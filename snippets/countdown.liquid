@@ -1,0 +1,35 @@
+
+{% liquid
+    assign timezone = ''
+
+    if timezone_choice == '1'
+        assign timezone = 'now' | date: '%z' 
+    endif
+
+%}
+<countdown-timer class="countdown" data-countdown-timezone="{{ timezone }}" data-countdown-enddate="{{ end_date | append: 'T' | append: end_time }}">
+    <div class="countdown-holder">
+        <div class="countdown-holder--days">
+            <span class="days">0</span>
+            <div class="countdown-holder__label">{{ 'sections.countdown.days' | t }}</div>
+        </div>
+        <div class="countdown-holder--hours">
+            <span class="hours">0</span>
+            <div class="countdown-holder__label">{{ 'sections.countdown.hours' | t }}</div>
+        </div>
+        <div class="countdown-holder--minutes">
+            <span class="minutes">0</span>
+            <div class="countdown-holder__label">{{ 'sections.countdown.minutes' | t }}</div>
+        </div>
+        <div class="countdown-holder--seconds">
+            <span class="seconds">0</span>
+            <div class="countdown-holder__label">{{ 'sections.countdown.seconds' | t }}</div>
+        </div>
+    </div>
+
+    {% unless hide_countdown %}
+        <div class="countdown-message hide">
+            {% echo end_message %}
+        </div>
+    {% endunless %}
+</countdown-timer>

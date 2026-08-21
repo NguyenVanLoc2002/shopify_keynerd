@@ -1,0 +1,35 @@
+{% if template != 'cart' %}
+  <script src="{{ 'cart.js' | asset_url }}" defer></script>
+{% endif %}
+
+<script src="{{ 'cart-drawer.js' | asset_url }}" defer></script>
+
+{% render 'cart-drawer', section_settings: section.settings %}
+
+
+
+{% schema %}
+{
+    "name": "t:sections.cart_drawer.name",
+    "limit": 1,
+    "settings": [
+        {
+            "type": "checkbox",
+            "id": "cart_recommendation",
+            "label": "t:sections.cart_drawer.settings.cart_recommendation.label",
+            "default": true
+        }
+    ],
+    "presets": [
+        {
+            "name": "t:sections.cart_drawer.presets.cart_drawer.name"
+        }
+    ],
+    "enabled_on": {
+        "groups": [
+            "custom.overlay"
+        ]
+    }
+}
+{% endschema %}
+

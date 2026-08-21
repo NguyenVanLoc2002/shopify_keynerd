@@ -1,0 +1,100 @@
+.contact-form {
+  width: 100%;
+  text-align: left;
+  margin-top: 15px;
+}
+.contact-form-label span {
+  font-size: var(--theme-body-font-size-small);
+  margin-bottom: 3px;
+  display: none;
+}
+.contact-form-notice {
+  font-size: var(--theme-body-font-size-small);
+  margin-bottom: 6px;
+}
+.contact-form input[type=text],
+.contact-form input[type=tel],
+.contact-form input[type=email],
+.contact-form textarea {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+}
+.contact-form button {
+  width: 100%;
+  cursor: pointer;
+}
+.contact-form select {
+  width: 100%;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+}
+.contact-form .select-field,
+.contact-form .radio-field,
+.contact-form .checkbox-field {
+  margin-bottom: 12px;
+}
+.contact-form .select-field {
+  position: relative;
+}
+.contact-form .select-field > svg {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  margin-top: -4px;
+  margin-right: 12px;
+}
+.contact-form .checkbox-field label,
+.contact-form .radio-field label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.contact-form .checkbox-field label:before,
+.contact-form .radio-field label:before {
+  content: "";
+  border: 1px solid;
+  border-color: var(--theme-lines-color-secondary);
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+}
+.contact-form .checkbox-field {
+  position: relative;
+}
+.contact-form .checkbox-field input[type=checkbox] {
+  display: none;
+}
+.contact-form .checkbox-field input[type=checkbox] + svg {
+  position: absolute;
+  top: 4px;
+  left: 1px;
+  display: none;
+}
+.contact-form .checkbox-field input[type=checkbox]:checked + svg {
+  display: block;
+}
+.contact-form .radio-field {
+  position: relative;
+}
+.contact-form .radio-field input[type=radio] {
+  display: none;
+}
+.contact-form .radio-field input[type=radio] + svg {
+  position: absolute;
+  top: 4px;
+  left: 1px;
+  display: none;
+}
+.contact-form .radio-field input[type=radio]:checked + svg {
+  display: block;
+}
+.contact-form .radio-field label:before {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}

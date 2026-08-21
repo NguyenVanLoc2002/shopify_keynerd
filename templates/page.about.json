@@ -1,0 +1,426 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+
+{
+  "sections": {
+    "image-banner-1": {
+      "type": "image-banner",
+      "blocks": {
+        "text-1": {
+          "type": "special-heading",
+          "settings": {
+            "banner_special_heading": "Move Better. Live Stronger.",
+            "banner_special_heading_size": "medium"
+          }
+        },
+        "buttons": {
+          "type": "buttons",
+          "settings": {
+            "banner_button_1_text": "Shop our activewear",
+            "banner_button_1_url": "",
+            "banner_button_1_target": "_self",
+            "banner_button_1_style": "fill",
+            "banner_button_1_custom_width": false,
+            "banner_button_1_width": 200,
+            "banner_button_2_text": "",
+            "banner_button_2_url": "",
+            "banner_button_2_target": "_self",
+            "banner_button_2_style": "fill",
+            "banner_button_2_custom_width": false,
+            "banner_button_2_width": 200
+          }
+        }
+      },
+      "block_order": [
+        "text-1",
+        "buttons"
+      ],
+      "settings": {
+        "height_mobile": "600",
+        "height": "680",
+        "side_margin_choice": "level-0",
+        "color_scheme": "",
+        "background_overlay": true,
+        "background_overlay_color": "#000000",
+        "background_overlay_gradient": "",
+        "background_overlay_opacity": 30,
+        "content_custom_width": true,
+        "content_width": 720,
+        "content_position": "center",
+        "content_vertical_align": "center",
+        "content_horizontal_align": "center",
+        "inset_choice": "level-4",
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": false,
+        "spacing_choice": "level-3",
+        "spacing_placement": "1"
+      }
+    },
+    "rich-text-1": {
+      "type": "rich-text",
+      "blocks": {
+        "heading-1": {
+          "type": "heading",
+          "settings": {
+            "text": "Our brand story",
+            "text_size": "small",
+            "text_custom_width": false,
+            "text_width": 450
+          }
+        },
+        "special-heading-1": {
+          "type": "special-heading",
+          "settings": {
+            "text": "Move with Purpose, Train with Confidence.",
+            "text_size": "small",
+            "text_custom_width": true,
+            "text_width": 800
+          }
+        },
+        "text_nqQLr9": {
+          "type": "text",
+          "settings": {
+            "text": "We started with a simple mission—to create activewear that performs as hard as you do. We believe in movement, strength, and confidence. From high-performance fabrics to eco-conscious design, we’re here to empower every step, every stretch, and every challenge. More than just gear, we’re a community built on passion and perseverance.",
+            "text_size": "medium",
+            "text_custom_width": true,
+            "text_width": 800
+          }
+        }
+      },
+      "block_order": [
+        "heading-1",
+        "special-heading-1",
+        "text_nqQLr9"
+      ],
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "side_margin_choice": "level-0",
+        "color_scheme": "scheme_4",
+        "inset_choice": "level-5",
+        "alignment": "center",
+        "gap": true,
+        "gap_choice": "level-4",
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": false,
+        "spacing_choice": "level-3",
+        "spacing_placement": "1"
+      }
+    },
+    "image_with_icon_cards_x3HhwB": {
+      "type": "image-with-icon-cards",
+      "blocks": {
+        "card_taLNKw": {
+          "type": "card",
+          "settings": {
+            "icon": "theme:performance",
+            "icon_width": 48,
+            "text_1": "Performance-Driven",
+            "text_1_size": "x-small",
+            "text_2": "<p>Engineered for movement and endurance.</p>",
+            "button_text": "",
+            "button_url": "",
+            "button_target": "_self",
+            "button_style": "link"
+          }
+        },
+        "card_Tn4kkf": {
+          "type": "card",
+          "settings": {
+            "icon": "theme:eco-friendly",
+            "icon_width": 48,
+            "text_1": "Sustainable & Ethical",
+            "text_1_size": "x-small",
+            "text_2": "<p>Engineered for movement and endurance.</p>",
+            "button_text": "",
+            "button_url": "",
+            "button_target": "_self",
+            "button_style": "link"
+          }
+        },
+        "card_Did7T8": {
+          "type": "card",
+          "settings": {
+            "icon": "theme:community",
+            "icon_width": 48,
+            "text_1": "Community-Focused",
+            "text_1_size": "x-small",
+            "text_2": "<p>Engineered for movement and endurance.</p>",
+            "button_text": "",
+            "button_url": "",
+            "button_target": "_self",
+            "button_style": "link"
+          }
+        },
+        "card_BMYR3Q": {
+          "type": "card",
+          "settings": {
+            "icon": "theme:durable",
+            "icon_width": 48,
+            "text_1": "Innovation & Comfort",
+            "text_1_size": "x-small",
+            "text_2": "<p>Engineered for movement and endurance.</p>",
+            "button_text": "",
+            "button_url": "",
+            "button_target": "_self",
+            "button_style": "link"
+          }
+        }
+      },
+      "block_order": [
+        "card_taLNKw",
+        "card_Tn4kkf",
+        "card_Did7T8",
+        "card_BMYR3Q"
+      ],
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "side_margin_choice": "level-0",
+        "color_scheme": "scheme_3",
+        "inset": true,
+        "inset_choice": "level-5",
+        "image_content_width_split": 50,
+        "content_text_align": "center",
+        "content_custom_width": true,
+        "content_width": 540,
+        "text_1": "What Makes Us Different",
+        "text_1_size": "small",
+        "text_2": "This is simple description for Icon cards section.",
+        "text_2_size": "medium",
+        "columns_count": 2,
+        "cards_gap_choice": "level-4",
+        "icon_background_show": false,
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-3",
+        "spacing_placement": "1"
+      }
+    },
+    "image-with-text-3": {
+      "type": "image-with-text",
+      "blocks": {
+        "text-2": {
+          "type": "special-heading",
+          "settings": {
+            "text": "Sustainable Essentials",
+            "text_size": "medium",
+            "text_custom_width": false,
+            "text_width": 450
+          }
+        },
+        "text-1": {
+          "type": "text",
+          "settings": {
+            "text": "Eco-friendly designs that don’t compromise on performance.",
+            "text_size": "medium",
+            "text_custom_width": true,
+            "text_width": 400
+          }
+        },
+        "image": {
+          "type": "image",
+          "settings": {
+            "image_aspect_ratio": "auto",
+            "image_custom_width": true,
+            "image_width": 450,
+            "image_radius": 0
+          }
+        },
+        "buttons_cQ68y4": {
+          "type": "buttons",
+          "settings": {
+            "button_1_text": "Explore this collection",
+            "button_1_url": "",
+            "button_1_target": "_self",
+            "button_1_style": "link",
+            "button_2_text": "",
+            "button_2_url": "",
+            "button_2_target": "_self",
+            "button_2_style": "fill"
+          }
+        }
+      },
+      "block_order": [
+        "text-2",
+        "text-1",
+        "image",
+        "buttons_cQ68y4"
+      ],
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "side_margin_choice": "level-5",
+        "color_scheme": "",
+        "inset": false,
+        "inset_choice": "level-3",
+        "gap": true,
+        "gap_choice": "level-6",
+        "image_content_width_split": 50,
+        "image_content_placement": "1",
+        "content_custom_width": true,
+        "content_width": 650,
+        "content_gap": true,
+        "content_gap_choice": "level-5",
+        "content_horizontal_align": "center",
+        "content_vertical_align": "center",
+        "content_text_align": "left",
+        "image_aspect_ratio": "auto",
+        "separator": true,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-4",
+        "spacing_placement": "1"
+      }
+    },
+    "home-featured-products-1": {
+      "type": "featured-products",
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "color_scheme": "",
+        "inset_choice": "level-5",
+        "edge_gradient_top": "",
+        "edge_gradient_bottom": "",
+        "text_1": "New arrivals",
+        "text_1_size": "small",
+        "text_1_choice": "heading",
+        "text_2": "Explore our curated collections designed for style, comfort, and performance.",
+        "text_2_size": "medium",
+        "text_2_newline": true,
+        "button_text": "View all",
+        "button_url": "",
+        "button_target": "_self",
+        "button_style": "link",
+        "collection_choice": "",
+        "display_style": "large",
+        "product_excerpt_show": false,
+        "columns_count": 4,
+        "columns_offset": true,
+        "total_count": 6,
+        "gap": true,
+        "gap_choice": "level-4",
+        "carousel": true,
+        "per_move": 1,
+        "autoplay": true,
+        "interval": 4000,
+        "loop": true,
+        "mouse_drag": true,
+        "arrows": true,
+        "dots": false,
+        "speed": 400,
+        "progress_bar": false,
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-4",
+        "spacing_placement": "1"
+      }
+    },
+    "image_cards_nWx4mD": {
+      "type": "image-cards",
+      "blocks": {
+        "card_iXVqjD": {
+          "type": "card",
+          "settings": {
+            "card_size": "medium",
+            "image_aspect_ratio": "auto",
+            "image_custom_width": false,
+            "image_width": 520,
+            "content_custom_width": false,
+            "content_width": 450,
+            "text_1": "Planet",
+            "text_1_size": "x-small",
+            "text_2": "",
+            "text_2_size": "medium",
+            "text_3": "P.E Nation is committed to protecting and supporting workers across our supply chain. As members of the Ethical Trading Initiative, a driving force in ethical sourcing, we believe in protecting, supporting and improving the lives of workers worldwide.",
+            "text_3_size": "medium",
+            "button_text": "",
+            "button_url": "",
+            "button_target": "_self",
+            "button_style": "fill"
+          }
+        },
+        "card_ctKyQa": {
+          "type": "card",
+          "settings": {
+            "card_size": "medium",
+            "image_aspect_ratio": "auto",
+            "image_custom_width": false,
+            "image_width": 520,
+            "content_custom_width": false,
+            "content_width": 450,
+            "text_1": "People",
+            "text_1_size": "x-small",
+            "text_2": "",
+            "text_2_size": "medium",
+            "text_3": "P.E Nation collections are enriched with recycled and regenerated fabrications, and we continuously explore ways to improve sustainable practices across our business and supply chain.",
+            "text_3_size": "medium",
+            "button_text": "",
+            "button_url": "",
+            "button_target": "_self",
+            "button_style": "fill"
+          }
+        }
+      },
+      "block_order": [
+        "card_iXVqjD",
+        "card_ctKyQa"
+      ],
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "side_margin_choice": "level-5",
+        "color_scheme": "",
+        "inset": false,
+        "inset_choice": "level-3",
+        "gap": true,
+        "gap_choice": "level-4",
+        "vertical_align": "normal",
+        "text_1": "",
+        "text_1_size": "medium",
+        "text_2": "",
+        "text_2_size": "medium",
+        "button_text": "",
+        "button_url": "",
+        "button_target": "_self",
+        "button_style": "fill",
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-3",
+        "spacing_placement": "1"
+      }
+    }
+  },
+  "order": [
+    "image-banner-1",
+    "rich-text-1",
+    "image_with_icon_cards_x3HhwB",
+    "image-with-text-3",
+    "home-featured-products-1",
+    "image_cards_nWx4mD"
+  ]
+}

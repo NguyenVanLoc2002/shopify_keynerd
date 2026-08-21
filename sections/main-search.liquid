@@ -1,0 +1,424 @@
+
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    {% unless section.settings.fullwidth %}
+      --theme-section-custom-width: {{ section.settings.width | append: 'px' }};
+    {% endunless %}
+
+  {% if section.settings.inset %}
+    --theme-section-content-padding: var(--theme-section-content-padding-{{ section.settings.inset_choice }});
+  {% endif %}
+
+  {% if section.settings.side_margin_choice != 'level-0' %}
+    --theme-section-side-margin: var(--theme-section-side-margin-{{ section.settings.side_margin_choice }});
+  {% endif %}
+  }
+{% endstyle %}
+
+{% if section.settings.spacing %}
+  {% style %}
+  #shopify-section-{{ section.id }}{
+    
+      {% unless section.settings.spacing_placement == '3' %}
+--theme-section-spacing-top: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+{% unless section.settings.spacing_placement == '2' %}
+      --theme-section-spacing-bottom: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+
+  }
+  {% endstyle %}
+{% endif %}
+
+
+{%liquid
+
+  assign input_type = 'product'
+  
+  if settings.predictive_search_collections
+      assign input_type = input_type | append: ',collection'
+  endif
+
+  if settings.predictive_search_pages
+      assign input_type = input_type | append: ',page'
+  endif
+
+
+  if settings.predictive_search_articles
+      assign input_type = input_type | append: ',article'
+  endif
+
+  assign results_count = search.results_count
+
+  assign search_count = 6
+
+
+  if search.performed
+    assign search_title = 'general.search.results_title_performed_html' | t: count: results_count, terms: search.terms
+  else
+    assign search_title = 'general.search.results_title' | t
+  endif
+
+
+
+
+  capture prev_next_icon 
+   render 'icon-chevron-down'
+  endcapture
+
+  assign next_html = 'general.pagination.next' | t | append: prev_next_icon
+  assign prev_html = 'general.pagination.previous' | t | append: prev_next_icon
+
+%}
+<div class="main-search section-search{% liquid 
+
+  if section.settings.fullwidth
+    echo ' has-fullwidth'
+  else
+    echo ' has-custom-width'
+  endif
+
+  if section.settings.side_margin_choice != 'level-0'
+    echo ' has-side-margin'
+  endif
+
+  if section.settings.inset
+    echo ' has-section-padding'
+  endif
+      
+  echo ' has-alignment-' | append: section.settings.alignment
+
+  echo ' ' | append: section.settings.color_scheme
+
+%}">
+  <div class="main-search-section-container section-search-container section-container">
+    <div class="main-page-header-details page-header-details main-search-header">
+      <h2 class="main-page-header-title page-search-title special-heading-size-{{ section.settings.heading_size }}">
+        {{ search_title }}
+      </h2>
+    </div>
+
+    <form action="{{ routes.search_url }}" method="get" role="search" class="main-search-form">
+      
+      <input type="hidden" name="type" value="{{ input_type }}" />
+      <input type="hidden" name="options[unavailable_products]" value="{{ settings.predictive_search_unavailable_products }}" />
+      <input type="hidden" name="options[prefix]" value="{{ settings.predictive_search_prefix }}">
+
+      <label class="main-search-form__label" for="SearchFormSearch">
+        <span class="main-search-form__label-text">{{ 'general.search.title' | t }}</span>
+        <span class="main-search-form__label-icon">{% render 'icon-search' %}</span>
+      </label>
+      <input id="SearchFormSearch" class="main-search-form__search" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}">
+      <button class="main-search-form__submit" type="submit">{{ 'general.search.submit' | t }}</button>
+    </form>
+    
+    {% paginate search.results by search_count %}
+
+    {% if search.performed %}
+      {% if search.results != blank %}
+        <div class="section-search-results">
+
+          <div class="section-search-results-top">
+            {%  render 'collection-top', section_settings: section.settings %}
+          </div>
+
+          <div class="section-search-results-content">
+            {% render 'filters', section_settings: section.settings %}
+
+            <div class="search-results-products products" data-id="{{ section.id }}">
+              <ul class="search-results-list">
+                {% for item in search.results %}
+                  {% case item.object_type %}
+                    {% when 'article' %}
+                      <li class="search-results-list-item post">
+                        <div class="post__thumbnail">
+                          <a href="{{ item.url }}">{% render 'section-image-processor', image: item.image %}</a>
+                        </div>
+                        <div class="post__details">
+                          <div class="search-results-list-item__type">{{ item.object_type }}</div>
+                          <h2 class="post__title">
+                            <a href="{{ item.url }}">{{ item.title }}</a>
+                          </h2>
+                          <div class="post__meta">
+                            <span>{{ 'by' }} {{ item.author }}</span>
+                            <span>{{ item.created_at | date: '%B %d, %Y' }}</span>
+                          </div>
+                          <a href="{{ item.url }}" class="post__read-more">
+                            {{ 'blog.link_text' | t }}
+                          </a>
+                        </div>
+                      </li>
+                    {% when 'page' %}
+                      <li class="search-results-list-item page">
+                        <div class="page__details">
+                          <div class="search-results-list-item__type">{{ item.object_type }}</div>
+                          <h2 class="page__title">
+                            <a href="{{ item.url }}">{{ item.title }}</a>
+                          </h2>
+                          <a href="{{ item.url }}" class="page__read-more">
+                            {{ 'blog.link_text' | t }}
+                          </a>
+                        </div>
+                      </li>
+                    {% else %}
+                      <li class="search-results-list-item search-results-product product">
+                        {% render 'section-product-processor', product: item, section_settings: section.settings, prefix: 'search-results-product' %}
+                      </li>
+
+                  {% endcase %}
+                {% endfor %}
+
+              </ul>
+
+              {% if paginate.pages > 1 %}
+                <div class="search-pagination pagination">
+                  {{ paginate | default_pagination: next: next_html, previous: prev_html }}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <h1 class="search-results-no-result-text special-heading-s4">{{ 'general.search.no_results' | t: terms: search.terms }}</h1>
+      {% endif %}
+    {% endif %}
+
+    {% endpaginate %}
+  </div>
+</div>
+
+
+{% schema %}
+{
+    "name": "t:sections.main_search.name",
+    "settings": [
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__general.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "fullwidth",
+            "label": "t:sections.common.settings.fullwidth.label",
+            "info": "t:sections.common.settings.fullwidth.info",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "width",
+            "min": 500,
+            "max": 2000,
+            "step": 20,
+            "unit": "px",
+            "label": "t:sections.common.settings.width.label",
+            "default": 1320,
+            "info": "t:sections.common.settings.width.info"
+        },
+        {
+            "type": "select",
+            "id": "side_margin_choice",
+            "label": "t:sections.common.settings.side_margin_choice.label",
+            "options": [
+                {
+                    "value": "level-0",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__4.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__5.label"
+                }
+            ],
+            "info": "t:sections.common.settings.side_margin_choice.info",
+            "default": "level-4"
+        },
+        {
+            "type": "color_scheme",
+            "id": "color_scheme",
+            "default": "scheme_1",
+            "label": "t:sections.common.settings.color_scheme.label"
+        },
+        {
+            "type": "checkbox",
+            "id": "inset",
+            "label": "t:sections.main_search.settings.inset.label",
+            "default": false
+        },
+        {
+            "type": "select",
+            "id": "inset_choice",
+            "label": "t:sections.common.settings.inset_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.inset_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.inset_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.inset_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.inset_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.inset_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        },
+        {
+            "type": "select",
+            "id": "heading_size",
+            "label": "t:sections.main_search.settings.heading_size.label",
+            "options": [
+                {
+                    "value": "x-small",
+                    "label": "t:sections.main_search.settings.heading_size.options.option__0.label"
+                },
+                {
+                    "value": "small",
+                    "label": "t:sections.main_search.settings.heading_size.options.option__1.label"
+                },
+                {
+                    "value": "medium",
+                    "label": "t:sections.main_search.settings.heading_size.options.option__2.label"
+                },
+                {
+                    "value": "large",
+                    "label": "t:sections.main_search.settings.heading_size.options.option__3.label"
+                }
+            ],
+            "default": "medium"
+        },
+        {
+            "type": "select",
+            "id": "alignment",
+            "label": "t:sections.main_search.settings.alignment.label",
+            "options": [
+                {
+                    "value": "left",
+                    "label": "t:sections.main_search.settings.alignment.options.option__0.label"
+                },
+                {
+                    "value": "center",
+                    "label": "t:sections.main_search.settings.alignment.options.option__1.label"
+                },
+                {
+                    "value": "right",
+                    "label": "t:sections.main_search.settings.alignment.options.option__2.label"
+                }
+            ],
+            "default": "left"
+        },
+        {
+            "type": "number",
+            "id": "results_per_page",
+            "label": "t:sections.main_search.settings.results_per_page.label",
+            "default": 6,
+            "info": "t:sections.main_search.settings.results_per_page.info"
+        },
+        {
+            "type": "checkbox",
+            "id": "filters",
+            "label": "t:sections.main_search.settings.filters.label",
+            "info": "t:sections.main_search.settings.filters.info",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "sorting",
+            "label": "t:sections.main_search.settings.sorting.label",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "total_count",
+            "label": "t:sections.main_search.settings.total_count.label",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__spacing.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "spacing",
+            "label": "t:sections.common.settings.spacing.label",
+            "info": "t:sections.common.settings.spacing.info",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "spacing_choice",
+            "label": "t:sections.common.settings.spacing_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        },
+        {
+            "type": "select",
+            "id": "spacing_placement",
+            "label": "t:sections.common.settings.spacing_placement.label",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__0.label"
+                },
+                {
+                    "value": "2",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__1.label"
+                },
+                {
+                    "value": "3",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__2.label"
+                }
+            ],
+            "default": "1",
+            "info": "t:sections.common.settings.spacing_placement.info"
+        }
+    ]
+}
+{% endschema %}
+

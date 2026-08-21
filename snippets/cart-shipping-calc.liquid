@@ -1,0 +1,33 @@
+<shipping-calculator class="shipping-calculator">
+    <details>
+        <summary>
+            <h3 class="shipping-calculator-title">{{ 'sections.cart.estimate_shipping.calculator_title' | t }}</h3>
+            {% render 'icon-chevron-down' %}
+        </summary>
+        <div class="shipping-calculator-form">
+            <div class="shipping-calculator-form-country-field">
+                <label for="shipping-country">{{ 'sections.cart.estimate_shipping.country' | t }}</label>
+                <select id="shipping-country" class="shipping-calculator-country" name="country">
+                    {{ country_option_tags }}
+                </select>
+            </div>
+
+            <div class="shipping-calculator-form-province-field">
+                <label for="shipping-province">{{ 'sections.cart.estimate_shipping.province' | t }}</label>
+                <select id="shipping-province" class="shipping-calculator-province" name="province"></select>
+            </div>
+
+            <div class="shipping-calculator-form-zip-field">
+                <label for="shipping-zip">{{ 'sections.cart.estimate_shipping.zip' | t }}</label>
+                <input type="text" id="shipping-zip" class="shipping-calculator-zip" placeholder="{{ 'sections.cart.estimate_shipping.zip' | t }}">
+            </div>
+
+            <button type="button" class="shipping-calculator-submit btn-outline-secondary"><span data-text="{{ 'sections.cart.estimate_shipping.submit' | t }}"><span>{{ 'sections.cart.estimate_shipping.submit' | t }}</span></span></button>
+        </div>
+        <div class="shipping-rates">
+            <div class="shipping-rates-content"></div>
+        </div>
+    </details>
+</shipping-calculator>
+
+

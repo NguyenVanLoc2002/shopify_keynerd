@@ -1,0 +1,107 @@
+<!-- /templates/customers/login.liquid -->
+
+
+<script src="{{ 'customers.js' | asset_url }}" defer></script>
+
+
+<div class="customers-wrapper customers-login-wrapper">
+    <div class="customers-login active">
+        <div class="customers-login-header">
+            <h1 class="customers-form-title customers-login-title">{{ 'customer.login_page.title' | t }}</h1>
+        </div>
+        <div class="customers-form customers-login-form">
+            {% form 'customer_login' %}
+
+            {{ form.errors | default_errors }}
+
+            <label for="CustomerLoginEmail">
+                <span>{{ 'customer.login_page.email' | t }}</span>
+                <input id="CustomerLoginEmail" type="email" name="customer[email]" class="customer_email" />
+            </label>
+
+            <label for="CustomerLoginPassword">
+                <span>{{ 'customer.login_page.password' | t }}</span>
+                <input id="CustomerLoginPassword" type="password" name="customer[password]" class="customer_password" />
+            </label>
+
+            <button type="submit" class="btn-fill">{{ 'customer.login_page.sign_in' | t }}</button>
+
+            {% endform %}
+        </div>
+
+        {% if section.settings.login_forgot_show %}
+            <div class="customers-login-forgot-link customers-forgot-link">
+                <button>{{ 'customer.login_page.forgot_password' | t  }}</button>
+            </div>
+        {% endif %}
+        <div class="customers-login-register-link">
+            {{ 'customer.login_page.create_account_label' | t  }} {{ 'customer.login_page.create_account' | t | customer_register_link }}
+        </div>
+    </div>
+    {% if section.settings.login_forgot_show %}
+        <div class="customers-forgot">
+            
+            <div class="customers-forgot-header">
+                <h1 class="customers-form-title customers-forgot-title">{{ 'customer.recover_password.title' | t  }}</h1>
+            </div>
+            <div class="customers-form customers-forgot-form">
+                {% form 'recover_customer_password' %}
+
+                {{ form.errors | default_errors }}
+
+                <label for="CustomerLoginForgotEmail">
+                    <span>{{ 'customer.login_page.email' | t }}</span>
+                    <input id="CustomerLoginForgotEmail" type="email" name="email" class="email" />
+                </label>
+                <p>{{ 'We will send you an email to reset your password' }}</p>
+                <button type="submit" class="btn-fill">{{ 'customer.login_page.submit' | t  }}</button>
+                {% endform %}
+            </div>
+            <div class="customers-login-forgot-link-cancel customers-forgot-link-cancel">
+                <button>{{ 'customer.login_page.cancel' | t }}</button>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if shop.checkout.guest_login %}
+
+        <div class="customers-guest">
+            <div class="customers-guest-header">
+                <h1 class="customers-form-title customers-guest-title">{{ 'customer.login_page.guest.title' | t }}</h1>
+            </div>
+            <div class="customers-form customers-guest-form">
+                {% form 'guest_login' %}
+                    <button type="submit" class="btn-fill">{{ 'customer.login_page.guest.submit' | t }}</button>
+                {% endform %}
+            </div>
+
+    {% endif %}
+</div>
+
+
+
+{% schema %}
+{
+    "name": "t:sections.login_form.name",
+    "limit": 1,
+    "settings": [
+        {
+            "type": "checkbox",
+            "id": "login_forgot_show",
+            "label": "t:sections.login_form.settings.login_forgot_show.label",
+            "default": true
+        }
+    ],
+    "presets": [
+        {
+            "name": "t:sections.login_form.presets.login_form.name"
+        }
+    ],
+    "enabled_on": {
+        "templates": [
+            "customers/login"
+        ]
+    }
+}
+{% endschema %}
+

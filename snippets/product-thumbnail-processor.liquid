@@ -1,0 +1,29 @@
+{% case image.media_type %}
+    {% when 'external_video' %}
+        <span class="product-video product-external-video" style="--aspect-ratio: {{ image.aspect_ratio }}">
+            <div class="product-video__preview">
+                {% render 'section-image-processor', image: image, width: 200  %}
+                {% render 'icon-play-thumbnail' %}
+            </div>
+        </span>
+
+    {% when 'video' %}
+        <span class="product-video product-internal-video" style="--aspect-ratio: {{ image.aspect_ratio }}">
+            <div class="product-video__preview">
+                {% render 'section-image-processor', image: image, width: 200  %}
+                {% render 'icon-play-thumbnail' %}
+            </div>
+        </span>
+
+    {% when 'model' %}
+        <span class="product-3d-model">
+            <div class="product-3d-model__preview">
+                {% render 'section-image-processor', image: image, width: 200  %}
+                {% render 'icon-3d-model-thumbnail' %}
+            </div>
+        </span>
+    {% else %}
+        <span>
+            {% render 'section-image-processor', image: image, width: 200  %}
+        </span>
+{% endcase %}

@@ -1,0 +1,204 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "image-banner-1": {
+      "type": "image-banner",
+      "blocks": {
+        "text-1": {
+          "type": "special-heading",
+          "settings": {}
+        },
+        "text-2": {
+          "type": "text",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "text-1",
+        "text-2"
+      ],
+      "settings": {
+        "side_margin_choice": "level-4",
+        "content_vertical_align": "center",
+        "spacing": false
+      }
+    },
+    "rich-text-1": {
+      "type": "rich-text",
+      "blocks": {
+        "heading-1": {
+          "type": "heading",
+          "settings": {}
+        },
+        "special-heading-1": {
+          "type": "special-heading",
+          "settings": {}
+        },
+        "description-1": {
+          "type": "text",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "heading-1",
+        "special-heading-1",
+        "description-1"
+      ],
+      "settings": {
+        "inset_choice": "level-4",
+        "alignment": "center"
+      }
+    },
+    "image-banner-with-pins-1": {
+      "type": "image-banner-with-pins",
+      "blocks": {
+        "pin-1": {
+          "type": "pin",
+          "settings": {}
+        },
+        "pin-2": {
+          "type": "pin",
+          "settings": {
+            "pin_top_offset": 50,
+            "pin_left_offset": 70
+          }
+        }
+      },
+      "block_order": [
+        "pin-1",
+        "pin-2"
+      ],
+      "settings": {
+        "side_margin_choice": "level-4"
+      }
+    },
+    "image-with-pins-1": {
+      "type": "image-with-pins",
+      "blocks": {
+        "pin-1": {
+          "type": "pin",
+          "settings": {}
+        },
+        "pin-2": {
+          "type": "pin",
+          "settings": {
+            "pin_top_offset": 83,
+            "pin_left_offset": 30
+          }
+        }
+      },
+      "block_order": [
+        "pin-1",
+        "pin-2"
+      ],
+      "settings": {
+        "side_margin_choice": "level-4",
+        "side_image_placement": "right",
+        "separator": true
+      }
+    },
+    "image-cards-1": {
+      "type": "image-cards",
+      "blocks": {
+        "card-1": {
+          "type": "card",
+          "settings": {
+            "card_size": "medium",
+            "image_custom_width": true,
+            "image_width": 520
+          }
+        },
+        "card-2": {
+          "type": "card",
+          "settings": {
+            "card_size": "medium",
+            "image_custom_width": false
+          }
+        }
+      },
+      "block_order": [
+        "card-1",
+        "card-2"
+      ],
+      "settings": {
+        "side_margin_choice": "level-4",
+        "text_1": "",
+        "text_2": "",
+        "button_text": ""
+      }
+    },
+    "image-banner-with-products-1": {
+      "type": "image-banner-with-products",
+      "settings": {
+        "height": "780"
+      }
+    },
+    "featured-products-1": {
+      "type": "featured-products",
+      "settings": {}
+    },
+    "multicolumn-1": {
+      "type": "multicolumn",
+      "blocks": {
+        "column-1": {
+          "type": "column",
+          "settings": {
+            "width": 44,
+            "grid_1_color_scheme": "scheme_4",
+            "grid_1_vertical_align": "top-bottom"
+          }
+        },
+        "column-2": {
+          "type": "column",
+          "settings": {
+            "width": 28,
+            "display_style": "1",
+            "grid_1_color_scheme": "scheme_2",
+            "grid_1_aspect_ratio": "4/3",
+            "grid_1_vertical_align": "bottom",
+            "grid_1_use_image": true,
+            "grid_2_show": true,
+            "grid_2_color_scheme": "scheme_2",
+            "grid_2_aspect_ratio": "4/3",
+            "grid_2_vertical_align": "bottom",
+            "grid_2_use_image": true
+          }
+        },
+        "column-3": {
+          "type": "column",
+          "settings": {
+            "width": 28,
+            "grid_1_color_scheme": "scheme_2",
+            "grid_1_aspect_ratio": "2/3",
+            "grid_1_vertical_align": "bottom",
+            "grid_1_use_image": true
+          }
+        }
+      },
+      "block_order": [
+        "column-1",
+        "column-2",
+        "column-3"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "image-banner-1",
+    "rich-text-1",
+    "image-banner-with-pins-1",
+    "image-with-pins-1",
+    "image-cards-1",
+    "image-banner-with-products-1",
+    "featured-products-1",
+    "multicolumn-1"
+  ]
+}

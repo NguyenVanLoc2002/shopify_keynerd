@@ -1,0 +1,253 @@
+
+{% liquid 
+  assign count =  section.blocks | size
+  
+  if count > 1 and section.settings.carousel
+   assign has_carousel = true
+  endif
+
+  if has_carousel
+    assign data_options = 'data-options={"type":"fade","perPage":1,"pagination":false}'
+  endif 
+%}
+
+{% unless count == 0 %}
+<div class="section-announcement-bar{% liquid 
+  if section.settings.border_choice != '0'
+    echo ' has-border-style-' | append: section.settings.border_choice
+  endif 
+
+  echo ' ' | append: section.settings.color_scheme
+
+%}">
+  <div class="section-announcement-bar-content{% liquid 
+    if has_carousel
+      echo ' has-carousel splide'
+    endif
+    %}" {% liquid 
+    if has_carousel 
+
+      assign data_options = 'data-options={'
+        
+
+      assign data_options = data_options | append: '"type":"' | append: 'fade' | append: '",'
+      assign data_options = data_options | append: '"rewind":' | append: section.settings.loop | append: ','
+      
+      assign data_options = data_options | append: '"perPage":"' | append: '1' | append: '",'
+
+      if section.settings.speed != blank
+        assign data_options = data_options | append: '"speed":"' | append: section.settings.speed | append: '",'
+      endif 
+      if section.settings.interval != blank
+        assign data_options = data_options | append: '"interval":"' | append: section.settings.interval | append: '",'
+      endif 
+      
+      assign data_options = data_options | append: '"autoplay":' | append: section.settings.autoplay | append: ','
+      assign data_options = data_options | append: '"drag":' | append: section.settings.mouse_drag | append: ','
+      assign data_options = data_options | append: '"arrows":' | append: section.settings.arrows | append: ','
+      assign data_options = data_options | append: '"pagination":' | append: false | append: ','
+      
+
+      assign data_options_count = data_options | size | minus: 1
+      assign data_options = data_options | slice: 0, data_options_count
+      assign data_options = data_options | append: '}'
+
+
+      echo data_options
+    endif
+  
+  %}>
+    {% if has_carousel %}
+      <div class="splide__arrows">
+        <button class="splide__arrow splide__arrow--prev">
+          {% render 'icon-chevron-down' %}
+        </button>
+        <button class="splide__arrow splide__arrow--next">
+          {% render 'icon-chevron-down' %}
+        </button>
+      </div>
+      <div class="splide__track">
+        <div class="splide__list">
+    {% endif %}
+      {% for block in section.blocks %}
+          {% if block.type == 'announcement' %}
+              {% if block.settings.text != blank %}
+                  <div class="section-announcement announcement-{{ forloop.index }}{% liquid 
+                    if has_carousel
+                      echo ' splide__slide'
+                    endif 
+                  %}" {{ block.shopify_attributes }}>
+                      <span>{{ block.settings.text }}</span>
+                      {% if block.settings.btn_text != blank %}
+                          <a href="{{ block.settings.btn_url }}" target="{{ block.settings.btn_target | default: '_self' }}">{{ block.settings.btn_text }}</a>
+                      {% endif %}
+                    </div>
+              {% endif %}
+          {% endif %}
+      {% endfor %}
+    {% if count >= 2 and section.settings.carousel %}
+    </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endunless %}
+
+
+
+{% schema %}
+{
+    "name": "t:sections.announcement_bar.name",
+    "settings": [
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__general.content"
+        },
+        {
+            "type": "color_scheme",
+            "id": "color_scheme",
+            "default": "scheme_6",
+            "label": "t:sections.common.settings.color_scheme.label"
+        },
+        {
+            "type": "select",
+            "id": "border_choice",
+            "label": "t:sections.announcement_bar.settings.border_choice.label",
+            "options": [
+                {
+                    "value": "0",
+                    "label": "t:sections.announcement_bar.settings.border_choice.options.option__0.label"
+                },
+                {
+                    "value": "1",
+                    "label": "t:sections.announcement_bar.settings.border_choice.options.option__1.label"
+                },
+                {
+                    "value": "2",
+                    "label": "t:sections.announcement_bar.settings.border_choice.options.option__2.label"
+                },
+                {
+                    "value": "3",
+                    "label": "t:sections.announcement_bar.settings.border_choice.options.option__3.label"
+                }
+            ],
+            "default": "0"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__carousel_settings.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel",
+            "label": "t:sections.common.settings.carousel.label",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "autoplay",
+            "label": "t:sections.common.settings.autoplay.label",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "interval",
+            "min": 1000,
+            "max": 9000,
+            "step": 100,
+            "unit": "ms",
+            "label": "t:sections.common.settings.interval.label",
+            "default": 4000
+        },
+        {
+            "type": "checkbox",
+            "id": "loop",
+            "label": "t:sections.common.settings.loop.label",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "mouse_drag",
+            "label": "t:sections.common.settings.mouse_drag.label",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "arrows",
+            "label": "t:sections.common.settings.arrows.label",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "speed",
+            "min": 100,
+            "max": 2000,
+            "step": 50,
+            "unit": "ms",
+            "label": "t:sections.common.settings.speed.label",
+            "default": 400
+        }
+    ],
+    "blocks": [
+        {
+            "name": "t:sections.announcement_bar.blocks.announcement.name",
+            "type": "announcement",
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "t:sections.announcement_bar.blocks.announcement.settings.header__general.content"
+                },
+                {
+                    "type": "textarea",
+                    "id": "text",
+                    "label": "t:sections.announcement_bar.blocks.announcement.settings.text.label",
+                    "default": "This is announcement bar for displaying all kind of information."
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.announcement_bar.blocks.announcement.settings.header__button.content"
+                },
+                {
+                    "type": "text",
+                    "id": "btn_text",
+                    "label": "t:sections.announcement_bar.blocks.announcement.settings.btn_text.label"
+                },
+                {
+                    "type": "url",
+                    "id": "btn_url",
+                    "label": "t:sections.announcement_bar.blocks.announcement.settings.btn_url.label",
+                    "info": "t:sections.announcement_bar.blocks.announcement.settings.btn_url.info"
+                },
+                {
+                    "type": "select",
+                    "id": "btn_target",
+                    "label": "t:sections.announcement_bar.blocks.announcement.settings.btn_target.label",
+                    "options": [
+                        {
+                            "value": "_self",
+                            "label": "t:sections.announcement_bar.blocks.announcement.settings.btn_target.options.option__0.label"
+                        },
+                        {
+                            "value": "_blank",
+                            "label": "t:sections.announcement_bar.blocks.announcement.settings.btn_target.options.option__1.label"
+                        }
+                    ],
+                    "default": "_self",
+                    "info": "t:sections.announcement_bar.blocks.announcement.settings.btn_target.info"
+                }
+            ]
+        }
+    ],
+    "default": {
+        "blocks": [
+            {
+                "type": "announcement"
+            },
+            {
+                "type": "announcement"
+            }
+        ]
+    }
+}
+{% endschema %}
+

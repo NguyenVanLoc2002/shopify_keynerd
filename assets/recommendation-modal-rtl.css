@@ -1,0 +1,11 @@
+.recommendation-modal__container {
+  border-radius: 0 !important;
+}
+.recommendation-modal__button {
+  border-radius: 0 !important;
+}
+.recommendation-modal__selector--flag {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background-color: #fff !important;
+}

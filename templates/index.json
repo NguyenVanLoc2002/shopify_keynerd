@@ -1,0 +1,1354 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "home-slideshow-1": {
+      "type": "slideshow",
+      "blocks": {
+        "slide-1": {
+          "type": "slide",
+          "settings": {
+            "color_scheme": "",
+            "slide_image_overlay": true,
+            "slide_image_overlay_color": "#000000",
+            "slide_gradient_overlay": "linear-gradient(135deg, rgba(255, 111, 60, 1), rgba(47, 47, 47, 1) 100%)",
+            "slide_image_overlay_opacity": 30,
+            "slide_image_link": "",
+            "slide_fullwidth": true,
+            "slide_custom_width": 1320,
+            "slide_content_position": "center",
+            "slide_content_vertical_align": "center",
+            "slide_content_horizontal_align": "center",
+            "slide_content_custom_width": true,
+            "slide_content_width": 580,
+            "slide_heading": "Run Further, Feel Stronger",
+            "slide_heading_size": "large",
+            "slide_subheading": "",
+            "slide_description": "Discover performance-driven activewear designed to empower every step.",
+            "slide_button_1_text": "Shop activewears",
+            "slide_button_1_url": "",
+            "slide_button_1_style": "fill",
+            "slide_button_1_target": "_self",
+            "slide_button_1_custom_width": false,
+            "slide_button_1_width": 200,
+            "slide_button_2_text": "",
+            "slide_button_2_url": "",
+            "slide_button_2_style": "fill",
+            "slide_button_2_target": "_self",
+            "slide_button_2_custom_width": false,
+            "slide_button_2_width": 200
+          }
+        },
+        "slide_f6JjL7": {
+          "type": "slide",
+          "settings": {
+            "color_scheme": "",
+            "slide_image_overlay": true,
+            "slide_image_overlay_color": "#000000",
+            "slide_gradient_overlay": "linear-gradient(135deg, rgba(255, 111, 60, 1), rgba(47, 47, 47, 1) 100%)",
+            "slide_image_overlay_opacity": 30,
+            "slide_image_link": "",
+            "slide_fullwidth": true,
+            "slide_custom_width": 1320,
+            "slide_content_position": "center",
+            "slide_content_vertical_align": "center",
+            "slide_content_horizontal_align": "center",
+            "slide_content_custom_width": true,
+            "slide_content_width": 580,
+            "slide_heading": "Elevate Your Performance.",
+            "slide_heading_size": "large",
+            "slide_subheading": "",
+            "slide_description": "Discover performance-driven activewear designed to empower every step.",
+            "slide_button_1_text": "Shop activewears",
+            "slide_button_1_url": "",
+            "slide_button_1_style": "fill",
+            "slide_button_1_target": "_self",
+            "slide_button_1_custom_width": false,
+            "slide_button_1_width": 200,
+            "slide_button_2_text": "",
+            "slide_button_2_url": "",
+            "slide_button_2_style": "fill",
+            "slide_button_2_target": "_self",
+            "slide_button_2_custom_width": false,
+            "slide_button_2_width": 200
+          }
+        },
+        "slide_LnbCMh": {
+          "type": "slide",
+          "settings": {
+            "color_scheme": "",
+            "slide_image_overlay": true,
+            "slide_image_overlay_color": "#000000",
+            "slide_gradient_overlay": "linear-gradient(135deg, rgba(255, 111, 60, 1), rgba(47, 47, 47, 1) 100%)",
+            "slide_image_overlay_opacity": 30,
+            "slide_image_link": "",
+            "slide_fullwidth": true,
+            "slide_custom_width": 1320,
+            "slide_content_position": "center",
+            "slide_content_vertical_align": "center",
+            "slide_content_horizontal_align": "center",
+            "slide_content_custom_width": true,
+            "slide_content_width": 620,
+            "slide_heading": "Every Move, Every Moment.",
+            "slide_heading_size": "large",
+            "slide_subheading": "",
+            "slide_description": "Discover performance-driven activewear designed to empower every step and lifestyle.",
+            "slide_button_1_text": "Shop activewears",
+            "slide_button_1_url": "",
+            "slide_button_1_style": "fill",
+            "slide_button_1_target": "_self",
+            "slide_button_1_custom_width": false,
+            "slide_button_1_width": 200,
+            "slide_button_2_text": "",
+            "slide_button_2_url": "",
+            "slide_button_2_style": "fill",
+            "slide_button_2_target": "_self",
+            "slide_button_2_custom_width": false,
+            "slide_button_2_width": 200
+          }
+        }
+      },
+      "block_order": [
+        "slide-1",
+        "slide_f6JjL7",
+        "slide_LnbCMh"
+      ],
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "side_margin_choice": "level-0",
+        "slideshow_height_mobile": "600",
+        "slideshow_height": "780",
+        "inset_choice": "level-4",
+        "slideshow_autoplay": true,
+        "slideshow_transition_interval": 4000,
+        "slideshow_loop": true,
+        "slideshow_mouse_drag": true,
+        "slideshow_arrows": true,
+        "slideshow_dots": true,
+        "slideshow_transition_speed": 400,
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": false,
+        "spacing_choice": "level-3",
+        "spacing_placement": "1"
+      }
+    },
+    "rich_text_V6ADnb": {
+      "type": "rich-text",
+      "blocks": {
+        "text_7MEihJ": {
+          "type": "text",
+          "settings": {
+            "text": "Over 50,000 products sold worldwide.",
+            "text_size": "large",
+            "text_custom_width": false,
+            "text_width": 450
+          }
+        },
+        "special_heading_MprQ87": {
+          "type": "special-heading",
+          "settings": {
+            "text": "Your Journey. Your Gear.",
+            "text_size": "medium",
+            "text_custom_width": true,
+            "text_width": 540
+          }
+        }
+      },
+      "block_order": [
+        "text_7MEihJ",
+        "special_heading_MprQ87"
+      ],
+      "disabled": true,
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "side_margin_choice": "level-0",
+        "color_scheme": "",
+        "inset_choice": "level-1",
+        "alignment": "center",
+        "gap": true,
+        "gap_choice": "level-4",
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-5",
+        "spacing_placement": "2"
+      }
+    },
+    "scrolling-text-1": {
+      "type": "scrolling-text",
+      "blocks": {
+        "text_Bnt36z": {
+          "type": "text",
+          "settings": {
+            "text": "Eco-friendly Fabrics",
+            "text_size": "small"
+          }
+        },
+        "text_QCy4m8": {
+          "type": "text",
+          "settings": {
+            "text": "Sustainable Manufacturing",
+            "text_size": "small"
+          }
+        },
+        "text_3z9eQR": {
+          "type": "text",
+          "settings": {
+            "text": "Made for Movement",
+            "text_size": "small"
+          }
+        },
+        "text_qb68j7": {
+          "type": "text",
+          "settings": {
+            "text": "Scientifically Tested.",
+            "text_size": "small"
+          }
+        }
+      },
+      "block_order": [
+        "text_Bnt36z",
+        "text_QCy4m8",
+        "text_3z9eQR",
+        "text_qb68j7"
+      ],
+      "settings": {
+        "fullwidth": false,
+        "width": 600,
+        "color_scheme": "scheme_1",
+        "inset": false,
+        "inset_choice": "level-3",
+        "gap_choice": "level-3",
+        "edge_fade": true,
+        "direction": "left-right",
+        "speed": 40,
+        "splitter_use_custom_width": true,
+        "splitter_custom_width": 4,
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": false,
+        "spacing_choice": "level-4",
+        "spacing_placement": "3"
+      }
+    },
+    "home-featured-products-1": {
+      "type": "featured-products",
+      "custom_css": [
+        "/* Giới hạn tên sản phẩm 2 dòng */.section-featured-products-product .product__title a {display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;}",
+        " /* Ẩn span From trước giá tiền*/.section-featured-products-product__price--varies {display: none !important;}"
+      ],
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "color_scheme": "scheme_7",
+        "inset_choice": "level-5",
+        "edge_gradient_top": "linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 100%)",
+        "edge_gradient_bottom": "",
+        "text_1": "New arrivals",
+        "text_1_size": "medium",
+        "text_1_choice": "heading",
+        "text_2": "Explore our curated collections designed for style, comfort, and performance.",
+        "text_2_size": "medium",
+        "text_2_newline": true,
+        "button_text": "View all",
+        "button_url": "",
+        "button_target": "_self",
+        "button_style": "link",
+        "collection_choice": "new-arrivals",
+        "display_style": "large",
+        "product_excerpt_show": false,
+        "columns_count": 4,
+        "columns_offset": true,
+        "total_count": 6,
+        "gap": true,
+        "gap_choice": "level-4",
+        "carousel": true,
+        "per_move": 1,
+        "autoplay": true,
+        "interval": 4000,
+        "loop": true,
+        "mouse_drag": true,
+        "arrows": true,
+        "dots": false,
+        "speed": 400,
+        "progress_bar": false,
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-3",
+        "spacing_placement": "3"
+      }
+    },
+    "rich_text_A849JD": {
+      "type": "rich-text",
+      "blocks": {
+        "special_heading_hLn7PM": {
+          "type": "special-heading",
+          "settings": {
+            "text": "Discover Your Next Favorite Gear.",
+            "text_size": "medium",
+            "text_custom_width": true,
+            "text_width": 650
+          }
+        },
+        "buttons_Lw3pRC": {
+          "type": "buttons",
+          "settings": {
+            "button_1_text": "View all collections",
+            "button_1_url": "",
+            "button_1_target": "_self",
+            "button_1_style": "link",
+            "button_1_custom_width": false,
+            "button_1_width": 200,
+            "button_2_text": "",
+            "button_2_url": "",
+            "button_2_target": "_self",
+            "button_2_style": "fill",
+            "button_2_custom_width": false,
+            "button_2_width": 200
+          }
+        }
+      },
+      "block_order": [
+        "special_heading_hLn7PM",
+        "buttons_Lw3pRC"
+      ],
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "side_margin_choice": "level-0",
+        "color_scheme": "",
+        "inset_choice": "level-3",
+        "alignment": "center",
+        "gap": true,
+        "gap_choice": "level-4",
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-4",
+        "spacing_placement": "2"
+      }
+    },
+    "home-featured-collections-1": {
+      "type": "featured-collections",
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "color_scheme": "",
+        "inset_choice": "level-5",
+        "text_1": "",
+        "text_1_size": "small",
+        "text_2": "",
+        "text_2_size": "large",
+        "text_2_newline": true,
+        "button_text": "",
+        "button_url": "",
+        "button_target": "_self",
+        "button_style": "link",
+        "collection_choice": [
+          "anime-inspired-keycaps",
+          "artisan-keycaps",
+          "custom-figurines",
+          "featured-keycaps",
+          "keycap-sets",
+          "personalized-gifts"
+        ],
+        "columns_count": 3,
+        "columns_offset": false,
+        "total_count": 6,
+        "gap": true,
+        "gap_choice": "level-4",
+        "collection_aspect_ratio": "auto",
+        "collection_count": true,
+        "collection_title_overlay": true,
+        "carousel": false,
+        "per_move": 2,
+        "autoplay": true,
+        "interval": 4000,
+        "loop": true,
+        "mouse_drag": true,
+        "arrows": true,
+        "dots": false,
+        "speed": 400,
+        "progress_bar": true,
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-3",
+        "spacing_placement": "3"
+      }
+    },
+    "image_cards_carousel_q7FQwE": {
+      "type": "image-cards-carousel",
+      "blocks": {
+        "card_876YHM": {
+          "type": "card",
+          "settings": {
+            "image_aspect_ratio": "auto",
+            "image_custom_width": true,
+            "image_width": 520,
+            "image_link": "",
+            "content_custom_width": false,
+            "content_width": 450,
+            "text_1": "Running",
+            "text_1_size": "x-small",
+            "text_2": "",
+            "text_2_size": "medium",
+            "text_3": "Lightweight, breathable tops, shorts, and running shoes.",
+            "text_3_size": "medium",
+            "button_text": "",
+            "button_url": "",
+            "button_target": "_self",
+            "button_style": "fill"
+          }
+        },
+        "card_E7jggB": {
+          "type": "card",
+          "settings": {
+            "image_aspect_ratio": "auto",
+            "image_custom_width": true,
+            "image_width": 520,
+            "image_link": "",
+            "content_custom_width": false,
+            "content_width": 450,
+            "text_1": "Gym Training",
+            "text_1_size": "x-small",
+            "text_2": "",
+            "text_2_size": "medium",
+            "text_3": "Durable tops, weightlifting gloves, and training shoes.",
+            "text_3_size": "medium",
+            "button_text": "",
+            "button_url": "",
+            "button_target": "_self",
+            "button_style": "fill"
+          }
+        },
+        "card_bW7HND": {
+          "type": "card",
+          "settings": {
+            "image_aspect_ratio": "auto",
+            "image_custom_width": true,
+            "image_width": 520,
+            "image_link": "",
+            "content_custom_width": false,
+            "content_width": 450,
+            "text_1": "Yoga",
+            "text_1_size": "x-small",
+            "text_2": "",
+            "text_2_size": "medium",
+            "text_3": "Stretchable leggings, tanks, and mats.",
+            "text_3_size": "medium",
+            "button_text": "",
+            "button_url": "",
+            "button_target": "_self",
+            "button_style": "fill"
+          }
+        },
+        "card_MkQehm": {
+          "type": "card",
+          "settings": {
+            "image_aspect_ratio": "auto",
+            "image_custom_width": true,
+            "image_width": 520,
+            "image_link": "",
+            "content_custom_width": false,
+            "content_width": 450,
+            "text_1": "Outdoor Adventures",
+            "text_1_size": "x-small",
+            "text_2": "",
+            "text_2_size": "medium",
+            "text_3": "Jackets, hiking pants, and weatherproof gear.",
+            "text_3_size": "medium",
+            "button_text": "",
+            "button_url": "",
+            "button_target": "_self",
+            "button_style": "fill"
+          }
+        }
+      },
+      "block_order": [
+        "card_876YHM",
+        "card_E7jggB",
+        "card_bW7HND",
+        "card_MkQehm"
+      ],
+      "disabled": true,
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "side_margin_choice": "level-0",
+        "color_scheme": "scheme_3",
+        "inset": true,
+        "inset_choice": "level-5",
+        "gap": true,
+        "gap_choice": "level-4",
+        "vertical_align": "normal",
+        "text_1": "Shop By Activity",
+        "text_1_size": "medium",
+        "text_2": "Find performance-driven gear tailored to your favorite activities.",
+        "text_2_size": "medium",
+        "button_text": "View all",
+        "button_url": "",
+        "button_target": "_self",
+        "button_style": "link",
+        "columns_count": 3,
+        "columns_offset": true,
+        "carousel": true,
+        "per_move": 1,
+        "autoplay": true,
+        "interval": 4000,
+        "loop": true,
+        "mouse_drag": true,
+        "arrows": true,
+        "dots": false,
+        "speed": 400,
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-3",
+        "spacing_placement": "1"
+      }
+    },
+    "featured_products_tabs_FANLcf": {
+      "type": "featured-products-tabs",
+      "blocks": {
+        "product_tab_nN9P4q": {
+          "type": "product_tab",
+          "settings": {
+            "collection_choice": "anime-inspired-keycaps"
+          }
+        },
+        "product_tab_dBcRkW": {
+          "type": "product_tab",
+          "settings": {
+            "collection_choice": "featured-keycaps"
+          }
+        }
+      },
+      "block_order": [
+        "product_tab_nN9P4q",
+        "product_tab_dBcRkW"
+      ],
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "color_scheme": "",
+        "inset_choice": "level-5",
+        "text_1": "Best sellers",
+        "text_1_size": "x-small",
+        "text_2": "",
+        "text_2_size": "large",
+        "text_2_newline": false,
+        "tab_title_size": "x-small",
+        "button_text": "View all products",
+        "button_url_choice": "collection-links",
+        "button_url": "shopify://collections/best-sellers",
+        "button_target": "_self",
+        "button_style": "link",
+        "columns_count": 4,
+        "columns_offset": true,
+        "total_count": 6,
+        "gap": true,
+        "gap_choice": "level-4",
+        "carousel": true,
+        "per_move": 1,
+        "autoplay": true,
+        "interval": 4000,
+        "loop": true,
+        "mouse_drag": true,
+        "arrows": true,
+        "dots": false,
+        "speed": 400,
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-3",
+        "spacing_placement": "1"
+      }
+    },
+    "countdown-banner-1": {
+      "type": "countdown-banner",
+      "disabled": true,
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "height": 600,
+        "side_margin_choice": "level-0",
+        "color_scheme": "",
+        "content_display_style": "2",
+        "background_overlay": false,
+        "background_overlay_color": "#000000",
+        "background_overlay_opacity": 40,
+        "end_date": "2026-09-26",
+        "end_time": "16:00",
+        "timezone_choice": "1",
+        "hide_countdown": true,
+        "end_message": "<p>This message will be displayed once the countdown ends.</p>",
+        "text_1": "Shop Deals Before They’re Gone!",
+        "text_1_size": "medium",
+        "text_2": "Get 20% offers. Use code <strong>“20%OFF”</strong>.",
+        "text_2_size": "large",
+        "button_1_text": "Shop on sale products",
+        "button_1_url": "",
+        "button_1_target": "_self",
+        "button_1_style": "fill",
+        "button_1_enable_width": true,
+        "button_1_width": 350,
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-3",
+        "spacing_placement": "1"
+      }
+    },
+    "scrolling-cards": {
+      "type": "scrolling-cards",
+      "blocks": {
+        "card-1": {
+          "type": "card",
+          "settings": {
+            "heading": "Trending tops",
+            "heading_size": "small",
+            "button_text": "Explore more",
+            "button_url": ""
+          }
+        },
+        "card-2": {
+          "type": "card",
+          "settings": {
+            "heading": "All leggings",
+            "heading_size": "small",
+            "button_text": "Explore more",
+            "button_url": ""
+          }
+        },
+        "card-3": {
+          "type": "card",
+          "settings": {
+            "heading": "New accessories",
+            "heading_size": "small",
+            "button_text": "Explore more",
+            "button_url": ""
+          }
+        },
+        "card-4": {
+          "type": "card",
+          "settings": {
+            "heading": "New releases",
+            "heading_size": "small",
+            "button_text": "Explore more",
+            "button_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "card-1",
+        "card-2",
+        "card-3",
+        "card-4"
+      ],
+      "disabled": true,
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "color_scheme": "",
+        "inset": false,
+        "inset_choice": "level-3",
+        "edge_fade": false,
+        "direction": "left-right",
+        "speed": 40,
+        "separator": true,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-4",
+        "spacing_placement": "1"
+      }
+    },
+    "rich_text_xR9Hky": {
+      "type": "rich-text",
+      "blocks": {
+        "special_heading_DM9B3L": {
+          "type": "special-heading",
+          "settings": {
+            "text": "Complete Your Activewear Outfit",
+            "text_size": "medium",
+            "text_custom_width": true,
+            "text_width": 650
+          }
+        },
+        "text_fPJbTV": {
+          "type": "text",
+          "settings": {
+            "text": "Perfectly styled outfits designed to inspire your next workout.",
+            "text_size": "medium",
+            "text_custom_width": false,
+            "text_width": 450
+          }
+        }
+      },
+      "block_order": [
+        "special_heading_DM9B3L",
+        "text_fPJbTV"
+      ],
+      "disabled": true,
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "side_margin_choice": "level-0",
+        "color_scheme": "",
+        "inset_choice": "level-3",
+        "alignment": "center",
+        "gap": true,
+        "gap_choice": "level-4",
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-4",
+        "spacing_placement": "2"
+      }
+    },
+    "image-with-pins-1": {
+      "type": "image-with-pins",
+      "blocks": {
+        "pin-1": {
+          "type": "pin",
+          "settings": {
+            "pin_top_offset": 48,
+            "pin_left_offset": 52,
+            "pin_product_choice": "foundation-short-sleeve-tee-in-silver"
+          }
+        },
+        "pin-2": {
+          "type": "pin",
+          "settings": {
+            "pin_top_offset": 68,
+            "pin_left_offset": 42,
+            "pin_product_choice": "preset-short-in-dark-navy"
+          }
+        },
+        "pin-3": {
+          "type": "pin",
+          "settings": {
+            "pin_top_offset": 31,
+            "pin_left_offset": 38,
+            "pin_product_choice": "shelter-jacket-in-black"
+          }
+        }
+      },
+      "block_order": [
+        "pin-1",
+        "pin-2",
+        "pin-3"
+      ],
+      "disabled": true,
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "side_margin_choice": "level-5",
+        "image_content_width_split": 66,
+        "text_1": "",
+        "text_1_size": "medium",
+        "text_2": "",
+        "text_2_size": "medium",
+        "text_3": "",
+        "text_3_size": "large",
+        "button_text": "",
+        "button_url": "",
+        "button_target": "_self",
+        "button_style": "link",
+        "gap": true,
+        "gap_choice": "level-4",
+        "products_color_scheme": "scheme_1",
+        "side_image_placement": "right",
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-5",
+        "spacing_placement": "3"
+      }
+    },
+    "featured_products_mC6eF3": {
+      "type": "featured-products",
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "color_scheme": "scheme_4",
+        "inset_choice": "level-5",
+        "edge_gradient_top": "",
+        "edge_gradient_bottom": "",
+        "text_1": "Trending now",
+        "text_1_size": "medium",
+        "text_1_choice": "heading",
+        "text_2": "Discover our most-loved activewear, perfect for every activity.",
+        "text_2_size": "medium",
+        "text_2_newline": true,
+        "button_text": "View all",
+        "button_url": "",
+        "button_target": "_self",
+        "button_style": "link",
+        "collection_choice": "trending-now",
+        "display_style": "medium",
+        "product_excerpt_show": true,
+        "columns_count": 3,
+        "columns_offset": true,
+        "total_count": 6,
+        "gap": true,
+        "gap_choice": "level-5",
+        "carousel": true,
+        "per_move": 1,
+        "autoplay": true,
+        "interval": 4000,
+        "loop": true,
+        "mouse_drag": true,
+        "arrows": true,
+        "dots": false,
+        "speed": 400,
+        "progress_bar": false,
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-3",
+        "spacing_placement": "1"
+      }
+    },
+    "featured_product_banner_mxieNd": {
+      "type": "featured-product-banner",
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "side_margin_choice": "level-0",
+        "color_scheme": "scheme_8",
+        "inset": false,
+        "inset_choice": "level-3",
+        "product_choice": "elemental-tank-in-silver-sage",
+        "product_background_overlay": true,
+        "product_background_overlay_color": "#000000",
+        "product_background_gradient_overlay": "linear-gradient(180deg, rgba(255, 111, 60, 1), rgba(30, 42, 56, 1) 100%)",
+        "product_background_overlay_opacity": 20,
+        "product_button_text": "Explore this product",
+        "product_button_style": "fill",
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-3",
+        "spacing_placement": "1"
+      }
+    },
+    "image_with_text_kxcE9w": {
+      "type": "image-with-text",
+      "blocks": {
+        "special_heading_Rm3gEG": {
+          "type": "special-heading",
+          "settings": {
+            "text": "The Story Behind Our Activewear.",
+            "text_size": "x-small",
+            "text_custom_width": true,
+            "text_width": 450
+          }
+        },
+        "text_QrQgNi": {
+          "type": "text",
+          "settings": {
+            "text": "WE’RE HERE TO REDEFINE ACTIVEWEAR WITH PERFORMANCE, COMFORT, AND SUSTAINABILITY.",
+            "text_size": "medium",
+            "text_custom_width": false,
+            "text_width": 450
+          }
+        },
+        "text_ADiQ7w": {
+          "type": "text",
+          "settings": {
+            "text": "At Refine, we’re passionate about creating activewear that inspires confidence and empowers movement. From the gym to the great outdoors, our designs are built to perform and endure. We use sustainable materials and innovative technologies to craft gear that’s not just stylish but also environmentally responsible. Every stitch reflects our commitment to quality and our belief in empowering everyone to move better, live better.",
+            "text_size": "medium",
+            "text_custom_width": false,
+            "text_width": 450
+          }
+        },
+        "buttons_AkAFYB": {
+          "type": "buttons",
+          "settings": {
+            "button_1_text": "About us",
+            "button_1_url": "",
+            "button_1_target": "_self",
+            "button_1_style": "outline-secondary",
+            "button_2_text": "",
+            "button_2_url": "",
+            "button_2_target": "_self",
+            "button_2_style": "fill"
+          }
+        }
+      },
+      "block_order": [
+        "special_heading_Rm3gEG",
+        "text_QrQgNi",
+        "text_ADiQ7w",
+        "buttons_AkAFYB"
+      ],
+      "settings": {
+        "fullwidth": false,
+        "width": 1240,
+        "side_margin_choice": "level-4",
+        "color_scheme": "",
+        "inset": false,
+        "inset_choice": "level-3",
+        "gap": true,
+        "gap_choice": "level-7",
+        "image_content_width_split": 64,
+        "image_content_placement": "1",
+        "content_custom_width": false,
+        "content_width": 650,
+        "content_gap": true,
+        "content_gap_choice": "level-4",
+        "content_horizontal_align": "left",
+        "content_vertical_align": "top",
+        "content_text_align": "left",
+        "image_aspect_ratio": "1/1",
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-5",
+        "spacing_placement": "1"
+      }
+    },
+    "rich_text_h4HfNk": {
+      "type": "rich-text",
+      "blocks": {
+        "special_heading_G3aQQ7": {
+          "type": "special-heading",
+          "settings": {
+            "text": "Seasonal Must-Haves for Every Move",
+            "text_size": "medium",
+            "text_custom_width": true,
+            "text_width": 700
+          }
+        },
+        "text_FYUTDH": {
+          "type": "text",
+          "settings": {
+            "text": "Discover activewear tailored to keep you comfortable all year round.",
+            "text_size": "medium",
+            "text_custom_width": false,
+            "text_width": 450
+          }
+        }
+      },
+      "block_order": [
+        "special_heading_G3aQQ7",
+        "text_FYUTDH"
+      ],
+      "disabled": true,
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "side_margin_choice": "level-0",
+        "color_scheme": "",
+        "inset_choice": "level-3",
+        "alignment": "center",
+        "gap": true,
+        "gap_choice": "level-4",
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-4",
+        "spacing_placement": "2"
+      }
+    },
+    "featured-collections-links-1": {
+      "type": "featured-collections-links",
+      "blocks": {
+        "collection-1": {
+          "type": "collection",
+          "settings": {
+            "collection_choice": "winter-essentials"
+          }
+        },
+        "collection-2": {
+          "type": "collection",
+          "settings": {
+            "collection_choice": "breathable-bras"
+          }
+        },
+        "collection-3": {
+          "type": "collection",
+          "settings": {
+            "collection_choice": "performance-gears"
+          }
+        },
+        "collection-4": {
+          "type": "collection",
+          "settings": {
+            "collection_choice": "home-workouts"
+          }
+        }
+      },
+      "block_order": [
+        "collection-1",
+        "collection-2",
+        "collection-3",
+        "collection-4"
+      ],
+      "disabled": true,
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "side_margin_choice": "level-5",
+        "color_scheme": "",
+        "inset": false,
+        "inset_choice": "level-3",
+        "text_1": "",
+        "text_1_size": "medium",
+        "text_2": "",
+        "text_2_size": "medium",
+        "text_3": "",
+        "text_3_size": "large",
+        "collections_placement": "2",
+        "collection_title_size": "huge",
+        "collection_title_choice": "heading",
+        "collection_button": true,
+        "collection_button_choice": "icon",
+        "separator": true,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-5",
+        "spacing_placement": "3"
+      }
+    },
+    "image_before_after_Ez3kch": {
+      "type": "image-before-after",
+      "blocks": {
+        "image_NhYJBP": {
+          "type": "image",
+          "settings": {
+            "color_scheme": "",
+            "text": "Black breathable bra",
+            "text_size": "medium"
+          }
+        },
+        "image_GGVKkF": {
+          "type": "image",
+          "settings": {
+            "color_scheme": "",
+            "text": "White breathable bra",
+            "text_size": "medium"
+          }
+        }
+      },
+      "block_order": [
+        "image_NhYJBP",
+        "image_GGVKkF"
+      ],
+      "disabled": true,
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "height_mobile": "460",
+        "height": "680",
+        "side_margin_choice": "level-5",
+        "color_scheme": "scheme_1",
+        "inset": false,
+        "inset_choice": "level-3",
+        "text_1": "Multiple Colors Available",
+        "text_1_size": "medium",
+        "text_2": "Discover our most-loved activewear, perfect for every activity.",
+        "text_2_size": "medium",
+        "button_text": "",
+        "button_url": "",
+        "button_target": "_self",
+        "button_style": "fill",
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-4",
+        "spacing_placement": "1"
+      }
+    },
+    "testimonials-1": {
+      "type": "testimonials",
+      "blocks": {
+        "testimonial-1": {
+          "type": "testimonial",
+          "settings": {
+            "review": "These leggings feel like a second skin! The fit is perfect, and they move with me no matter the workout. I've tried so many brands, and this is by far the best activewear I've ever worn.",
+            "reviewer": "Emma L.",
+            "reviewer_description": "Fitness Enthusiast",
+            "rating": 5
+          }
+        },
+        "testimonial-4": {
+          "type": "testimonial",
+          "settings": {
+            "review": "Unbelievably flexible! These leggings stretch without losing shape—perfect for yoga and HIIT.",
+            "reviewer": "Lena K.",
+            "reviewer_description": "Yoga Instructor",
+            "rating": 5
+          }
+        },
+        "testimonial-2": {
+          "type": "testimonial",
+          "settings": {
+            "review": "As a personal trainer, I need gear that lasts. This activewear holds up through intense workouts, stays breathable, and still looks brand new after months of use. Highly recommend!",
+            "reviewer": "James R.",
+            "reviewer_description": "Certified Trainer",
+            "rating": 5
+          }
+        },
+        "testimonial-5": {
+          "type": "testimonial",
+          "settings": {
+            "review": "Finally, activewear that looks as good as it performs. Stylish, breathable, and super comfy!",
+            "reviewer": "David S.",
+            "reviewer_description": "Athlete",
+            "rating": 5
+          }
+        },
+        "testimonial-3": {
+          "type": "testimonial",
+          "settings": {
+            "review": "I used to struggle with activewear that felt heavy and soaked up sweat. This brand changed everything! The moisture-wicking fabric keeps me cool and dry, even during my toughest runs.",
+            "reviewer": "Sophia M.",
+            "reviewer_description": "Marathon Runner",
+            "rating": 5
+          }
+        }
+      },
+      "block_order": [
+        "testimonial-1",
+        "testimonial-4",
+        "testimonial-2",
+        "testimonial-5",
+        "testimonial-3"
+      ],
+      "disabled": true,
+      "settings": {
+        "fullwidth": false,
+        "width": 1040,
+        "side_margin_choice": "level-0",
+        "color_scheme": "scheme_4",
+        "inset": true,
+        "inset_choice": "level-5",
+        "text_1": "Our testimonials",
+        "text_1_size": "medium",
+        "text_2": "Discover our most-loved activewear, perfect for every activity.",
+        "text_2_size": "medium",
+        "header_align": "center",
+        "columns_count": 1,
+        "gap": true,
+        "gap_choice": "level-4",
+        "testimonial_background": "#ffffff",
+        "testimonial_content_align": "center",
+        "testimonial_review_typo_choice": "2",
+        "avatar_radius": 50,
+        "carousel": true,
+        "per_move": 1,
+        "autoplay": true,
+        "interval": 4000,
+        "loop": false,
+        "mouse_drag": true,
+        "arrows": true,
+        "dots": false,
+        "speed": 400,
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-4",
+        "spacing_placement": "1"
+      }
+    },
+    "blog_posts_3YE4GY": {
+      "type": "blog-posts",
+      "disabled": true,
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "side_margin_choice": "level-5",
+        "color_scheme": "",
+        "inset": false,
+        "inset_choice": "level-3",
+        "text_1": "Explore Our Blog: Fitness, Style, and More.",
+        "text_1_size": "medium",
+        "text_1_choice": "heading",
+        "text_2": "Discover workout guides, activewear care tips, and inspiration for every move.",
+        "text_2_size": "medium",
+        "button_text": "View all posts",
+        "button_url": "",
+        "button_target": "_self",
+        "button_style": "link",
+        "blog_choice": "",
+        "total_count": 6,
+        "gap": true,
+        "gap_choice": "level-4",
+        "tag_show": false,
+        "meta_show": true,
+        "excerpt_show": false,
+        "read_more_link_show": true,
+        "carousel": true,
+        "per_move": 2,
+        "autoplay": true,
+        "interval": 4000,
+        "loop": false,
+        "mouse_drag": true,
+        "arrows": true,
+        "dots": false,
+        "speed": 400,
+        "separator": true,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-4",
+        "spacing_placement": "1"
+      }
+    },
+    "image-gallery-1": {
+      "type": "image-gallery",
+      "blocks": {
+        "image-1": {
+          "type": "image",
+          "settings": {
+            "image_url": "",
+            "aspect_ratio": "auto"
+          }
+        },
+        "image-2": {
+          "type": "image",
+          "settings": {
+            "image_url": "",
+            "aspect_ratio": "auto"
+          }
+        },
+        "image-3": {
+          "type": "image",
+          "settings": {
+            "image_url": "",
+            "aspect_ratio": "auto"
+          }
+        },
+        "image-4": {
+          "type": "image",
+          "settings": {
+            "image_url": "",
+            "aspect_ratio": "auto"
+          }
+        },
+        "image-5": {
+          "type": "image",
+          "settings": {
+            "image_url": "",
+            "aspect_ratio": "auto"
+          }
+        },
+        "image-6": {
+          "type": "image",
+          "settings": {
+            "image_url": "",
+            "aspect_ratio": "auto"
+          }
+        }
+      },
+      "block_order": [
+        "image-1",
+        "image-2",
+        "image-3",
+        "image-4",
+        "image-5",
+        "image-6"
+      ],
+      "disabled": true,
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "side_margin_choice": "level-5",
+        "color_scheme": "",
+        "inset": false,
+        "inset_choice": "level-3",
+        "columns": 6,
+        "gap": true,
+        "gap_choice": "level-4",
+        "text_1": "Explore through Instagram | @Refine",
+        "text_1_size": "medium",
+        "text_1_url": "",
+        "text_1_choice": "heading",
+        "text_2": "",
+        "text_2_size": "large",
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-4",
+        "spacing_placement": "1"
+      }
+    }
+  },
+  "order": [
+    "home-slideshow-1",
+    "rich_text_V6ADnb",
+    "scrolling-text-1",
+    "home-featured-products-1",
+    "rich_text_A849JD",
+    "home-featured-collections-1",
+    "image_cards_carousel_q7FQwE",
+    "featured_products_tabs_FANLcf",
+    "countdown-banner-1",
+    "scrolling-cards",
+    "rich_text_xR9Hky",
+    "image-with-pins-1",
+    "featured_products_mC6eF3",
+    "featured_product_banner_mxieNd",
+    "image_with_text_kxcE9w",
+    "rich_text_h4HfNk",
+    "featured-collections-links-1",
+    "image_before_after_Ez3kch",
+    "testimonials-1",
+    "blog_posts_3YE4GY",
+    "image-gallery-1"
+  ]
+}

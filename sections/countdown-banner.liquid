@@ -1,0 +1,575 @@
+{% style %}
+#shopify-section-{{ section.id }} {
+
+
+    --theme-sale-banner-height: {{ section.settings.height | append: 'px' }};
+  
+  {% if section.settings.background_overlay %}
+    --theme-sale-banner-overlay-color: {{ section.settings.background_overlay_color }};
+    --theme-sale-banner-overlay-opacity: {{ section.settings.background_overlay_opacity | append: '%' }};
+
+  {% endif %}
+
+  {% if section.settings.background_mobile_overlay %}
+    --theme-sale-banner-mobile-overlay-color: {{ section.settings.background_mobile_overlay_color }};
+    --theme-sale-banner-mobile-overlay-opacity: {{ section.settings.background_mobile_overlay_opacity }};
+
+  {% endif %}
+
+  {% if section.settings.side_margin_choice != 'level-0' %}
+    --theme-section-side-margin: var(--theme-section-side-margin-{{ section.settings.side_margin_choice }});
+  {% endif %}
+}
+
+
+{% if section.settings.button_1_enable_width %}
+  #shopify-section-{{ section.id }}{
+    --theme-sale-banner-button-1-width: {{ section.settings.button_1_width | append: 'px' }};
+  }
+{% endif %}
+
+
+{% endstyle %}
+
+
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    {% unless section.settings.fullwidth %}
+      --theme-section-custom-width: {{ section.settings.width | append: 'px' }};
+    {% endunless %}
+
+  }
+{% endstyle %}
+
+{% if section.settings.separator %}
+  {% style %}
+  #shopify-section-{{ section.id }} .separator{
+    --theme-section-separator-width: {{ section.settings.separator_width | append: '%' }};
+
+    {% if section.settings.separator_use_custom_color %}
+      --theme-section-separator-color: {{ section.settings.separator_custom_color }};
+    {% endif %}
+  }
+  {% endstyle %}
+{% endif %}
+
+{% if section.settings.spacing %}
+  {% style %}
+  #shopify-section-{{ section.id }}{
+    
+      {% unless section.settings.spacing_placement == '3' %}
+--theme-section-spacing-top: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+{% unless section.settings.spacing_placement == '2' %}
+      --theme-section-spacing-bottom: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+
+  }
+  {% endstyle %}
+{% endif %}
+
+<div class="section-countdown-banner{% liquid
+
+    
+  if section.settings.fullwidth
+    echo ' has-fullwidth'
+  else
+    echo ' has-custom-width'
+  endif
+
+  if section.settings.side_margin_choice != 'level-0'
+    echo ' has-side-margin'
+  endif
+
+  if section.settings.content_display_style
+    echo ' has-display-style-' | append: section.settings.content_display_style
+  endif
+
+  if settings.animation_sections
+    echo ' has-animation'
+  endif
+
+%}">
+  <div class="section-countdown-banner-container section-container">
+    <div class="section-countdown-banner-inner{% liquid
+    
+      echo ' ' | append: section.settings.color_scheme
+    %}">
+      <div class="section-countdown-banner-background">
+        {% if section.settings.background_image != blank %}
+          {% render 'section-image-processor', image: section.settings.background_image %}
+
+          {% if section.settings.background_overlay %}
+            <div class="section-countdown-banner-background-overlay"></div>
+          {% endif %}
+        {% endif %}
+      </div>
+      <div class="section-countdown-banner-content">
+        <div class="section-countdown-banner-left">
+          {% if section.settings.text_1 != blank %}
+            <h2 class="section-countdown-banner-left__heading special-heading-size-{{ section.settings.text_1_size }}">{{ section.settings.text_1 }}</h2>
+          {% endif %}
+          {% if section.settings.text_2 != blank %}
+            <p class="section-countdown-banner-left__description paragraph-size-{{ section.settings.text_2_size }}">{{ section.settings.text_2 }}</p>
+          {% endif %}
+        </div>
+        <div class="section-countdown-banner-center">
+            {% render 'countdown' 
+                end_date: section.settings.end_date, 
+                end_time: section.settings.end_time, 
+                timezone_choice: section.settings.timezone_choice,
+                hide_countdown: section.settings.hide_countdown,
+                end_message: section.settings.end_message 
+            %}
+        </div>
+        <div class="section-countdown-banner-right">
+          {% if section.settings.button_1_text != blank %}
+            {% render 'button', 
+                button_text: section.settings.button_1_text, 
+                button_url: section.settings.button_1_url, 
+                button_style: section.settings.button_1_style, 
+                button_classes: 'section-countdown-banner-right__button-1',
+                button_target: section.settings.button_1_target
+            %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% if section.settings.separator %}
+  <div class="section-separator{% liquid 
+echo ' ' | append: section.settings.color_scheme
+ %}"><hr class="separator"></div>
+{% endif %}
+
+  
+
+
+{% schema %}
+{
+    "name": "t:sections.countdown_banner.name",
+    "settings": [
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__general.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "fullwidth",
+            "label": "t:sections.common.settings.fullwidth.label",
+            "info": "t:sections.common.settings.fullwidth.info",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "width",
+            "min": 500,
+            "max": 2000,
+            "step": 20,
+            "unit": "px",
+            "label": "t:sections.common.settings.width.label",
+            "default": 1320,
+            "info": "t:sections.common.settings.width.info"
+        },
+        {
+            "type": "range",
+            "id": "height",
+            "min": 100,
+            "max": 600,
+            "step": 5,
+            "unit": "px",
+            "label": "t:sections.countdown_banner.settings.height.label",
+            "default": 160,
+            "info": "t:sections.countdown_banner.settings.height.info"
+        },
+        {
+            "type": "select",
+            "id": "side_margin_choice",
+            "label": "t:sections.common.settings.side_margin_choice.label",
+            "options": [
+                {
+                    "value": "level-0",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__4.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__5.label"
+                }
+            ],
+            "info": "t:sections.common.settings.side_margin_choice.info",
+            "default": "level-4"
+        },
+        {
+            "type": "color_scheme",
+            "id": "color_scheme",
+            "default": "scheme_3",
+            "label": "t:sections.common.settings.color_scheme.label"
+        },
+        {
+            "type": "select",
+            "id": "content_display_style",
+            "label": "t:sections.countdown_banner.settings.content_display_style.label",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "t:sections.countdown_banner.settings.content_display_style.options.option__0.label"
+                },
+                {
+                    "value": "2",
+                    "label": "t:sections.countdown_banner.settings.content_display_style.options.option__1.label"
+                }
+            ],
+            "default": "1"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__background.content"
+        },
+        {
+            "type": "image_picker",
+            "id": "background_image",
+            "label": "t:sections.countdown_banner.settings.background_image.label"
+        },
+        {
+            "type": "checkbox",
+            "id": "background_overlay",
+            "label": "t:sections.countdown_banner.settings.background_overlay.label",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "background_overlay_color",
+            "label": "t:sections.countdown_banner.settings.background_overlay_color.label",
+            "default": "#000000",
+            "info": "t:sections.countdown_banner.settings.background_overlay_color.info"
+        },
+        {
+            "type": "range",
+            "id": "background_overlay_opacity",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "t:sections.countdown_banner.settings.background_overlay_opacity.label",
+            "default": 40,
+            "info": "t:sections.countdown_banner.settings.background_overlay_opacity.info"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__countdown_timer.content"
+        },
+        {
+            "type": "text",
+            "id": "end_date",
+            "label": "t:sections.countdown_banner.settings.end_date.label",
+            "default": "2026-09-26",
+            "info": "t:sections.countdown_banner.settings.end_date.info"
+        },
+        {
+            "type": "text",
+            "id": "end_time",
+            "label": "t:sections.countdown_banner.settings.end_time.label",
+            "default": "16:00",
+            "info": "t:sections.countdown_banner.settings.end_time.info"
+        },
+        {
+            "type": "select",
+            "id": "timezone_choice",
+            "label": "t:sections.countdown_banner.settings.timezone_choice.label",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "t:sections.countdown_banner.settings.timezone_choice.options.option__0.label"
+                },
+                {
+                    "value": "2",
+                    "label": "t:sections.countdown_banner.settings.timezone_choice.options.option__1.label"
+                }
+            ],
+            "default": "1"
+        },
+        {
+            "type": "checkbox",
+            "id": "hide_countdown",
+            "label": "t:sections.countdown_banner.settings.hide_countdown.label",
+            "default": true
+        },
+        {
+            "type": "richtext",
+            "id": "end_message",
+            "label": "t:sections.countdown_banner.settings.end_message.label",
+            "default": "<p>This message will be displayed once the countdown ends.</p>"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__heading.content"
+        },
+        {
+            "type": "text",
+            "id": "text_1",
+            "label": "t:sections.countdown_banner.settings.text_1.label",
+            "default": "Countdown"
+        },
+        {
+            "type": "select",
+            "id": "text_1_size",
+            "label": "t:sections.countdown_banner.settings.text_1_size.label",
+            "options": [
+                {
+                    "value": "x-small",
+                    "label": "t:sections.countdown_banner.settings.text_1_size.options.option__0.label"
+                },
+                {
+                    "value": "small",
+                    "label": "t:sections.countdown_banner.settings.text_1_size.options.option__1.label"
+                },
+                {
+                    "value": "medium",
+                    "label": "t:sections.countdown_banner.settings.text_1_size.options.option__2.label"
+                },
+                {
+                    "value": "large",
+                    "label": "t:sections.countdown_banner.settings.text_1_size.options.option__3.label"
+                }
+            ],
+            "default": "small"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__description.content"
+        },
+        {
+            "type": "inline_richtext",
+            "id": "text_2",
+            "label": "t:sections.countdown_banner.settings.text_2.label",
+            "default": "This is simple description for Countdown banner"
+        },
+        {
+            "type": "select",
+            "id": "text_2_size",
+            "label": "t:sections.countdown_banner.settings.text_2_size.label",
+            "options": [
+                {
+                    "value": "x-small",
+                    "label": "t:sections.countdown_banner.settings.text_2_size.options.option__0.label"
+                },
+                {
+                    "value": "small",
+                    "label": "t:sections.countdown_banner.settings.text_2_size.options.option__1.label"
+                },
+                {
+                    "value": "medium",
+                    "label": "t:sections.countdown_banner.settings.text_2_size.options.option__2.label"
+                },
+                {
+                    "value": "large",
+                    "label": "t:sections.countdown_banner.settings.text_2_size.options.option__3.label"
+                }
+            ],
+            "default": "medium"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__button_1.content"
+        },
+        {
+            "type": "text",
+            "id": "button_1_text",
+            "label": "t:sections.countdown_banner.settings.button_1_text.label",
+            "default": "Button text",
+            "info": "t:sections.countdown_banner.settings.button_1_text.info"
+        },
+        {
+            "type": "url",
+            "id": "button_1_url",
+            "label": "t:sections.countdown_banner.settings.button_1_url.label"
+        },
+        {
+            "type": "select",
+            "id": "button_1_target",
+            "label": "t:sections.countdown_banner.settings.button_1_target.label",
+            "options": [
+                {
+                    "value": "_self",
+                    "label": "t:sections.countdown_banner.settings.button_1_target.options.option__0.label"
+                },
+                {
+                    "value": "_blank",
+                    "label": "t:sections.countdown_banner.settings.button_1_target.options.option__1.label"
+                }
+            ],
+            "default": "_self",
+            "info": "t:sections.countdown_banner.settings.button_1_target.info"
+        },
+        {
+            "type": "select",
+            "id": "button_1_style",
+            "label": "t:sections.common.settings.button_1_style.label",
+            "options": [
+                {
+                    "value": "outline",
+                    "label": "t:sections.common.settings.button_1_style.options.option__0.label"
+                },
+                {
+                    "value": "fill",
+                    "label": "t:sections.common.settings.button_1_style.options.option__1.label"
+                },
+                {
+                    "value": "outline-secondary",
+                    "label": "t:sections.common.settings.button_1_style.options.option__2.label"
+                },
+                {
+                    "value": "fill-secondary",
+                    "label": "t:sections.common.settings.button_1_style.options.option__3.label"
+                },
+                {
+                    "value": "link",
+                    "label": "t:sections.common.settings.button_1_style.options.option__4.label"
+                }
+            ],
+            "default": "fill"
+        },
+        {
+            "type": "checkbox",
+            "id": "button_1_enable_width",
+            "label": "t:sections.common.settings.button_1_enable_width.label",
+            "default": true,
+            "info": "t:sections.common.settings.button_1_enable_width.info"
+        },
+        {
+            "type": "range",
+            "id": "button_1_width",
+            "min": 150,
+            "max": 350,
+            "step": 2,
+            "unit": "px",
+            "label": "t:sections.common.settings.button_1_width.label",
+            "default": 200,
+            "info": "t:sections.common.settings.button_1_width.info"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__separator.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "separator",
+            "label": "t:sections.common.settings.separator.label",
+            "info": "t:sections.common.settings.separator.info",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "separator_width",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "t:sections.common.settings.separator_width.label",
+            "default": 100,
+            "info": "t:sections.common.settings.separator_width.info"
+        },
+        {
+            "type": "checkbox",
+            "id": "separator_use_custom_color",
+            "label": "t:sections.common.settings.separator_use_custom_color.label",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "separator_custom_color",
+            "label": "t:sections.common.settings.separator_custom_color.label",
+            "default": "#CCCCCC"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__spacing.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "spacing",
+            "label": "t:sections.common.settings.spacing.label",
+            "info": "t:sections.common.settings.spacing.info",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "spacing_choice",
+            "label": "t:sections.common.settings.spacing_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        },
+        {
+            "type": "select",
+            "id": "spacing_placement",
+            "label": "t:sections.common.settings.spacing_placement.label",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__0.label"
+                },
+                {
+                    "value": "2",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__1.label"
+                },
+                {
+                    "value": "3",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__2.label"
+                }
+            ],
+            "default": "1",
+            "info": "t:sections.common.settings.spacing_placement.info"
+        }
+    ],
+    "presets": [
+        {
+            "name": "t:sections.countdown_banner.presets.countdown_banner.name"
+        }
+    ],
+    "disabled_on": {
+        "groups": [
+            "*"
+        ]
+    }
+}
+{% endschema %}
+

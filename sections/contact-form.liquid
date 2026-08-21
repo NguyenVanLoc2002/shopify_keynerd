@@ -1,0 +1,673 @@
+{% style %}
+#shopify-section-{{ section.id }} {
+  
+  {% if section.settings.background_overlay %}
+    --theme-contact-form-overlay-color: {{ section.settings.background_overlay_color }};
+    --theme-contact-form-overlay-opacity: {{ section.settings.background_overlay_opacity | append: '%' }};
+
+  {% endif %}
+
+  --theme-section-content-padding: var(--theme-section-content-padding-{{ section.settings.inset_choice }});
+
+  {% if section.settings.side_margin_choice != 'level-0' %}
+    --theme-section-side-margin: var(--theme-section-side-margin-{{ section.settings.side_margin_choice }});
+  {% endif %}
+}
+{% endstyle %}
+
+
+
+
+{% style %}
+  #shopify-section-{{ section.id }}{
+
+    {% if section.settings.content_gap %}
+    --theme-contact-form-content-gap: var(--theme-gap-{{ section.settings.content_gap_choice }});
+    {% endif %}
+
+    {% if section.settings.form_custom_width %}
+      --theme-contact-form-content-contact-form-width: {{ section.settings.form_width | append: 'px' }};
+    {% endif %}
+
+}
+{% endstyle %}
+
+
+{% if section.settings.separator %}
+  {% style %}
+  #shopify-section-{{ section.id }} .separator{
+    --theme-section-separator-width: {{ section.settings.separator_width | append: '%' }};
+
+    {% if section.settings.separator_use_custom_color %}
+      --theme-section-separator-color: {{ section.settings.separator_custom_color }};
+    {% endif %}
+  }
+  {% endstyle %}
+{% endif %}
+
+{% if section.settings.spacing %}
+  {% style %}
+  #shopify-section-{{ section.id }}{
+    
+      {% unless section.settings.spacing_placement == '3' %}
+--theme-section-spacing-top: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+{% unless section.settings.spacing_placement == '2' %}
+      --theme-section-spacing-bottom: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+
+  }
+  {% endstyle %}
+{% endif %}
+
+<div class="section-contact-form{% liquid
+  if section.settings.content_position != blank
+    echo ' content-align-' | append: section.settings.content_position
+  endif 
+
+  if section.settings.side_margin_choice != 'level-0'
+    echo ' has-side-margin'
+  endif
+
+  echo ' has-section-padding'
+  
+  echo ' ' | append: section.settings.color_scheme
+
+  if settings.animation_sections
+    echo ' has-animation'
+  endif
+
+%}">
+  <div class="section-contact-form-background">
+    <div class="section-contact-form-background-media">
+      {% if section.settings.background_image != blank or section.settings.background_image_mobile != blank %}
+        {% render 'section-image-processor', image: section.settings.background_image, image_mobile: section.settings.background_image_mobile %}
+      {% endif %}
+    </div>
+    {% if section.settings.background_overlay %}
+      <div class="section-contact-form-background-overlay"></div>
+    {% endif %}
+  </div>
+	<div class="section-contact-form-content section-container">
+    {% if section.settings.text_1 != blank or section.settings.text_2 != blank %}
+      <div class="section-contact-form-content-header">
+        {% if section.settings.text_1 != blank %}
+          <h2 class="section-contact-form-content-header__heading special-heading-size-{{ section.settings.text_1_size }}">{{ section.settings.text_1 }}</h2>
+        {% endif %}
+
+        {% if section.settings.text_2 != blank %}
+          <p class="section-contact-form-content-header__description paragraph-size-{{ section.settings.text_2_size }}">{{ section.settings.text_2 }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+    <div class="section-contact-form-content-contact-form">
+      {% render 'contact-form' section: section %}
+    </div>
+	</div>
+</div>
+{% if section.settings.separator %}
+  <div class="section-separator{% liquid 
+echo ' ' | append: section.settings.color_scheme
+ %}"><hr class="separator"></div>
+{% endif %}
+
+
+{% schema %}
+{
+    "name": "t:sections.contact_form.name",
+    "settings": [
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__general.content"
+        },
+        {
+            "type": "select",
+            "id": "side_margin_choice",
+            "label": "t:sections.common.settings.side_margin_choice.label",
+            "options": [
+                {
+                    "value": "level-0",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__4.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__5.label"
+                }
+            ],
+            "info": "t:sections.common.settings.side_margin_choice.info",
+            "default": "level-4"
+        },
+        {
+            "type": "color_scheme",
+            "id": "color_scheme",
+            "default": "scheme_4",
+            "label": "t:sections.common.settings.color_scheme.label"
+        },
+        {
+            "type": "select",
+            "id": "inset_choice",
+            "label": "t:sections.common.settings.inset_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.inset_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.inset_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.inset_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.inset_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.inset_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__background.content"
+        },
+        {
+            "type": "image_picker",
+            "id": "background_image_mobile",
+            "label": "t:sections.contact_form.settings.background_image_mobile.label"
+        },
+        {
+            "type": "image_picker",
+            "id": "background_image",
+            "label": "t:sections.contact_form.settings.background_image.label",
+            "info": "t:sections.contact_form.settings.background_image.info"
+        },
+        {
+            "type": "checkbox",
+            "id": "background_overlay",
+            "label": "t:sections.contact_form.settings.background_overlay.label",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "background_overlay_color",
+            "label": "t:sections.contact_form.settings.background_overlay_color.label",
+            "default": "#000000",
+            "info": "t:sections.contact_form.settings.background_overlay_color.info"
+        },
+        {
+            "type": "range",
+            "id": "background_overlay_opacity",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "t:sections.contact_form.settings.background_overlay_opacity.label",
+            "default": 100,
+            "info": "t:sections.contact_form.settings.background_overlay_opacity.info"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__content.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "content_gap",
+            "label": "t:sections.contact_form.settings.content_gap.label",
+            "info": "t:sections.contact_form.settings.content_gap.info",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "content_gap_choice",
+            "label": "t:sections.common.settings.content_gap_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.content_gap_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.content_gap_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.content_gap_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.content_gap_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.content_gap_choice.options.option__4.label"
+                },
+                {
+                    "value": "level-6",
+                    "label": "t:sections.common.settings.content_gap_choice.options.option__5.label"
+                },
+                {
+                    "value": "level-7",
+                    "label": "t:sections.common.settings.content_gap_choice.options.option__6.label"
+                }
+            ],
+            "default": "level-2",
+            "info": "t:sections.common.settings.content_gap_choice.info"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__heading.content"
+        },
+        {
+            "type": "text",
+            "id": "text_1",
+            "label": "t:sections.contact_form.settings.text_1.label",
+            "default": "Contact form"
+        },
+        {
+            "type": "select",
+            "id": "text_1_size",
+            "label": "t:sections.contact_form.settings.text_1_size.label",
+            "options": [
+                {
+                    "value": "x-small",
+                    "label": "t:sections.contact_form.settings.text_1_size.options.option__0.label"
+                },
+                {
+                    "value": "small",
+                    "label": "t:sections.contact_form.settings.text_1_size.options.option__1.label"
+                },
+                {
+                    "value": "medium",
+                    "label": "t:sections.contact_form.settings.text_1_size.options.option__2.label"
+                },
+                {
+                    "value": "large",
+                    "label": "t:sections.contact_form.settings.text_1_size.options.option__3.label"
+                }
+            ],
+            "default": "medium"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__description.content"
+        },
+        {
+            "type": "text",
+            "id": "text_2",
+            "label": "t:sections.contact_form.settings.text_2.label",
+            "default": "This is simple description for contact form section."
+        },
+        {
+            "type": "select",
+            "id": "text_2_size",
+            "label": "t:sections.contact_form.settings.text_2_size.label",
+            "options": [
+                {
+                    "value": "x-small",
+                    "label": "t:sections.contact_form.settings.text_2_size.options.option__0.label"
+                },
+                {
+                    "value": "small",
+                    "label": "t:sections.contact_form.settings.text_2_size.options.option__1.label"
+                },
+                {
+                    "value": "medium",
+                    "label": "t:sections.contact_form.settings.text_2_size.options.option__2.label"
+                },
+                {
+                    "value": "large",
+                    "label": "t:sections.contact_form.settings.text_2_size.options.option__3.label"
+                }
+            ],
+            "default": "large"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__contact_form.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "form_custom_width",
+            "label": "t:sections.common.settings.form_custom_width.label",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "form_width",
+            "min": 200,
+            "max": 1200,
+            "step": 10,
+            "unit": "px",
+            "label": "t:sections.common.settings.form_width.label",
+            "default": 520,
+            "info": "t:sections.common.settings.form_width.info"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__separator.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "separator",
+            "label": "t:sections.common.settings.separator.label",
+            "info": "t:sections.common.settings.separator.info",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "separator_width",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "t:sections.common.settings.separator_width.label",
+            "default": 100,
+            "info": "t:sections.common.settings.separator_width.info"
+        },
+        {
+            "type": "checkbox",
+            "id": "separator_use_custom_color",
+            "label": "t:sections.common.settings.separator_use_custom_color.label",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "separator_custom_color",
+            "label": "t:sections.common.settings.separator_custom_color.label",
+            "default": "#CCCCCC"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__spacing.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "spacing",
+            "label": "t:sections.common.settings.spacing.label",
+            "info": "t:sections.common.settings.spacing.info",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "spacing_choice",
+            "label": "t:sections.common.settings.spacing_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        },
+        {
+            "type": "select",
+            "id": "spacing_placement",
+            "label": "t:sections.common.settings.spacing_placement.label",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__0.label"
+                },
+                {
+                    "value": "2",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__1.label"
+                },
+                {
+                    "value": "3",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__2.label"
+                }
+            ],
+            "default": "1",
+            "info": "t:sections.common.settings.spacing_placement.info"
+        }
+    ],
+    "blocks": [
+        {
+            "name": "t:sections.contact_form.blocks.text.name",
+            "type": "text",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "text",
+                    "label": "t:sections.contact_form.blocks.text.settings.text.label",
+                    "default": "Name"
+                },
+                {
+                    "type": "text",
+                    "id": "name",
+                    "label": "t:sections.contact_form.blocks.text.settings.name.label",
+                    "default": "name"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "required",
+                    "label": "t:sections.contact_form.blocks.text.settings.required.label",
+                    "default": false
+                }
+            ]
+        },
+        {
+            "name": "t:sections.contact_form.blocks.textarea.name",
+            "type": "textarea",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "textarea",
+                    "id": "text",
+                    "label": "t:sections.contact_form.blocks.textarea.settings.text.label",
+                    "default": "Message"
+                },
+                {
+                    "type": "text",
+                    "id": "name",
+                    "label": "t:sections.contact_form.blocks.textarea.settings.name.label",
+                    "default": "body"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "required",
+                    "label": "t:sections.contact_form.blocks.textarea.settings.required.label",
+                    "default": false
+                }
+            ]
+        },
+        {
+            "name": "t:sections.contact_form.blocks.email.name",
+            "type": "email",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "text",
+                    "label": "t:sections.contact_form.blocks.email.settings.text.label",
+                    "default": "Email"
+                },
+                {
+                    "type": "text",
+                    "id": "name",
+                    "label": "t:sections.contact_form.blocks.email.settings.name.label",
+                    "default": "email"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "required",
+                    "label": "t:sections.contact_form.blocks.email.settings.required.label",
+                    "default": false
+                }
+            ]
+        },
+        {
+            "name": "t:sections.contact_form.blocks.tel.name",
+            "type": "tel",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "text",
+                    "label": "t:sections.contact_form.blocks.tel.settings.text.label",
+                    "default": "Phone"
+                },
+                {
+                    "type": "text",
+                    "id": "name",
+                    "label": "t:sections.contact_form.blocks.tel.settings.name.label",
+                    "default": "Phone"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "required",
+                    "label": "t:sections.contact_form.blocks.tel.settings.required.label",
+                    "default": false
+                }
+            ]
+        },
+        {
+            "name": "t:sections.contact_form.blocks.checkbox.name",
+            "type": "checkbox",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "text",
+                    "label": "t:sections.contact_form.blocks.checkbox.settings.text.label",
+                    "default": "Checkbox"
+                },
+                {
+                    "type": "text",
+                    "id": "name",
+                    "label": "t:sections.contact_form.blocks.checkbox.settings.name.label",
+                    "default": "checkbox"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "required",
+                    "label": "t:sections.contact_form.blocks.checkbox.settings.required.label",
+                    "default": false
+                }
+            ]
+        },
+        {
+            "name": "t:sections.contact_form.blocks.multichoice.name",
+            "type": "multichoice",
+            "settings": [
+                {
+                    "type": "select",
+                    "id": "multichoice_type",
+                    "label": "t:sections.contact_form.blocks.multichoice.settings.multichoice_type.label",
+                    "options": [
+                        {
+                            "value": "select",
+                            "label": "t:sections.contact_form.blocks.multichoice.settings.multichoice_type.options.option__0.label"
+                        },
+                        {
+                            "value": "radio",
+                            "label": "t:sections.contact_form.blocks.multichoice.settings.multichoice_type.options.option__1.label"
+                        }
+                    ],
+                    "default": "select"
+                },
+                {
+                    "type": "text",
+                    "id": "text",
+                    "label": "t:sections.contact_form.blocks.multichoice.settings.text.label",
+                    "default": "Dropdown choice"
+                },
+                {
+                    "type": "text",
+                    "id": "name",
+                    "label": "t:sections.contact_form.blocks.multichoice.settings.name.label",
+                    "default": "dropdown-choice"
+                },
+                {
+                    "type": "text",
+                    "id": "option_labels",
+                    "label": "t:sections.contact_form.blocks.multichoice.settings.option_labels.label",
+                    "default": "Option 1, Option 2, Option 3"
+                },
+                {
+                    "type": "text",
+                    "id": "option_values",
+                    "label": "t:sections.contact_form.blocks.multichoice.settings.option_values.label",
+                    "default": "option-1, option-2, option-3"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "required",
+                    "label": "t:sections.contact_form.blocks.multichoice.settings.required.label",
+                    "default": false
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "t:sections.contact_form.presets.contact_form.name",
+            "blocks": [
+                {
+                    "type": "text",
+                    "settings": {
+                        "required": true
+                    }
+                },
+                {
+                    "type": "email",
+                    "settings": {
+                        "required": true
+                    }
+                },
+                {
+                    "type": "tel"
+                },
+                {
+                    "type": "textarea",
+                    "settings": {
+                        "required": true
+                    }
+                }
+            ]
+        }
+    ],
+    "disabled_on": {
+        "groups": [
+            "*"
+        ]
+    }
+}
+{% endschema %}
+

@@ -1,0 +1,85 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+
+{
+  "name": "Footer",
+  "type": "footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "newsletter-1": {
+          "type": "newsletter",
+          "settings": {
+            "form_custom_width": true,
+            "form_width": 400,
+            "content_custom_width": true,
+            "content_width": 450,
+            "text_1": "Stay updated with us",
+            "text_1_size": "medium",
+            "text_1_choice": "heading",
+            "text_2": "<p>This is simple text description for Footer newsletter section</p>"
+          }
+        },
+        "menu-1": {
+          "type": "menu",
+          "settings": {
+            "menu": "footer",
+            "title": true
+          }
+        },
+        "text-2": {
+          "type": "text",
+          "settings": {
+            "text_custom_width": false,
+            "text_width": 300,
+            "heading": "Contact us",
+            "text": "<p>contact@refine.com<br/>+1 123 456 7890</p>"
+          }
+        },
+        "social-1": {
+          "type": "social",
+          "settings": {
+            "display_style": "3"
+          }
+        }
+      },
+      "block_order": [
+        "newsletter-1",
+        "menu-1",
+        "text-2",
+        "social-1"
+      ],
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "color_scheme": "",
+        "inset_choice": "level-5",
+        "display_style": "3",
+        "use_image": true,
+        "image_url": "",
+        "show_payment_icons": true,
+        "colophon_text": "© 2024 All rights reserved.",
+        "colophon_show_powered_by_link": true,
+        "country_selector": true,
+        "country_label_style": "2",
+        "language_selector": false,
+        "language_label_style": "2",
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc"
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

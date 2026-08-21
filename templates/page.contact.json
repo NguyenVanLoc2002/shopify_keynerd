@@ -1,0 +1,200 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "side_margin_choice": "level-5",
+        "title_size": "large",
+        "alignment": "center",
+        "content_size": "large",
+        "content_custom_width": true,
+        "content_width": 1080,
+        "spacing": true,
+        "spacing_choice": "level-3",
+        "spacing_placement": "1"
+      }
+    },
+    "image_cards_94mYRp": {
+      "type": "image-cards",
+      "blocks": {
+        "card_jLfNFr": {
+          "type": "card",
+          "settings": {
+            "card_size": "small",
+            "image_aspect_ratio": "auto",
+            "image_custom_width": true,
+            "image_width": 520,
+            "content_custom_width": false,
+            "content_width": 450,
+            "text_1": "",
+            "text_1_size": "x-small",
+            "text_2": "Visit our stores",
+            "text_2_size": "small",
+            "text_3": "",
+            "text_3_size": "large",
+            "button_text": "View in Map",
+            "button_url": "",
+            "button_target": "_self",
+            "button_style": "link"
+          }
+        },
+        "card_3JF6LD": {
+          "type": "card",
+          "settings": {
+            "card_size": "small",
+            "image_aspect_ratio": "auto",
+            "image_custom_width": false,
+            "image_width": 520,
+            "content_custom_width": false,
+            "content_width": 450,
+            "text_1": "",
+            "text_1_size": "small",
+            "text_2": "FAQ & Shipping",
+            "text_2_size": "small",
+            "text_3": "",
+            "text_3_size": "large",
+            "button_text": "Learn more",
+            "button_url": "",
+            "button_target": "_self",
+            "button_style": "link"
+          }
+        },
+        "card_fLGYrB": {
+          "type": "card",
+          "settings": {
+            "card_size": "small",
+            "image_aspect_ratio": "auto",
+            "image_custom_width": false,
+            "image_width": 520,
+            "content_custom_width": false,
+            "content_width": 450,
+            "text_1": "",
+            "text_1_size": "small",
+            "text_2": "Contact us",
+            "text_2_size": "small",
+            "text_3": "",
+            "text_3_size": "large",
+            "button_text": "Send a query",
+            "button_url": "",
+            "button_target": "_self",
+            "button_style": "link"
+          }
+        }
+      },
+      "block_order": [
+        "card_jLfNFr",
+        "card_3JF6LD",
+        "card_fLGYrB"
+      ],
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "side_margin_choice": "level-5",
+        "color_scheme": "",
+        "inset": false,
+        "inset_choice": "level-3",
+        "gap": true,
+        "gap_choice": "level-4",
+        "vertical_align": "normal",
+        "text_1": "",
+        "text_1_size": "medium",
+        "text_2": "",
+        "text_2_size": "medium",
+        "button_text": "",
+        "button_url": "",
+        "button_target": "_self",
+        "button_style": "fill",
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-3",
+        "spacing_placement": "1"
+      }
+    },
+    "contact_form_wKxerj": {
+      "type": "contact-form",
+      "blocks": {
+        "text_AaDbYP": {
+          "type": "text",
+          "settings": {
+            "text": "Name",
+            "name": "name",
+            "required": true
+          }
+        },
+        "email_LaHEhP": {
+          "type": "email",
+          "settings": {
+            "text": "Email",
+            "name": "email",
+            "required": true
+          }
+        },
+        "tel_QA4hHj": {
+          "type": "tel",
+          "settings": {
+            "text": "Phone",
+            "name": "Phone",
+            "required": false
+          }
+        },
+        "textarea_wA8JkQ": {
+          "type": "textarea",
+          "settings": {
+            "text": "Message",
+            "name": "body",
+            "required": true
+          }
+        }
+      },
+      "block_order": [
+        "text_AaDbYP",
+        "email_LaHEhP",
+        "tel_QA4hHj",
+        "textarea_wA8JkQ"
+      ],
+      "settings": {
+        "side_margin_choice": "level-0",
+        "color_scheme": "",
+        "inset_choice": "level-5",
+        "background_overlay": false,
+        "background_overlay_color": "#000000",
+        "background_overlay_opacity": 100,
+        "content_gap": true,
+        "content_gap_choice": "level-2",
+        "text_1": "Mail us",
+        "text_1_size": "small",
+        "text_2": "Need a help? Just use below form to send us queries.",
+        "text_2_size": "medium",
+        "form_custom_width": true,
+        "form_width": 520,
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-3",
+        "spacing_placement": "1"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "image_cards_94mYRp",
+    "contact_form_wKxerj"
+  ]
+}

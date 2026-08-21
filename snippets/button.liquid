@@ -1,0 +1,53 @@
+{% comment %}
+    Renders button
+
+    Accepts:
+    - button_url: {Object} Product object
+    - button_target: {String} Add class prefix to html child element
+    - button_style: {String} Set the display style to html element
+    - button_text: {String} Display text/label to html element
+    - button_custom_width: {String} Set width to html element
+    - button_classes: {String} Add class to html element
+    - icon_choice: {String} icon name to insert
+
+    Usage:
+    {% render 'button',
+        button_url: button_url
+        button_target: button_target
+        button_style: button_style
+        button_text: button_text
+        button_custom_width: button_custom_width
+        button_classes: button_classes
+    %}
+{% endcomment %}
+
+{% assign tag = button_tag | default: 'a' %}
+
+<{{ tag }} 
+    {% if tag == 'a' %} 
+        href="{{ button_url | default: '#' }}" 
+        target="{{ button_target | default: '_self' }}" 
+
+        {% if button_title != blank %}
+            title="{{ button_title }}"
+        {% endif %}
+    {% endif %} 
+    class="{{ button_classes }}{% liquid 
+        if button_style != blank
+            echo ' btn-' | append: button_style
+        endif
+
+        if button_custom_width
+            echo ' has-custom-width'
+        endif
+
+    %}">
+    {% if button_text != blank %}
+        <span data-text="{{ button_text }}">
+            <span>{{ button_text }}</span>
+        </span>
+    {% endif %}
+    {% if icon_choice == 'icon-arrow-top-right' %}
+        {% render 'icon-arrow-top-right' %}
+    {% endif %}
+</{{ tag }}>

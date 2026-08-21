@@ -1,0 +1,94 @@
+{% comment %}
+    Renders a product media. Also see 'product-media-processor'
+
+    Accepts:
+    - media: {Object} Product Media object
+    - enable_lightbox: {Boolean} Product images on lightbox
+
+    Usage:
+    {% render 'product-media',
+        media: media,
+        enable_lightbox: enable_lightbox
+    %}
+{% endcomment %}
+
+{% case image.media_type %}
+    {% when 'external_video' %}
+        <product-rich-media class="product-video product-external-video product-rich-media" style="--aspect-ratio: {{ image.aspect_ratio }}">
+            <div class="product-video__preview product-rich-media-preview">
+                {% render 'section-image-processor', image: image  %}
+                {% render 'icon-play' %}
+            </div>
+            <div class="product-video__main product-rich-media-content">
+                {{ image | external_video_tag }}
+            </div>
+        </product-rich-media>
+
+    {% when 'video' %}
+        <product-rich-media class="product-video product-internal-video product-rich-media" style="--aspect-ratio: {{ image.aspect_ratio }}">
+            <div class="product-video__preview product-rich-media-preview">
+                {% render 'section-image-processor', image: image  %}
+                {% render 'icon-play' %}
+            </div>
+            <div class="product-video__main product-rich-media-content">
+                {{ image | video_tag: controls: true }}
+            </div>
+        </product-rich-media>
+
+    {% when 'model' %}
+        <product-rich-media class="product-3d-model product-rich-media">
+            <div class="product-3d-model__preview product-rich-media-preview">
+                {% render 'section-image-processor', image: image  %}
+                {% render 'icon-3d-model' %}
+            </div>
+            <div class="product-3d-model__main product-rich-media-content">
+                {{ image | model_viewer_tag }}
+            </div>
+
+            {%- capture data_model_json -%}
+                {{- image | where: 'media_type', 'model' | json -}}
+            {%- endcapture -%}
+            <button
+                class="product-3d-model__xr-button product-3d-model-xr-button product-xr-button"
+                type="button"
+                aria-label="{{ 'products.product.xr_button_label' | t }}"
+                data-shopify-xr
+                data-shopify-model3d-id="{{ image.id }}"
+                data-shopify-title="title"
+                data-shopify-xr-hidden
+                data-shopify-model3d-content="{{- data_model_json | escape -}}"
+            >
+                {% render 'icon-3d-model-thumbnail' %}
+                {{ 'products.product.xr_button_label' | t }}
+            </button>
+        </product-rich-media>
+    {% else %}
+
+        {% liquid 
+            assign image_width = image.width
+            assign image_height = image.height
+            
+        %}
+        <a href="{{ image.src | image_url }}" {% liquid 
+
+            assign product_lightbox_options = ""
+
+            if enable_lightbox
+                assign product_lightbox_options = 'data-pswp-width="' | append: image_width | append: '" data-pswp-height="' | append: image_height | append: '"'
+            endif
+
+            echo product_lightbox_options
+        
+        %}>
+            {% render 'section-image-processor', image: image  %}
+        </a>
+{% endcase %}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{%- capture 'data_model_json' -%}"
+  to: "{%- capture data_model_json -%}"
+  position: 1920..1951
+{%- endcomment -%}

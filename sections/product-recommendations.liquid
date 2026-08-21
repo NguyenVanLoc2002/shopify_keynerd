@@ -1,0 +1,24 @@
+{% liquid 
+
+    assign display_style = ''
+
+    if recommendations.intent == 'complementary'
+        assign display_style = 'small'
+    endif
+
+    
+%}
+{% if recommendations.performed and recommendations.products_count > 0 %}
+    <ul class="product-recommendations-list{% liquid
+        if recommendations.intent == 'complementary'
+            echo ' has-product-size-small'
+        endif
+
+    %}">
+        {% for product in recommendations.products %}
+        <li class="product-recommendations-product products-list-item product" data-product-id="{{ product.id }}">
+            {% render 'section-product-processor', product: product, prefix: 'product-recommendations-product', display_style: display_style %}
+        </li>
+        {% endfor %}
+    </ul>
+{% endif %}

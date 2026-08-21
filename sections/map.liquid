@@ -1,0 +1,586 @@
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    {% if section.settings.height_mobile != 'auto' %}
+      --theme-map-height-mobile: {{ section.settings.height_mobile | append: 'px' }};
+    {% endif %}
+
+    {% if section.settings.height != 'auto' %}
+      --theme-map-height-desktop: {{ section.settings.height | append: 'px' }};
+    {% endif %}
+
+    --theme-map-content-width: {{ section.settings.map_content_width_split | append: '%' }};
+    --theme-map-map-width: calc(100% - {{ section.settings.map_content_width_split | append: '%' }});
+
+  }
+{% endstyle %}
+
+{% style %}
+
+#shopify-section-{{ section.id }} {
+
+    {% if section.settings.content_custom_width %}
+      --theme-map-addresses-width: {{ section.settings.content_width | append: 'px' }};
+    {% endif %}
+
+    --theme-map-vertical-align: {{ section.settings.vertical_align }};
+    --theme-map-horizontal-align: {{ section.settings.horizontal_align }};
+}
+
+{% endstyle %}
+
+
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    {% unless section.settings.fullwidth %}
+      --theme-section-custom-width: {{ section.settings.width | append: 'px' }};
+    {% endunless %}
+
+  {% if section.settings.inset %}
+    --theme-section-content-padding: var(--theme-section-content-padding-{{ section.settings.inset_choice }});
+  {% endif %}
+
+  {% if section.settings.side_margin_choice != 'level-0' %}
+    --theme-section-side-margin: var(--theme-section-side-margin-{{ section.settings.side_margin_choice }});
+  {% endif %}
+  }
+{% endstyle %}
+
+{% if section.settings.separator %}
+  {% style %}
+  #shopify-section-{{ section.id }} .separator{
+    --theme-section-separator-width: {{ section.settings.separator_width | append: '%' }};
+
+    {% if section.settings.separator_use_custom_color %}
+      --theme-section-separator-color: {{ section.settings.separator_custom_color }};
+    {% endif %}
+  }
+  {% endstyle %}
+{% endif %}
+
+{% if section.settings.spacing %}
+  {% style %}
+  #shopify-section-{{ section.id }}{
+    
+      {% unless section.settings.spacing_placement == '3' %}
+--theme-section-spacing-top: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+{% unless section.settings.spacing_placement == '2' %}
+      --theme-section-spacing-bottom: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+
+  }
+  {% endstyle %}
+{% endif %}
+
+
+{% assign google_map_api_key = section.settings.map_api %}
+
+
+{% if google_map_api_key != blank %}
+    <script type='text/javascript' src='//maps.google.com/maps/api/js?key={{ google_map_api_key }}' defer></script>
+    <script src="{{ 'map.js' | asset_url }}" defer></script>
+{% endif %}
+
+<location-map class="section-map{% liquid 
+
+  if section.settings.fullwidth
+    echo ' has-fullwidth'
+  else
+    echo ' has-custom-width'
+  endif
+
+  if section.settings.side_margin_choice != 'level-0'
+    echo ' has-side-margin'
+  endif
+
+  if section.settings.inset
+    echo ' has-section-padding'
+  endif
+
+  echo ' ' | append: section.settings.color_scheme
+
+  if settings.animation_sections
+    echo ' has-animation'
+  endif
+
+%}">
+  <div class="section-map-container section-container">
+    <div class="section-map-addresses">
+        <ul class="section-map-addresses-list">
+            {% for block in section.blocks %}
+                <li class="section-map-addresses-list-item block-{{ block.id }}" 
+                  {{ block.shopify_attributes }}
+                  {% if google_map_api_key != blank %}
+                  data-latlng="{{ block.settings.latlng }}" 
+                  data-target-id="map-section-{{ section.id }}-{{ block.id }}" 
+                  data-map-style="{{ section.settings.map_style }}"
+                  tabindex="0"
+                  {% endif %}
+                >
+                    <h3 class="section-map-addresses-list-item__location">{{ block.settings.location_name }}</h3>
+                    <div class="section-map-addresses-list-item__address">{{ block.settings.address }}</div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="section-map-maps-list">
+      {% if google_map_api_key != blank %}
+        {% for block in section.blocks %}
+            <div id="map-section-{{ section.id }}-{{ block.id }}" class="section-map-maps-map"></div>
+        {% endfor %}
+      {% elsif section.settings.fallback_image != blank %}
+        {% render 'section-image-processor', image: section.settings.fallback_image %}
+      {% else %}
+        {{ 'image' | placeholder_svg_tag: 'placeholder placeholder-maps' }}
+      {% endif %}
+    </div>
+  </div>
+</location-map>
+{% if section.settings.separator %}
+  <div class="section-separator{% liquid 
+echo ' ' | append: section.settings.color_scheme
+ %}"><hr class="separator"></div>
+{% endif %}
+
+
+
+
+
+{% schema %}
+{
+    "name": "t:sections.map.name",
+    "settings": [
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__general.content"
+        },
+        {
+            "type": "text",
+            "id": "map_api",
+            "label": "t:sections.map.settings.map_api.label",
+            "info": "t:sections.map.settings.map_api.info"
+        },
+        {
+            "type": "checkbox",
+            "id": "fullwidth",
+            "label": "t:sections.common.settings.fullwidth.label",
+            "info": "t:sections.common.settings.fullwidth.info",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "width",
+            "min": 500,
+            "max": 2000,
+            "step": 20,
+            "unit": "px",
+            "label": "t:sections.common.settings.width.label",
+            "default": 1320,
+            "info": "t:sections.common.settings.width.info"
+        },
+        {
+            "type": "select",
+            "id": "side_margin_choice",
+            "label": "t:sections.common.settings.side_margin_choice.label",
+            "options": [
+                {
+                    "value": "level-0",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__4.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__5.label"
+                }
+            ],
+            "info": "t:sections.common.settings.side_margin_choice.info",
+            "default": "level-0"
+        },
+        {
+            "type": "color_scheme",
+            "id": "color_scheme",
+            "default": "scheme_4",
+            "label": "t:sections.common.settings.color_scheme.label"
+        },
+        {
+            "type": "checkbox",
+            "id": "inset",
+            "label": "t:sections.map.settings.inset.label",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "inset_choice",
+            "label": "t:sections.common.settings.inset_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.inset_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.inset_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.inset_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.inset_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.inset_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        },
+        {
+            "type": "range",
+            "id": "map_content_width_split",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "t:sections.common.settings.map_content_width_split.label",
+            "default": 50
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__map.content"
+        },
+        {
+            "type": "select",
+            "id": "height_mobile",
+            "label": "t:sections.common.settings.height_mobile.label",
+            "options": [
+                {
+                    "value": "360",
+                    "label": "t:sections.common.settings.height_mobile.options.option__0.label"
+                },
+                {
+                    "value": "420",
+                    "label": "t:sections.common.settings.height_mobile.options.option__1.label"
+                },
+                {
+                    "value": "480",
+                    "label": "t:sections.common.settings.height_mobile.options.option__2.label"
+                },
+                {
+                    "value": "560",
+                    "label": "t:sections.common.settings.height_mobile.options.option__3.label"
+                },
+                {
+                    "value": "640",
+                    "label": "t:sections.common.settings.height_mobile.options.option__4.label"
+                },
+                {
+                    "value": "720",
+                    "label": "t:sections.common.settings.height_mobile.options.option__5.label"
+                },
+                {
+                    "value": "800",
+                    "label": "t:sections.common.settings.height_mobile.options.option__6.label"
+                }
+            ],
+            "default": "420"
+        },
+        {
+            "type": "select",
+            "id": "height",
+            "label": "t:sections.map.settings.height.label",
+            "options": [
+                {
+                    "value": "360",
+                    "label": "t:sections.map.settings.height.options.option__0.label"
+                },
+                {
+                    "value": "420",
+                    "label": "t:sections.map.settings.height.options.option__1.label"
+                },
+                {
+                    "value": "480",
+                    "label": "t:sections.map.settings.height.options.option__2.label"
+                },
+                {
+                    "value": "560",
+                    "label": "t:sections.map.settings.height.options.option__3.label"
+                },
+                {
+                    "value": "640",
+                    "label": "t:sections.map.settings.height.options.option__4.label"
+                },
+                {
+                    "value": "720",
+                    "label": "t:sections.map.settings.height.options.option__5.label"
+                },
+                {
+                    "value": "800",
+                    "label": "t:sections.map.settings.height.options.option__6.label"
+                }
+            ],
+            "default": "720"
+        },
+        {
+            "type": "select",
+            "id": "map_style",
+            "label": "t:sections.map.settings.map_style.label",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "t:sections.map.settings.map_style.options.option__0.label"
+                },
+                {
+                    "value": "2",
+                    "label": "t:sections.map.settings.map_style.options.option__1.label"
+                },
+                {
+                    "value": "3",
+                    "label": "t:sections.map.settings.map_style.options.option__2.label"
+                },
+                {
+                    "value": "4",
+                    "label": "t:sections.map.settings.map_style.options.option__3.label"
+                }
+            ],
+            "default": "1"
+        },
+        {
+            "type": "image_picker",
+            "id": "fallback_image",
+            "label": "t:sections.map.settings.fallback_image.label",
+            "info": "t:sections.map.settings.fallback_image.info"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__content.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "content_custom_width",
+            "label": "t:sections.common.settings.content_custom_width.label",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "content_width",
+            "min": 200,
+            "max": 1200,
+            "step": 10,
+            "unit": "px",
+            "label": "t:sections.common.settings.content_width.label",
+            "default": 320,
+            "info": "t:sections.common.settings.content_width.info"
+        },
+        {
+            "type": "select",
+            "id": "horizontal_align",
+            "label": "t:sections.map.settings.horizontal_align.label",
+            "options": [
+                {
+                    "value": "flex-start",
+                    "label": "t:sections.map.settings.horizontal_align.options.option__0.label"
+                },
+                {
+                    "value": "flex-end",
+                    "label": "t:sections.map.settings.horizontal_align.options.option__1.label"
+                },
+                {
+                    "value": "center",
+                    "label": "t:sections.map.settings.horizontal_align.options.option__2.label"
+                }
+            ],
+            "default": "center"
+        },
+        {
+            "type": "select",
+            "id": "vertical_align",
+            "label": "t:sections.map.settings.vertical_align.label",
+            "options": [
+                {
+                    "value": "flex-start",
+                    "label": "t:sections.map.settings.vertical_align.options.option__0.label"
+                },
+                {
+                    "value": "flex-end",
+                    "label": "t:sections.map.settings.vertical_align.options.option__1.label"
+                },
+                {
+                    "value": "center",
+                    "label": "t:sections.map.settings.vertical_align.options.option__2.label"
+                }
+            ],
+            "default": "center"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__separator.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "separator",
+            "label": "t:sections.common.settings.separator.label",
+            "info": "t:sections.common.settings.separator.info",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "separator_width",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "t:sections.common.settings.separator_width.label",
+            "default": 100,
+            "info": "t:sections.common.settings.separator_width.info"
+        },
+        {
+            "type": "checkbox",
+            "id": "separator_use_custom_color",
+            "label": "t:sections.common.settings.separator_use_custom_color.label",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "separator_custom_color",
+            "label": "t:sections.common.settings.separator_custom_color.label",
+            "default": "#CCCCCC"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__spacing.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "spacing",
+            "label": "t:sections.common.settings.spacing.label",
+            "info": "t:sections.common.settings.spacing.info",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "spacing_choice",
+            "label": "t:sections.common.settings.spacing_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        },
+        {
+            "type": "select",
+            "id": "spacing_placement",
+            "label": "t:sections.common.settings.spacing_placement.label",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__0.label"
+                },
+                {
+                    "value": "2",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__1.label"
+                },
+                {
+                    "value": "3",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__2.label"
+                }
+            ],
+            "default": "1",
+            "info": "t:sections.common.settings.spacing_placement.info"
+        }
+    ],
+    "blocks": [
+        {
+            "name": "t:sections.map.blocks.location.name",
+            "type": "location",
+            "limit": 4,
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "latlng",
+                    "label": "t:sections.map.blocks.location.settings.latlng.label",
+                    "info": "t:sections.map.blocks.location.settings.latlng.info",
+                    "default": "51.53328008891747, -0.1271963874440336"
+                },
+                {
+                    "type": "text",
+                    "id": "location_name",
+                    "label": "t:sections.map.blocks.location.settings.location_name.label",
+                    "default": "Location"
+                },
+                {
+                    "type": "richtext",
+                    "id": "address",
+                    "label": "t:sections.map.blocks.location.settings.address.label",
+                    "default": "<p>This is address line 1,<br/>address line 2</p>"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "t:sections.map.presets.map.name",
+            "blocks": [
+                {
+                    "type": "location",
+                    "settings": {
+                        "latlng": "51.53328008891747, -0.1271963874440336",
+                        "location_name": "Location 1",
+                        "address": "<p>This is address line 1,<br/>address line 2</p>"
+                    }
+                },
+                {
+                    "type": "location",
+                    "settings": {
+                        "latlng": "40.71455489114797, -73.98961768717074",
+                        "location_name": "Location 2",
+                        "address": "<p>This is address line 1,<br/>address line 2</p>"
+                    }
+                }
+            ]
+        }
+    ],
+    "disabled_on": {
+        "groups": [
+            "*"
+        ]
+    }
+}
+{% endschema %}
+

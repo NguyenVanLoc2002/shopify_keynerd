@@ -1,0 +1,20 @@
+{% form 'customer', class: 'newsletter-form' %}
+    <input type="hidden" name="contact[tags]" value="newsletter">
+    <div class="newsletter-form-container">
+    <div class="newsletter-form-email email">
+        <label class="newsletter-form-email__label" for="NewsletterFormEmail-{{ section_id }}">
+            <span class="newsletter-form-email__label-text">{{ 'general.newsletter.email' | t }}</span>
+        </label>
+        <input id="NewsletterFormEmail-{{ section_id }}" type="email" name="contact[email]" placeholder="{{ 'general.newsletter.placeholders.email' | t }}" />
+    </div>
+    <button class="newsletter-form-submit submit" type="submit" aria-label="Newsletter submit">
+        {% render 'icon-arrow-right' %}
+    </button>
+    </div>
+    {%- if form.errors -%}
+    <span class="newsletter-form__message form__message" id="Newsletter-error--{{ section_id }}">{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}</span>
+    {%- endif -%}
+    {%- if form.posted_successfully? -%}
+    <h3 class="newsletter-form__message newsletter-form__message--success form__message" id="Newsletter-success--{{ section.id }}" tabindex="-1" autofocus>{{ 'general.newsletter.notice.success' | t }}</h3>
+    {%- endif -%}
+{% endform %}

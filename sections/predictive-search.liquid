@@ -1,0 +1,112 @@
+
+{%- if predictive_search.performed -%}
+  
+  {% assign predictive_search_types = predictive_search.types | join: ',' %}
+
+  
+  {%- if predictive_search.resources.products.size > 0 -%}
+    <div class="predictive-search-results-header">
+        <h2 class="predictive-search-results-header__heading">
+          {{ 'general.search.predictive_search.products_count_text' | t: count: predictive_search.resources.products.size }}
+        </h2>
+        <a href="{{ 
+            routes.search_url | 
+            append: '?q=' | 
+            append: predictive_search.terms
+        }}">{{ 'general.search.predictive_search.link_text' | t }}</a>
+    </div>
+    <ul class="predictive-search-results-list" role="listbox" aria-labelledby="predictive-search-products">
+      {%- for product in predictive_search.resources.products -%}
+        <li class="predictive-search-results-product product" role="option">
+          {% render 'section-product-processor', product: product, prefix: 'predictive-search-results-product' %}
+        </li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+
+  
+  {%- if predictive_search.resources.collections.size > 0 -%}
+    <div class="predictive-search-results-header">
+        <h2 class="predictive-search-results-header__heading">
+          {{ 'general.search.predictive_search.collections_count_text' | t: count: predictive_search.resources.collections.size }}
+        </h2>
+        <a href="{{ 
+            routes.search_url | 
+            append: '?q=' | 
+            append: predictive_search.terms
+        }}">{{ 'general.search.predictive_search.link_text' | t }}</a>
+    </div>
+    <ul class="predictive-search-results-list" role="listbox" aria-labelledby="predictive-search-collections">
+      {%- for collection in predictive_search.resources.collections -%}
+        <li class="predictive-search-results-collection collection" role="option">
+          {% render 'section-collection-processor', collection: collection, prefix: 'predictive-search-results-collection' %}
+        </li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+
+  {% if predictive_search.resources.pages.size > 0 %}
+    <div class="predictive-search-results-header">
+        <h2 class="predictive-search-results-header__heading">
+          {{ 'general.search.predictive_search.pages_count_text' | t: count: predictive_search.resources.pages.size }}
+        </h2>
+        <a href="{{ 
+            routes.search_url | 
+            append: '?q=' | 
+            append: predictive_search.terms
+        }}">{{ 'general.search.predictive_search.link_text' | t }}</a>
+    </div>
+    <ul class="predictive-search-results-list" role="listbox" aria-labelledby="predictive-search-pages">
+        {%- for item in predictive_search.resources.pages -%}
+          <li class="predictive-search-results-list-item page" role="option">
+            <div class="page__details">
+              <div class="predictive-search-results-list-item__type">{{ item.object_type }}</div>
+              <h3 class="page__title">
+                <a href="{{ item.url }}">{{ item.title }}</a>
+              </h3>
+              <a href="{{ item.url }}" class="page__read-more">
+                {{ 'blog.link_text' | t }}
+              </a>
+            </div>
+          </li>
+        {%- endfor -%}
+    </ul>
+  {% endif %}
+
+  {% if predictive_search.resources.articles.size > 0 %}
+    <div class="predictive-search-results-header">
+        <h2 class="predictive-search-results-header__heading">
+          {{ 'general.search.predictive_search.articles_count_text' | t: count: predictive_search.resources.articles.size }}
+        </h2>
+        <a href="{{ 
+            routes.search_url | 
+            append: '?q=' | 
+            append: predictive_search.terms
+        }}">{{ 'general.search.predictive_search.link_text' | t }}</a>
+    </div>
+    <ul class="predictive-search-results-list" role="listbox" aria-labelledby="predictive-search-articles">
+        {%- for item in predictive_search.resources.articles -%}
+        <li class="predictive-search-results-list-item post" role="option">
+          {% if item.image != blank %}
+            <div class="post__thumbnail">
+              <a href="{{ item.url }}">{% render 'section-image-processor', image: item.image %}</a>
+            </div>
+          {% endif %}
+          <div class="post__details">
+            <div class="predictive-search-results-list-item__type">{{ item.object_type }}</div>
+            <h3 class="post__title">
+              <a href="{{ item.url }}">{{ item.title }}</a>
+            </h3>
+            <a href="{{ item.url }}" class="post__read-more">
+              {{ 'blog.link_text' | t }}
+            </a>
+          </div>
+        </li>
+        {%- endfor -%}
+    </ul>
+  {% endif %}
+
+  {% if predictive_search.resources.products == blank and predictive_search.resources.pages == blank and predictive_search.resources.articles == blank %}
+    <p>{{ 'general.search.no_results' | t: terms: predictive_search.terms }}</p>
+  {% endif %}
+{%- endif -%}

@@ -1,0 +1,510 @@
+{% style %}
+#shopify-section-{{ section.id }} {
+
+  --theme-logo-list-columns-count: {{ section.settings.columns_count }};
+
+  {% if section.settings.gap %}
+    --theme-logo-list-gap: var(--theme-gap-{{ section.settings.gap_choice }});
+    {% else %}
+      --theme-logo-list-gap: 0px;
+  {% endif %}
+
+
+}
+{% endstyle %}
+
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    {% unless section.settings.fullwidth %}
+      --theme-section-custom-width: {{ section.settings.width | append: 'px' }};
+    {% endunless %}
+
+  {% if section.settings.inset %}
+    --theme-section-content-padding: var(--theme-section-content-padding-{{ section.settings.inset_choice }});
+  {% endif %}
+
+  {% if section.settings.side_margin_choice != 'level-0' %}
+    --theme-section-side-margin: var(--theme-section-side-margin-{{ section.settings.side_margin_choice }});
+  {% endif %}
+  }
+{% endstyle %}
+
+{% if section.settings.separator %}
+  {% style %}
+  #shopify-section-{{ section.id }} .separator{
+    --theme-section-separator-width: {{ section.settings.separator_width | append: '%' }};
+
+    {% if section.settings.separator_use_custom_color %}
+      --theme-section-separator-color: {{ section.settings.separator_custom_color }};
+    {% endif %}
+  }
+  {% endstyle %}
+{% endif %}
+
+{% if section.settings.spacing %}
+  {% style %}
+  #shopify-section-{{ section.id }}{
+    
+      {% unless section.settings.spacing_placement == '3' %}
+--theme-section-spacing-top: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+{% unless section.settings.spacing_placement == '2' %}
+      --theme-section-spacing-bottom: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+
+  }
+  {% endstyle %}
+{% endif %}
+
+{% assign blocks_count = section.blocks | size %}
+
+<div class="section-logo-list{% liquid 
+
+  if section.settings.fullwidth
+    echo ' has-fullwidth'
+  else
+    echo ' has-custom-width'
+  endif
+
+  if section.settings.side_margin_choice != 'level-0'
+    echo ' has-side-margin'
+  endif
+
+  if section.settings.inset
+    echo ' has-section-padding'
+  endif
+
+  echo ' ' | append: section.settings.color_scheme
+
+  if settings.animation_sections
+    echo ' has-animation'
+  endif
+
+%}">
+    <div class="section-logo-list-container section-container">
+      {% if section.settings.text_1 != blank or section.settings.text_2 != blank %}
+        <div class="section-logo-list-header">
+          {% if section.settings.text_1 != blank %}
+            <h2 class="section-logo-list-header__heading heading-size-{{ section.settings.text_1_size }}">{{ section.settings.text_1 }}</h2>
+          {% endif %}
+          {% if section.settings.text_2 != blank %}
+            <p class="section-logo-list-header__description paragraph-size-{{ section.settings.text_2_size }}">{{ section.settings.text_2 }}</p>
+          {% endif %}
+        </div>
+      {% endif %}
+      <div class="section-logo-list-content">
+        {% if blocks_count > 0 %}
+            <ul class="section-logo-list-items">
+                {% for block in section.blocks %}
+                    <li class="section-logo-list-item {{ block.id }}" {{ block.shopify_attributes }}>
+                        {% if block.settings.logo_image != blank or block.settings.logo_text != blank %}
+                            <a href="{{ block.settings.logo_url | default: '#' }}">
+                                <div class="section-logo-list-item__image">
+                                  {% if block.settings.logo_image != blank %}
+                                      {% render 'section-image-processor', image: block.settings.logo_image %}
+                                  {% else %}
+                                    {{ 'image' | placeholder_svg_tag: 'placeholder placeholder-logo-list' }}
+                                  {% endif %}
+                                </div>
+                                {% if block.settings.logo_text != blank %}
+                                    <div class="section-logo-list-item__text">{% echo block.settings.logo_text %}</div>
+                                {% endif %}
+                            </a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+      </div>
+    </div>
+</div>
+{% if section.settings.separator %}
+  <div class="section-separator{% liquid 
+echo ' ' | append: section.settings.color_scheme
+ %}"><hr class="separator"></div>
+{% endif %}
+
+
+
+{% schema %}
+{
+    "name": "t:sections.logo_list.name",
+    "settings": [
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__general.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "fullwidth",
+            "label": "t:sections.common.settings.fullwidth.label",
+            "info": "t:sections.common.settings.fullwidth.info",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "width",
+            "min": 500,
+            "max": 2000,
+            "step": 20,
+            "unit": "px",
+            "label": "t:sections.common.settings.width.label",
+            "default": 1320,
+            "info": "t:sections.common.settings.width.info"
+        },
+        {
+            "type": "select",
+            "id": "side_margin_choice",
+            "label": "t:sections.common.settings.side_margin_choice.label",
+            "options": [
+                {
+                    "value": "level-0",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__4.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__5.label"
+                }
+            ],
+            "info": "t:sections.common.settings.side_margin_choice.info",
+            "default": "level-4"
+        },
+        {
+            "type": "color_scheme",
+            "id": "color_scheme",
+            "default": "scheme_1",
+            "label": "t:sections.common.settings.color_scheme.label"
+        },
+        {
+            "type": "checkbox",
+            "id": "inset",
+            "label": "t:sections.logo_list.settings.inset.label",
+            "default": false
+        },
+        {
+            "type": "select",
+            "id": "inset_choice",
+            "label": "t:sections.common.settings.inset_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.inset_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.inset_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.inset_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.inset_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.inset_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__heading.content"
+        },
+        {
+            "type": "text",
+            "id": "text_1",
+            "label": "t:sections.logo_list.settings.text_1.label",
+            "default": "This is logo list"
+        },
+        {
+            "type": "select",
+            "id": "text_1_size",
+            "label": "t:sections.logo_list.settings.text_1_size.label",
+            "options": [
+                {
+                    "value": "x-small",
+                    "label": "t:sections.logo_list.settings.text_1_size.options.option__0.label"
+                },
+                {
+                    "value": "small",
+                    "label": "t:sections.logo_list.settings.text_1_size.options.option__1.label"
+                },
+                {
+                    "value": "medium",
+                    "label": "t:sections.logo_list.settings.text_1_size.options.option__2.label"
+                },
+                {
+                    "value": "large",
+                    "label": "t:sections.logo_list.settings.text_1_size.options.option__3.label"
+                }
+            ],
+            "default": "small"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__description.content"
+        },
+        {
+            "type": "text",
+            "id": "text_2",
+            "label": "t:sections.logo_list.settings.text_2.label",
+            "default": "This is simple description for the logo list"
+        },
+        {
+            "type": "select",
+            "id": "text_2_size",
+            "label": "t:sections.logo_list.settings.text_2_size.label",
+            "options": [
+                {
+                    "value": "x-small",
+                    "label": "t:sections.logo_list.settings.text_2_size.options.option__0.label"
+                },
+                {
+                    "value": "small",
+                    "label": "t:sections.logo_list.settings.text_2_size.options.option__1.label"
+                },
+                {
+                    "value": "medium",
+                    "label": "t:sections.logo_list.settings.text_2_size.options.option__2.label"
+                },
+                {
+                    "value": "large",
+                    "label": "t:sections.logo_list.settings.text_2_size.options.option__3.label"
+                }
+            ],
+            "default": "large"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__logos.content"
+        },
+        {
+            "type": "range",
+            "id": "columns_count",
+            "min": 1,
+            "max": 8,
+            "step": 1,
+            "label": "t:sections.logo_list.settings.columns_count.label",
+            "default": 6
+        },
+        {
+            "type": "checkbox",
+            "id": "gap",
+            "label": "t:sections.logo_list.settings.gap.label",
+            "info": "t:sections.logo_list.settings.gap.info",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "gap_choice",
+            "label": "t:sections.common.settings.gap_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.gap_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.gap_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.gap_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.gap_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.gap_choice.options.option__4.label"
+                },
+                {
+                    "value": "level-6",
+                    "label": "t:sections.common.settings.gap_choice.options.option__5.label"
+                },
+                {
+                    "value": "level-7",
+                    "label": "t:sections.common.settings.gap_choice.options.option__6.label"
+                }
+            ],
+            "default": "level-4",
+            "info": "t:sections.common.settings.gap_choice.info"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__separator.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "separator",
+            "label": "t:sections.common.settings.separator.label",
+            "info": "t:sections.common.settings.separator.info",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "separator_width",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "t:sections.common.settings.separator_width.label",
+            "default": 100,
+            "info": "t:sections.common.settings.separator_width.info"
+        },
+        {
+            "type": "checkbox",
+            "id": "separator_use_custom_color",
+            "label": "t:sections.common.settings.separator_use_custom_color.label",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "separator_custom_color",
+            "label": "t:sections.common.settings.separator_custom_color.label",
+            "default": "#CCCCCC"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__spacing.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "spacing",
+            "label": "t:sections.common.settings.spacing.label",
+            "info": "t:sections.common.settings.spacing.info",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "spacing_choice",
+            "label": "t:sections.common.settings.spacing_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        },
+        {
+            "type": "select",
+            "id": "spacing_placement",
+            "label": "t:sections.common.settings.spacing_placement.label",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__0.label"
+                },
+                {
+                    "value": "2",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__1.label"
+                },
+                {
+                    "value": "3",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__2.label"
+                }
+            ],
+            "default": "1",
+            "info": "t:sections.common.settings.spacing_placement.info"
+        }
+    ],
+    "blocks": [
+        {
+            "name": "t:sections.logo_list.blocks.logo.name",
+            "type": "logo",
+            "limit": 18,
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "t:sections.logo_list.blocks.logo.settings.header__brand.content"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "logo_image",
+                    "label": "t:sections.logo_list.blocks.logo.settings.logo_image.label"
+                },
+                {
+                    "type": "text",
+                    "id": "logo_text",
+                    "label": "t:sections.logo_list.blocks.logo.settings.logo_text.label",
+                    "default": "Brand name"
+                },
+                {
+                    "type": "url",
+                    "id": "logo_url",
+                    "label": "t:sections.logo_list.blocks.logo.settings.logo_url.label"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "t:sections.logo_list.presets.logo_list.name",
+            "blocks": [
+                {
+                    "type": "logo"
+                },
+                {
+                    "type": "logo"
+                },
+                {
+                    "type": "logo"
+                },
+                {
+                    "type": "logo"
+                },
+                {
+                    "type": "logo"
+                },
+                {
+                    "type": "logo"
+                }
+            ]
+        }
+    ],
+    "disabled_on": {
+        "groups": [
+            "*"
+        ]
+    }
+}
+{% endschema %}
+

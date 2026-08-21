@@ -1,0 +1,325 @@
+{% unless product.has_only_default_variant %}
+    {% liquid 
+
+        assign current_variant = product.selected_or_first_available_variant
+        
+        if settings.product_option_swatches_name contains ','
+            assign swatch_names = settings.product_option_swatches_name | split: ', '
+        else
+            assign swatch_names = settings.product_option_swatches_name | join: ','
+        endif 
+
+        assign swatch_values = settings.product_option_swatches_list | strip_newlines | split: ','
+
+        assign swatch_choice = block.settings.color_swatch_choice
+
+        assign swatch_metaobject_type = 'shopify--color-pattern'
+
+    %}
+    <product-options class="product-summary__variant-picker product-variants block-{{ block.id }} {{ section.id }}-{{ block.id }}" data-section-id="{{ section.id }}-{{ block.id }}" data-product-url="{{ product.url }}" {{ block.shopify_attributes }}>
+
+        {% for option in product.options_with_values %}
+            {% assign optionIndex = forloop.index | minus: 1 %}
+            
+            <product-option-picker class="product-option-picker option-{{ option.name | handle }}{% liquid 
+            
+                
+                comment
+                 for swatch_name in swatch_names
+                    if swatch_name == option.name
+                        echo ' has-swatches'
+                    endif
+                endfor 
+                endcomment
+
+                echo ' has-display-type-' | append: block.settings.option_display_choice
+
+            %}">
+                <label class="product-option-picker-label">
+                    <span>{{ option.name }}</span><span class="product-option-picker-label--chosen">{{ current_variant.options[optionIndex] }}</span>
+            
+                    {% for inside_block in section.blocks %}
+                        {% if inside_block.type == 'info-popup' %}
+                            {% assign info_popup_block = inside_block %}
+                            {% if info_popup_block != blank and info_popup_block.settings.variant_choice == option.name %}
+                                {% assign page_handle = info_popup_block.settings.page %}
+                                <div class="product-summary__info-popup block-{{ info_popup_block.id }}" {{ info_popup_block.shopify_attributes }}>
+                                    <product-info-popup class="product-info-popup">
+                                        <a href="{{ pages[page_handle].url }}" class="product-info-popup__button" data-page-handle="{{ page_handle }}" data-empty-text="{{ 'products.product.info_popup.placeholder_text' | t }}">{{ info_popup_block.settings.link_text }}</a>
+                                    </product-info-popup>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </label>
+                <div class="product-option-picker__dropdown"
+                {% if block.settings.option_display_choice == 'dropdown' %}
+                    tabindex="0"
+                {% endif %}
+                >
+                    {% if block.settings.option_display_choice == 'dropdown' %}
+                    <span class="product-option-picker-chosen">
+                        
+                        {% liquid
+        
+                            assign swatch_url = blank
+                            assign swatch_color = blank
+
+                            assign value = current_variant.options[optionIndex]
+                                
+                            if value.swatch.image
+                                assign swatch_image = value.swatch.image
+                                
+
+                                assign swatch_image_url = swatch_image | image_url
+
+                                assign swatch_image_array =  swatch_image_url | split: '/'
+                                assign swatch_image_array_size = swatch_image_array.size | minus: 1
+                                assign swatch_image_id = swatch_image_array[swatch_image_array_size] | split: '?'
+                                assign swatch_image_url = swatch_image_id[0]
+                                assign swatch_url = swatch_image_url
+                            elsif value.swatch.color
+                                assign swatch_color = 'rgb(' | append: value.swatch.color.rgb | append: ')'
+                            else
+                                for metaobject in shop.metaobjects[swatch_metaobject_type].values
+                                    if metaobject.label == value
+                                        if metaobject.image != blank
+                                            capture metaobject_image_url 
+                                                echo metaobject.image | image_url
+                                            endcapture
+
+                                            assign metaobject_image_array =  metaobject_image_url | split: '/'
+                                            assign metaobject_image_array_size = metaobject_image_array.size | minus: 1
+                                            assign metaobject_image_id = metaobject_image_array[metaobject_image_array_size] | split: '?'
+                                            assign metaobject_image_url = metaobject_image_id[0]
+                                            assign swatch_url = metaobject_image_url
+
+                                        elsif metaobject.color != blank
+                                            assign swatch_color = metaobject.color
+
+                                        endif
+
+                                    endif
+                                endfor
+                            endif
+
+                        
+                        %}
+                        
+                        {% if swatch_url == blank and swatch_color == blank %}
+                            {% for swatch_name in swatch_names %}
+                                {% if swatch_name == option.name %}
+                                    {% liquid 
+
+                                        assign current_swatch_value = blank
+                                        assign swatch_url = blank
+                                        assign swatch_color = blank
+
+                                        for swatch_value in swatch_values
+                                            
+                                            assign swatch_value_pair = swatch_value | split: ':'
+                                            assign swatch_value_pair_name = swatch_value_pair[0] | strip
+
+
+                                            if swatch_value_pair_name == value
+                                                assign current_swatch_value = swatch_value_pair[1]
+                                            endif 
+                                        endfor 
+
+                                        if swatch_choice == 'image'
+                                            if current_swatch_value contains '.'
+                                                assign swatch_url = current_swatch_value | strip
+                                                assign swatch_color = 'url(' | append: swatch_url | append: ')'  
+
+                                            else
+                                                if swatch_url == blank
+
+                                                    assign swatch_url = value.variant.featured_image.src
+                                                    assign swatch_url = swatch_url | replace: 'files/'
+                                                    
+                                                endif
+                                            endif
+
+                                        else
+                                            if current_swatch_value !=  blank
+                                                assign swatch_color = current_swatch_value
+                                            else
+                                                assign swatch_color = value
+
+                                            endif
+                                        endif
+                                    %}
+                                {% endif %}
+                            {% endfor %}    
+                        {% endif %}
+                        {% if swatch_url != blank or swatch_color != blank %}
+                            <div class="product-option-swatch{% liquid
+                                if swatch_url != blank
+                                    echo ' has-image-as-swatch'
+                                else
+                                    echo ' has-color-as-swatch'
+                                endif
+                            %}" style="{% liquid 
+                                
+                                echo '--product-swatch-value: ' | append: swatch_color
+
+                            %}">{% liquid 
+                                if swatch_url != blank and images[swatch_url] != blank 
+                                    render 'section-image-processor', image: images[swatch_url], width: 200, alt: product.title
+                                endif 
+                            %}</div>
+                        {% endif %} 
+                        <span class="product-option-picker-chosen__value">{{ current_variant.options[optionIndex] }}</span>
+                        {% render 'icon-chevron-down' %}
+                    </span>
+                    {% endif %}
+                    <ul class="product-option-picker__list" data-option-name="{{ option.name }}" data-option-value="{{ current_variant.options[optionIndex] | escape }}">
+                        
+                        {% for value in option.values %}
+                            {% assign value_index = forloop.index | minus: 1 %}
+                            <li class="product-option-picker__list-item{% liquid 
+                                
+                                if value.selected
+                                    echo ' chosen'
+                                endif
+
+                                unless value.available
+                                    echo ' disabled'
+                                endunless
+                            %}" data-option-value="{{ value | escape }}" tabindex="0">
+                            
+                                <input id="ProductOption-{{ optionIndex }}{{ value_index }}" type="radio" name="{{ option.name }}-{{ option.position }}" value="{{ value }}" data-id="{{ value.id }}" data-product-url="{{ value.product_url | default: product.url }}"
+                                {% if value.selected %}
+                                    checked
+                                {% endif %}
+                                {% unless value.available %}
+                                    class="disabled"
+                                {% endunless %}
+
+                                >
+
+                                {% comment %} <input id="ProductOption-{{ optionIndex }}{{ valueIndex }}" type="radio" name="{{ option.name }}" value="{{ current_variant.options[valueIndex] }}"> {% endcomment %}
+                                {% liquid
+        
+                                    assign swatch_url = blank
+                                    assign swatch_color = blank
+
+                                        
+                                    if value.swatch.image
+                                        assign swatch_image = value.swatch.image
+                                        
+
+                                        assign swatch_image_url = swatch_image | image_url
+
+                                        assign swatch_image_array =  swatch_image_url | split: '/'
+                                        assign swatch_image_array_size = swatch_image_array.size | minus: 1
+                                        assign swatch_image_id = swatch_image_array[swatch_image_array_size] | split: '?'
+                                        assign swatch_image_url = swatch_image_id[0]
+                                        assign swatch_url = swatch_image_url
+                                    elsif value.swatch.color
+                                        assign swatch_color = 'rgb(' | append: value.swatch.color.rgb | append: ')'
+                                    else
+                                        for metaobject in shop.metaobjects[swatch_metaobject_type].values
+                                            if metaobject.label == value
+                                                if metaobject.image != blank
+                                                    capture metaobject_image_url 
+                                                        echo metaobject.image | image_url
+                                                    endcapture
+
+                                                    assign metaobject_image_array =  metaobject_image_url | split: '/'
+                                                    assign metaobject_image_array_size = metaobject_image_array.size | minus: 1
+                                                    assign metaobject_image_id = metaobject_image_array[metaobject_image_array_size] | split: '?'
+                                                    assign metaobject_image_url = metaobject_image_id[0]
+                                                    assign swatch_url = metaobject_image_url
+
+                                                elsif metaobject.color != blank
+                                                    assign swatch_color = metaobject.color
+
+                                                endif
+
+                                            endif
+                                        endfor
+                                    endif
+
+                                
+                                %}
+                                
+                                {% if swatch_url == blank and swatch_color == blank %}
+                                    {% for swatch_name in swatch_names %}
+                                        {% if swatch_name == option.name %}
+                                            {% assign optionChoice = 'option' | append: option.position %}
+
+                                            {% liquid 
+
+                                                assign current_swatch_value = blank
+                                                assign swatch_url = blank
+                                                assign swatch_color = blank
+
+                                                for swatch_value in swatch_values
+                                                    
+                                                    assign swatch_value_pair = swatch_value | split: ':'
+                                                    assign swatch_value_pair_name = swatch_value_pair[0] | strip
+
+
+                                                    if swatch_value_pair_name == value
+                                                        assign current_swatch_value = swatch_value_pair[1]
+                                                    endif 
+                                                endfor 
+
+                                                if swatch_choice == 'image'
+                                                    if current_swatch_value contains '.'
+                                                        assign swatch_url = current_swatch_value | strip
+                                                        assign swatch_color = 'url(' | append: swatch_url | append: ')'  
+
+                                                    else
+                                                        if swatch_url == blank
+                                                        
+                                                            assign swatch_url = value.variant.featured_image.src
+                                                            assign swatch_url = swatch_url | replace: 'files/'
+                                                            
+                                                        endif
+                                                    endif
+
+                                                else
+                                                    if current_swatch_value !=  blank
+                                                        assign swatch_color = current_swatch_value
+                                                    else
+                                                        assign swatch_color = value
+
+                                                    endif
+                                                endif
+                                            %}
+                                        {% endif %}
+                                    {% endfor %}    
+                                {% endif %}
+                                {% if swatch_url != blank or swatch_color != blank %}
+                                    <div class="product-option-swatch{% liquid
+                                        if swatch_url != blank
+                                            echo ' has-image-as-swatch'
+                                        else
+                                            echo ' has-color-as-swatch'
+                                        endif
+                                    %}" style="{% liquid 
+                                        
+                                        echo '--product-swatch-value: ' | append: swatch_color
+
+                                    %}">{% liquid 
+                                        if swatch_url != blank and images[swatch_url] != blank 
+                                            render 'section-image-processor', image: images[swatch_url], width: 200, alt: product.title
+                                        endif 
+                                    %}</div>
+                                {% endif %}
+                                <div class="product-option-label">
+                                    <span class="product-option-label__value">{{ value }}</span>
+                                    {% render 'icon-check' %}
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+
+            </product-option-picker>
+        {% endfor %}
+    </product-options>
+{% endunless %}

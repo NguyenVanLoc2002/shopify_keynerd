@@ -1,0 +1,89 @@
+{% liquid 
+    assign input_type = 'product'
+
+    if settings.predictive_search_collections
+        assign input_type = input_type | append: ',collection'
+    endif
+
+    if settings.predictive_search_pages
+        assign input_type = input_type | append: ',page'
+    endif
+
+
+    if settings.predictive_search_articles
+        assign input_type = input_type | append: ',article'
+    endif
+    
+    assign search_recommendation = settings.predictive_search_recommendation
+    assign search_recommendation_choice = settings.predictive_search_recommendation_choice | default: 'all'
+
+%}
+
+<search-dropdown class="search-dropdown">
+
+{% if settings.predictive_search_enabled %}
+    <predictive-search id="predictive-search" class="predictive-search">
+{% endif %}
+    <div class="search-dropdown-header-form">
+        
+        <form action="{{ routes.search_url }}" method="get" role="search" class="search search-dropdown__form search-dropdown-form">
+            
+            <label class="search-dropdown-form__search-label visually-hidden">{{ 'general.search.title' | t }}</label>
+            <span class="search-dropdown-form-label-icon">{% render 'icon-search' %}</span>
+            <input 
+                type="search" 
+                name="q" 
+                placeholder="{{ 'general.search.placeholder' | t }}"
+                value="{{ search.terms | escape }}" 
+            />
+            
+            <input type="hidden" name="resources[type]" value="{{ input_type }}" />
+            <input type="hidden" name="resources[limit]" value="{{ settings.predictive_search_results_limit }}">
+            <input type="hidden" name="resources[options][unavailable_products]" value="{{ settings.predictive_search_unavailable_products }}" />
+            <input type="hidden" name="resources[options][prefix]" value="{{ settings.predictive_search_prefix }}" />
+            <button class="search-dropdown-form-submit" aria-label="Search submit">
+                <span class="search-dropdown-form-submit-icon">{% render 'icon-arrow-right' %}</span>
+            </button>
+        </form>
+    </div>
+    <div class="search-dropdown-container{% liquid
+        if search_recommendation
+            echo ' has-recommendation'
+        endif
+
+        echo ' ' | append: section.settings.color_scheme
+    %}">
+        {% if search_recommendation %}
+            <div class="search-dropdown__collections">
+                <div class="search-dropdown__collections-title">{{ 'general.search.collection_list.heading' | t }}</div>
+                <ul class="search-dropdown__collections-list">
+                    {% for collection in collections limit: settings.predictive_search_results_limit %}
+                        <li>{{- collection.title | link_to: collection.url }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="search-dropdown-recommendations">
+                <div class="search-dropdown-recommendations-header">
+                    <h2 class="search-dropdown-recommendations-header__heading">{{ 'general.search.recommendation.heading' | t }}</h2>
+                    <a href="{{ '#' }}" class="search-dropdown-recommendations-header__button btn-link">{{ 'general.search.recommendation.link_text' | t }}</a>
+                </div>
+                <ul class="search-dropdown-recommendations-list">
+                    {% for product in collections[search_recommendation_choice].products limit: settings.predictive_search_results_limit %}
+                        <li class="search-dropdown-recommendations-product product">
+                            {% render 'section-product-processor', product: product, prefix: 'search-dropdown-recommendations-product' %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        {% if settings.predictive_search_enabled %}
+            <div id="predictive-search-results" tabindex="-1" class="predictive-search-results"></div>
+        {% endif %}
+
+        <button type='button' class="search-dropdown-close">{% render 'icon-close' %}</button>
+    </div>
+{% if settings.predictive_search_enabled %}
+    </predictive-search>
+{% endif %}
+</search-dropdown>

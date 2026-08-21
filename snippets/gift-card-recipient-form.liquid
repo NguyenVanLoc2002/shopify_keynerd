@@ -1,0 +1,99 @@
+{% comment %}
+  Renders gift card recipient form.
+  Accepts:
+  - product: {Object} product object.
+  - form: {Object} the product form object.
+  - section: {Object} section to which this snippet belongs.
+
+  Usage:
+  {% render 'gift-card-recipient-form', product: product, form: form, section: section %}
+{% endcomment %}
+
+  {%- assign gift_card_recipient_control_flag = 'properties[__shopify_send_gift_card_to_recipient]' -%}
+  {% comment %} <script src="{{ 'recipient-form.js' | asset_url }}" defer="defer"></script> {% endcomment %}
+  <recipient-form class="recipient-form" data-section-id="{{ section.id }}" data-product-variant-id="{{ product.selected_or_first_available_variant.id }}">
+    <label class="recipient-form-toggle" for="RecipientFormToggle-{{ section.id }}">
+      <input
+        id="RecipientFormToggle-{{ section.id }}"
+        type="checkbox"
+        name="{{ gift_card_recipient_control_flag }}"
+      >
+      <span>{{ 'recipient.form.checkbox' | t }}</span>
+      {% render 'icon-check' %}
+    </label>
+    <ul class="recipient-form-errors">
+        {%- if form.errors -%}
+          {%- for field in form.errors -%}
+            <li>
+              {%- if field == 'form' -%}
+                {{ form.errors.messages[field] }}
+              {%- else -%}
+                <a href="#Recipient-{{ field }}-{{ section.id }}">
+                  {{ form.errors.messages[field] }}
+                </a>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        {%- endif -%}
+    </ul>
+    <div class="recipient-form-fields">
+      <label for="RecipientFormFieldEmail-{{ section.id }}">
+        <span class="recipient-email-label required">{{ 'recipient.form.email_label' | t }}</span>
+        <input
+          id="RecipientFormFieldEmail-{{ section.id }}"
+          class="recipient-form-fields--field required"
+          type="email"
+          name="properties[Recipient email]"
+          value="{{ form.email }}"
+        >
+      </label>
+      <label for="RecipientFormFieldName-{{ section.id }}">
+        <span class="recipient-name-label">{{ 'recipient.form.name_label' | t }}</span>
+        <input
+          id="RecipientFormFieldName-{{ section.id }}"
+          class="recipient-form-fields--field"
+          type="text"
+          name="properties[Recipient name]"
+          value="{{ form.name }}"
+        >
+      </label>
+      <label for="RecipientFormFieldMessage-{{ section.id }}">
+        <span class="recipient-message-label">{{ 'recipient.form.message_label' | t }}</span>
+        <textarea
+          id="RecipientFormFieldMessage-{{ section.id }}"
+          class="recipient-form-fields--field"
+          rows="10"
+          name="properties[Message]"
+          maxlength="200"
+        >{{- form.message -}}</textarea>
+        <span class="hint">{{ 'recipient.form.max_characters' | t : max_chars: 200 }}</span>
+      </label>
+
+      <label for="RecipientFormFieldSendon-{{ section.id }}">
+        <span class="recipient-sendon-label">{{ 'recipient.form.send_on_label' | t }}</span>
+        <input
+          id="RecipientFormFieldSendon-{{ section.id }}"
+          class="recipient-form-fields--field"
+          type="date"
+          name="properties[Send on]"
+          placeholder="{{ 'recipient.form.send_on' | t }}"
+          pattern="\d{4}-\d{2}-\d{2}"
+          value="{{ form.send_on }}"
+        >
+      </label>
+    </div>
+    <input
+      type="hidden"
+      name="{{ gift_card_recipient_control_flag }}"
+      value="if_present"
+      id="Recipient-control-{{ section.id }}"
+    >
+    <input
+      type="hidden"
+      name="properties[__shopify_offset]"
+      value=""
+      id="Recipient-timezone-offset-{{ section.id }}"
+      disabled
+    >
+
+  </recipient-form>

@@ -1,0 +1,41 @@
+{% comment %}
+    Renders language selector
+
+    Accepts:
+    - label_style: {String} Number to label style
+
+    Usage:
+    {% render 'language-selector',
+      label_style: '1'
+    %}
+{% endcomment %}
+
+{% if localization.available_languages.size > 1 %}
+    <localization-form>
+      {% form 'localization' %}
+        <div class="disclosure">
+          <button type="button" class="disclosure__button" aria-expanded="false">
+            {% if label_style == '2' %}
+              <span>{{ localization.language.iso_code | upcase }}</span>
+            {% else %}
+              <span>{{ localization.language.endonym_name | capitalize }}</span>
+            {% endif %}
+            <span>{% render 'icon-chevron-down' %}</span>
+          </button>
+  
+          <ul role="list" class="disclosure__list" hidden>
+            {% for language in localization.available_languages %}
+              <li class="disclosure__item" tabindex="-1">
+                <a href="{{ routes.root_url }}"{% if language.iso_code == localization.language.iso_code %} aria-current="true"{% endif %} hreflang="{{ language.iso_code }}" lang="{{ language.iso_code }}" data-value="{{ language.iso_code }}">
+                  {{ language.endonym_name | capitalize }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+  
+          <input type="hidden" name="language_code" value="{{ localization.language.iso_code }}">
+          <input type="hidden" name="country_code" value="{{ localization.country.iso_code }}">
+        </div>
+      {% endform %}
+    </localization-form>
+  {% endif %}

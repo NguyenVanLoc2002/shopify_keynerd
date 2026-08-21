@@ -1,0 +1,67 @@
+{% liquid
+
+    assign product_ids = ''
+
+    if cart.item_count > 0
+        for item in cart.items
+            assign product_ids = product_ids | append: item.product_id
+            assign cart_size = cart.items | size
+
+            if forloop.index != cart_size
+                assign product_ids = product_ids | append: ','
+            endif
+        endfor
+    endif
+
+%}
+
+<div class="cart-drawer-recommendations">
+    <div class="cart-drawer-recommendations-container section-container">
+    <div class="cart-drawer-recommendations-header">
+        <h3 class="cart-drawer-recommendations-header__heading heading-size-small">{{ 'sections.cart.recommendation_title' | t }}</h3>
+    </div>
+    <cart-recommendations class="product-recommendations" 
+        data-products-id="{{ product_ids }}" 
+        data-intent="related" 
+        data-columns-count="1"
+        data-limit="6" 
+        data-carousel="true" 
+        data-columns-offset="false"
+        {% liquid 
+
+        assign data_options = 'data-options={'
+          
+        assign data_options = data_options | append: '"rewind":' | append: true | append: ','
+        assign data_options = data_options | append: '"perMove":' | append: 1 | append: ','
+        assign data_options = data_options | append: '"perPage":' | append: 1 | append: ','
+
+        assign data_options = data_options | append: '"speed":"' | append: 400 | append: '",'
+        assign data_options = data_options | append: '"interval":"' | append: 4000 | append: '",'
+        
+        assign data_options = data_options | append: '"autoplay":' | append: true | append: ','
+        assign data_options = data_options | append: '"drag":' | append: true | append: ','
+        assign data_options = data_options | append: '"arrows":' | append: true | append: ','
+        assign data_options = data_options | append: '"pagination":' | append: true | append: ','
+
+      
+        assign data_options_count = data_options | size | minus: 1
+        assign data_options = data_options | slice: 0, data_options_count
+        assign data_options = data_options | append: '}'
+
+        echo data_options
+    
+    %}>
+    <div class="splide__progress">
+        <div class="splide__progress-bar"></div>
+    </div>
+    <div class="splide__arrows">
+        <button class="splide__arrow splide__arrow--prev">
+        {% render 'icon-arrow-right' %}
+        </button>
+        <button class="splide__arrow splide__arrow--next">
+        {% render 'icon-arrow-right' %}
+        </button>
+    </div>
+    </cart-recommendations>
+</div>
+</div>

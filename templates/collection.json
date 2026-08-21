@@ -1,0 +1,72 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+
+{
+  "sections": {
+    "main-collection-banner": {
+      "type": "main-collection-banner",
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "side_margin_choice": "level-0",
+        "color_scheme": "",
+        "inset": true,
+        "inset_choice": "level-5",
+        "height_mobile": "520",
+        "height": "520",
+        "background_image_show": false,
+        "background_overlay": false,
+        "background_overlay_color": "#000000",
+        "background_overlay_opacity": 20,
+        "color_scheme_background": "",
+        "title": "Shop all",
+        "title_size": "large",
+        "description": "<p>Discover high-performance activewear designed for every move—shop our latest collections tailored for comfort, style, and endurance.</p>",
+        "description_size": "medium",
+        "collection_links": "2",
+        "collection_choice": [],
+        "limit": 4,
+        "collection_count": false,
+        "collection_button_style": "link",
+        "alignment": "center",
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#cccccc",
+        "spacing": true,
+        "spacing_choice": "level-3",
+        "spacing_placement": "1"
+      }
+    },
+    "main-collection": {
+      "type": "main-collection",
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "side_margin_choice": "level-5",
+        "color_scheme": "",
+        "inset": false,
+        "inset_choice": "level-3",
+        "filters": true,
+        "sorting": true,
+        "total_count": true,
+        "products_count": 12,
+        "pagination_choice": "1",
+        "spacing": true,
+        "spacing_choice": "level-3",
+        "spacing_placement": "1"
+      }
+    }
+  },
+  "order": [
+    "main-collection-banner",
+    "main-collection"
+  ]
+}

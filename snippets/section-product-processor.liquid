@@ -1,0 +1,446 @@
+{% comment %}
+    Renders product
+
+    Accepts:
+    - product: {Object} Product object
+    - prefix: {String} Add class prefix to html child element
+
+    Usage:
+    {% render 'section-product-processor',
+      product: product,
+      prefix: 'product'
+    %}
+{% endcomment %}
+
+{% liquid 
+
+
+    assign current_variant = product.selected_or_first_available_variant
+
+
+    if current_variant == product and product.price_varies
+        assign money_price = 'products.product.price.from_price_html' | t: price: money_price
+    endif
+
+    
+    if settings.product_option_swatches_name contains ','
+        assign swatch_names = settings.product_option_swatches_name | split: ', '
+    else
+        assign swatch_names = settings.product_option_swatches_name | join: ','
+    endif 
+
+    assign swatch_values = settings.product_option_swatches_list | strip_newlines | split: ','
+
+    assign swatch_choice = settings.collection_swatches_type | default: 'color'
+
+
+    assign swatch_metaobject_type = 'shopify--color-pattern'
+
+
+    assign product_description_show = section_settings.product_excerpt_show | default: false
+
+    assign swatch_limit = 5
+%}
+
+
+<div class="{{ prefix | default: 'product' }}__top product__top">
+    {% if product.featured_image != blank %}
+    <div class="{{ prefix | default: 'product' }}__image product__image featured-image">
+        <a href="{{ product.url }}" title="{{ product.title }}">
+        {% if product.images[1] != blank and settings.collection_show_secondary_image %}
+            <div class="{{ prefix | default: 'product' }}__image-secondary product__image-secondary">
+                {% render 'section-image-processor', image: product.images[1], hidden_by_default: 'true' %}
+            </div>
+        {% endif %}
+        {% render 'section-image-processor', image: product.featured_image, hidden_by_default: 'true' %}
+        </a>
+
+        <div class="product-swatches-variant-images">
+            {% for variant in product.variants limit: swatch_limit %}
+                <div class="product-swatches-variant-images-variant-image" data-variant-id="{{ variant.id }}">
+                    {% if variant.featured_image != blank %}
+                        {% render 'section-image-processor', image: variant.featured_image %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if display_style != 'small' and display_style != 'medium' %}
+
+        <div class="{{ prefix | default: 'product' }}__labels product__labels">
+            {% if settings.collection_show_sale %}
+                {% if product.compare_at_price and product.compare_at_price > product.price %}
+                    {% if settings.collection_sale_type == '2' %}
+                        {% liquid
+                            assign product_price = product.price | plus: 0.0
+                            assign product_compare_at_price = product.compare_at_price | plus: 0.0
+
+                            assign discounted_price = product_compare_at_price | minus: product_price
+                            assign discounted_price = discounted_price | divided_by: product_compare_at_price
+
+                            assign discount_percentage = discounted_price | times: 100 | round
+
+                        %}
+                        <span class="{{ prefix | default: 'product' }}__sale-badge product__sale-badge">{{ '-' | append: discount_percentage | append: '%' }}</span>
+                    {% elsif settings.collection_sale_type == '3' %}
+                        {% liquid
+                            assign product_price = product.price | plus: 0.0
+                            assign product_compare_at_price = product.compare_at_price | plus: 0.0
+
+                            assign discounted_price = product_compare_at_price | minus: product_price
+                            assign discounted_price = discounted_price | money
+
+                        %}
+                        <span class="{{ prefix | default: 'product' }}__sale-badge product__sale-badge">{{ 'Save ' | append: discounted_price }}</span>
+                    {% else %}
+                        <span class="{{ prefix | default: 'product' }}__sale-badge product__sale-badge">{{ 'products.product.sale_badge' | t }}</span>
+                    {% endif %}
+                {% endif %}
+                {% if product.available == false %}
+                    <div class="{{ prefix | default: 'product' }}__sold-out-badge product__sold-out-badge sold-out">
+                    {{ 'products.product.stock.sold_out' | t }}
+                    </div>
+                {% endif %}
+            {% endif %}
+            
+            {% if settings.collection_product_label_1 != blank %}
+                {% liquid
+                    assign product_label_1_namespace_key = settings.collection_product_label_1 | split: '.'
+                    assign product_label_1 = product.metafields[product_label_1_namespace_key[0]][product_label_1_namespace_key[1]]
+                %}
+
+                {% if product_label_1 != blank %}
+                    <span class="{{ prefix | default: 'product' }}__label-1 product__label-1">{{ product_label_1 }}</span>
+                {% endif %}
+            {% endif %}
+            
+            {% if settings.collection_product_label_2 != blank %}
+                {% liquid
+                    assign product_label_2_namespace_key = settings.collection_product_label_2 | split: '.'
+                    assign product_label_2 = product.metafields[product_label_1_namespace_key[0]][product_label_2_namespace_key[1]]
+                %}
+
+                {% if product_label_2 != blank %}
+                    <span class="{{ prefix | default: 'product' }}__label-2 product__label-2">{{ product_label_2 }}</span>
+                {% endif %}
+            {% endif %}
+        </div>
+
+        {% if settings.collection_enable_quickview or settings.collection_enable_add_to_cart %}
+            <div class="{{ prefix | default: 'product' }}__actions product__actions">
+            {% if settings.collection_enable_quickview %}
+                <button type="button" class="{{ prefix | default: 'product' }}__quickview product__quickview product-quickview btn-outline-secondary" data-handle="{{ product.handle }}" data-product-id="{{ product.id }}">
+                    <span data-text="{{ 'products.product.quickview' | t }}">
+                        <span>{{ 'products.product.quickview' | t }}</span>
+                    </span>
+                </button>
+            {% endif %}
+
+            {% if settings.collection_enable_add_to_cart %}
+                {% liquid
+                    assign upsell_product = all_products[settings.cart_upsell_product]
+                    assign upsell_variant = upsell_product.selected_or_first_available_variant
+
+                %}
+                {% unless settings.cart_show_upsell and current_variant.id == upsell_variant.id %}
+                    {% form 'product', product, class: 'product-options-form product-summary__product-options-form', novalidate: 'novalidate', data-type: 'add-to-cart-form' %}
+                        <input type="hidden" name="quantity" value="1">
+                        <input type="hidden" name="id" value="{{ current_variant.id }}">
+                        <button 
+                            type="submit" 
+                            name="add" 
+                            class="{{ prefix | default: 'product' }}__add-to-cart product__add-to-cart product-add-to-cart"
+                            {% unless current_variant.available %}
+                            disabled
+                            {% endunless %}
+                        >
+                            {% render 'icon-cart' %}
+                        </button>
+                    {% endform %}
+                {% endunless %}
+            {% endif %}
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+<div class="{{ prefix | default: 'product' }}__bottom product__bottom">
+
+    {% if display_style == 'small' or display_style == 'medium' %}
+        <div class="{{ prefix | default: 'product' }}__labels product__labels">
+            {% if settings.collection_show_sale %}
+                {% if product.compare_at_price and product.compare_at_price > product.price %}
+                    {% if settings.collection_sale_type == '2' %}
+                        {% liquid
+                            assign product_price = product.price | plus: 0.0
+                            assign product_compare_at_price = product.compare_at_price | plus: 0.0
+
+                            assign discounted_price = product_compare_at_price | minus: product_price
+                            assign discounted_price = discounted_price | divided_by: product_compare_at_price
+
+                            assign discount_percentage = discounted_price | times: 100 | round
+
+                        %}
+                        <span class="{{ prefix | default: 'product' }}__sale-badge product__sale-badge">{{ '-' | append: discount_percentage | append: '%' }}</span>
+                    {% elsif settings.collection_sale_type == '3' %}
+                        {% liquid
+                            assign product_price = product.price | plus: 0.0
+                            assign product_compare_at_price = product.compare_at_price | plus: 0.0
+
+                            assign discounted_price = product_compare_at_price | minus: product_price
+                            assign discounted_price = discounted_price | money
+
+                        %}
+                        <span class="{{ prefix | default: 'product' }}__sale-badge product__sale-badge">{{ 'Save ' | append: discounted_price }}</span>
+                    {% else %}
+                        <span class="{{ prefix | default: 'product' }}__sale-badge product__sale-badge">{{ 'products.product.sale_badge' | t }}</span>
+                    {% endif %}
+                {% endif %}
+                {% if product.available == false %}
+                    <div class="{{ prefix | default: 'product' }}__sold-out-badge product__sold-out-badge sold-out">
+                    {{ 'products.product.stock.sold_out' | t }}
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            
+            {% if settings.collection_product_label_1 != blank %}
+                {% liquid
+                    assign product_label_1_namespace_key = settings.collection_product_label_1 | split: '.'
+                    assign product_label_1 = product.metafields[product_label_1_namespace_key[0]][product_label_1_namespace_key[1]]
+                %}
+
+                {% if product_label_1 != blank %}
+                    <span class="{{ prefix | default: 'product' }}__label-1 product__label-1">{{ product_label_1 }}</span>
+                {% endif %}
+            {% endif %}
+            
+            {% if settings.collection_product_label_2 != blank %}
+                {% liquid
+                    assign product_label_2_namespace_key = settings.collection_product_label_2 | split: '.'
+                    assign product_label_2 = product.metafields[product_label_1_namespace_key[0]][product_label_2_namespace_key[1]]
+                %}
+
+                {% if product_label_2 != blank %}
+                    <span class="{{ prefix | default: 'product' }}__label-2 product__label-2">{{ product_label_2 }}</span>
+                {% endif %}
+            {% endif %}
+        </div>
+
+    {% endif %}
+
+    {% if settings.collection_show_vendor %}
+        <div class="{{ prefix | default: 'product' }}__vendor product__vendor">
+        {{ product.vendor }}
+        </div>
+    {% endif %}
+    {% if product.title != blank %}
+    <h3 class="{{ prefix | default: 'product' }}__title product__title">
+        <a href="{{ product.url }}" title="{{ product.title }}">
+        {{ product.title }}
+        </a>
+    </h3>
+    {% endif %}
+    {% if product.price != blank and settings.collection_show_price %}
+    <p class="{{ prefix | default: 'product' }}__price product__price">
+        {% if product.price_varies %}
+            <span class="{{ prefix | default: 'product' }}__price--varies product__price--varies">{{ 'products.product.from_price_html' | t: price: money_price }}</span>
+        {% endif %}
+        {% if product.compare_at_price  and product.compare_at_price > product.price %}
+            <span class="{{ prefix | default: 'product' }}__price--compare product__price--compare">{{ product.compare_at_price | money }}</span>
+        {% endif %}
+        <span>{{ product.price | money }}</span>
+        {% if current_variant.unit_price_measurement %}
+            <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.unit_price' | t }}</span>
+            <span class="product-price-unit">
+                {%- capture unit_price_separator -%}
+                <span aria-hidden="true">/</span><span class="visually-hidden">{{ 'accessibility.unit_price_separator' | t }}&nbsp;</span>
+                {%- endcapture -%}
+                {%- capture unit_price_base_unit -%}
+                <span class="product-price-unit-base" data-price-unit-base>
+                    {%- if current_variant.available and current_variant.unit_price_measurement -%}
+                        {%- if current_variant.unit_price_measurement.reference_value != 1 -%}
+                            {{- current_variant.unit_price_measurement.reference_value -}}
+                        {%- endif -%}
+                        {{- current_variant.unit_price_measurement.reference_unit -}}
+                    {%- endif -%}
+                </span>
+                {%- endcapture -%}
+                <span class="product-price-unit-price" data-price-unit-price>{{ current_variant.unit_price | money }}</span>{{- unit_price_separator -}}{{- unit_price_base_unit -}}
+            </span>
+        {% endif %}
+    </p>
+    {% endif %}
+    {% if product_description_show %}
+        <div class="{{ prefix | default: 'product' }}__description product__description">
+            {{ product.description | truncatewords: 20 }}
+        </div>
+    {% endif %}
+
+    {% if display_style == 'small' or display_style == 'medium' %}
+
+        {% if settings.collection_enable_quickview %}
+            <button class="{{ prefix | default: 'product' }}__quickview product__quickview product-quickview btn-outline-secondary" data-handle="{{ product.handle }}" data-product-id="{{ product.id }}">
+                <span data-text="{{ 'products.product.quickview' | t }}">
+                    <span>{{ 'products.product.quickview' | t }}</span>
+                </span>
+            </button>
+        {% endif %}
+    {% endif %}
+
+    {% if settings.collection_show_swatches %}
+    <div class="{{ prefix | default: 'product' }}__swatches product__swatches">
+        <div class="{{ prefix | default: 'product' }}__swatches-list product__swatches-list">
+            {% for option in product.options_with_values %}
+                {% assign swatches_added = 0 %}
+                
+                {% for value in option.values limit: 5 %}
+                    {% liquid
+
+                        assign swatch_url = blank
+                        assign swatch_color = blank
+
+
+                        paginate shop.metaobjects[swatch_metaobject_type].values by 60
+                        for metaobject in shop.metaobjects[swatch_metaobject_type].values
+                           assign metaobject_label = metaobject.label | handleize
+                           assign option_value = value | handleize
+
+                            if metaobject_label == option_value
+                                if metaobject.image != blank
+                                    capture metaobject_image_url 
+                                        echo metaobject.image | image_url
+                                    endcapture
+
+                                    assign metaobject_image_array =  metaobject_image_url | split: '/'
+                                    assign metaobject_image_array_size = metaobject_image_array.size | minus: 1
+                                    assign metaobject_image_id = metaobject_image_array[metaobject_image_array_size] | split: '?'
+                                    assign metaobject_image_url = metaobject_image_id[0]
+                                    assign swatch_url = metaobject_image_url
+
+                                elsif metaobject.color != blank
+                                    assign swatch_color = metaobject.color
+
+                                endif
+
+                                
+
+                            endif
+                        endfor
+                        endpaginate
+
+                    %}
+
+                    {% if swatch_url == blank and swatch_color == blank %}
+
+                        {% liquid 
+
+                            assign option_has_swatch = blank
+                            assign option_images_array_string = ''
+                            assign current_option = ''
+                            
+
+                            for swatch_name in swatch_names
+                                if swatch_name == option.name
+                                    assign option_choice = 'option' | append: 1
+
+                                    assign option_has_swatch = true
+
+                                    assign option_images_array_string = option_images_array_string | append: value.variant[option_choice] | append: ':' | append: value.variant.featured_image
+
+                                endif
+                            endfor
+
+                            if option_has_swatch != blank
+                            
+                                assign current_swatch_value = blank
+                            
+                                for swatch_value in swatch_values
+                                    
+                                    assign swatch_value_pair = swatch_value | split: ':'
+                                    assign swatch_value_pair_name = swatch_value_pair[0] | strip
+
+
+                                    if swatch_value_pair_name == value
+                                        assign current_swatch_value = swatch_value_pair[1]
+                                    endif 
+                                endfor 
+
+                                if swatch_choice == 'image'
+                                    if current_swatch_value contains '.'
+                                        assign swatch_url = current_swatch_value | strip | file_url
+                                    else
+                                        if swatch_url == blank
+                                            assign option_images_array = option_images_array_string | split: ','
+                                            for option_image_key_pair in option_images_array
+                                                assign new_option_image_key_pair = option_image_key_pair | split: ':'
+
+                                                if new_option_image_key_pair[1] != blank and new_option_image_key_pair[0] == value
+                                                    assign swatch_url = new_option_image_key_pair[1] | replace: 'files/' | file_url
+                                                endif
+                                            endfor
+                                        endif
+                                    endif
+
+                                    
+                                    if swatch_url != blank
+                                        assign swatch_color = 'url(' | append: swatch_url | append: ')'  
+                                    endif
+                                else
+                                    if current_swatch_value !=  blank
+                                        assign swatch_color = current_swatch_value
+                                    else
+                                        assign swatch_color = value
+
+                                    endif
+                                endif
+
+                            endif
+                        %}
+
+                    {% endif %}
+
+                    {% if swatch_url != blank or swatch_color != blank %}
+                        {% assign swatches_added = swatches_added | plus: 1 %}
+                        <a class="{{ prefix | default: 'product' }}__swatches-swatch product__swatches-swatch product-swatches-swatch{% liquid
+                            if value.variant.id == current_variant.id
+                                echo ' current-variant'
+                            endif
+                            
+                            if swatch_choice == 'image'
+                                echo ' has-image-as-swatch'
+
+                                if swatch_url == blank
+                                    echo ' has-empty-swatch'
+                                endif
+                            else
+                                echo ' has-color-as-swatch'
+                            endif
+                        %}" style="{% liquid 
+                            
+                            echo '--product-swatch-value: ' | append: swatch_color
+
+                        %}" data-variant-id="{{ value.variant.id }}" data-option-value="{{ value }}" href="{{ value.variant.url }}" title="{{ value.variant.title | escape }}">
+                            {% liquid 
+                                if swatch_url != blank and images[swatch_url] != blank 
+                                    render 'section-image-processor', image: images[swatch_url], width: 24, alt: value.variant.title
+                                endif 
+                            %}
+                            <span>{{ value.variant.title | escape }}</span>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if option.values.size > swatch_limit and swatches_added >= swatch_limit %}
+                    <a class="{{ prefix | default: 'product' }}__swatches-more product__swatches-more" href="{{ product.url }}">
+                        {{ ' + ' }}{{ option.values.size | minus: swatch_limit }}
+                    </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+
+</div>

@@ -1,0 +1,480 @@
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    {% unless section.settings.fullwidth %}
+      --theme-section-custom-width: {{ section.settings.width | append: 'px' }};
+    {% endunless %}
+
+  {% if section.settings.inset %}
+    --theme-section-content-padding: var(--theme-section-content-padding-{{ section.settings.inset_choice }});
+  {% endif %}
+  
+  {% if section.settings.side_margin_choice != 'level-0' %}
+    --theme-section-side-margin: var(--theme-section-side-margin-{{ section.settings.side_margin_choice }});
+  {% endif %}
+  }
+{% endstyle %}
+
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    {% if section.settings.product_background_overlay %}
+        --theme-featured-product-banner-overlay-color: {{ section.settings.product_background_overlay_color }};
+        --theme-featured-product-banner-overlay-gradient: {{ section.settings.product_background_gradient_overlay }};
+        --theme-featured-product-banner-overlay-opacity: {{ section.settings.product_background_overlay_opacity | append: '%' }};
+
+    {% endif %}
+  }
+{% endstyle %}
+
+{% if section.settings.separator %}
+  {% style %}
+  #shopify-section-{{ section.id }} .separator{
+    --theme-section-separator-width: {{ section.settings.separator_width | append: '%' }};
+
+    {% if section.settings.separator_use_custom_color %}
+      --theme-section-separator-color: {{ section.settings.separator_custom_color }};
+    {% endif %}
+  }
+  {% endstyle %}
+{% endif %}
+
+{% if section.settings.spacing %}
+  {% style %}
+  #shopify-section-{{ section.id }}{
+    
+      {% unless section.settings.spacing_placement == '3' %}
+--theme-section-spacing-top: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+{% unless section.settings.spacing_placement == '2' %}
+      --theme-section-spacing-bottom: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+
+  }
+  {% endstyle %}
+{% endif %}
+
+{% if section.blocks != blank %}
+    {% for block in section.blocks %}
+        {% case block.type %}
+            {% when 'complementary' %}
+                {% style %}
+                    #shopify-section-{{ section.id }} .block-{{ block.id }}{
+
+
+                      {% if block.settings.products_gap %}
+                        --theme-product-complementary-gap: var(--theme-gap-{{ block.settings.products_gap_choice }});
+                        {% else %}
+                          --theme-product-complementary-gap: 0px;
+                      {% endif %}
+
+                      {% if block.settings.inset %}
+                        --theme-product-complementary-padding: var(--theme-block-content-padding-{{ block.settings.inset_choice }});
+                      {% endif %}  
+                    }
+                {% endstyle %}
+            {% when 'separator' %}
+                {% style %}
+                    #shopify-section-{{ section.id }} .block-{{ block.id }}{
+                        --theme-separator-width: {{ block.settings.width | append: '%' }};
+                        --theme-separator-height: {{ block.settings.height | append: 'px' }};
+                    }
+                {% endstyle %}
+            {% when 'spacer' %}
+                {% style %}
+                    #shopify-section-{{ section.id }} .block-{{ block.id }}{
+                        --theme-spacer-height: {{ block.settings.height | append: 'px' }};    
+                    }
+                {% endstyle %}
+        {% endcase %}
+    {% endfor %}
+{% endif %}
+
+
+
+{% liquid 
+
+    assign product = all_products[section.settings.product_choice]
+    assign current_variant = product.selected_or_first_available_variant
+    assign featured_image = current_variant.featured_image | default: product.featured_image 
+    assign pick_up_availabilities = current_variant.store_availabilities | where: 'pick_up_enabled', true
+
+
+    assign product_gallery_slider = true
+    assign product_image_count = product.images | size
+
+    if product_image_count > 1 and product_gallery_slider == true
+        assign has_slider = true
+    endif
+%}
+
+
+
+<div class="section-featured-product section-featured-product-banner product{% liquid 
+
+  if section.settings.fullwidth
+    echo ' has-fullwidth'
+  else
+    echo ' has-custom-width'
+  endif
+
+  if section.settings.side_margin_choice != 'level-0'
+    echo ' has-side-margin'
+  endif
+
+  if section.settings.inset
+    echo ' has-section-padding'
+  endif
+
+  echo ' ' | append: section.settings.color_scheme
+
+  if settings.animation_sections
+    echo ' has-animation'
+  endif
+
+%}">
+  <div class="section-featured-product-banner-container section-container">
+    {% if product != blank %}
+        {% if product.images %}
+            <div class="section-featured-product-banner-background">
+                <div class="section-featured-product-banner-background-media">
+                    {% for image in product.images limit: 2 %}
+                        {% render 'section-image-processor', image: image  %}
+                    {% endfor %}
+                </div>
+
+                {% if section.settings.product_background_overlay %}
+                    <div class="section-featured-product-banner-background-overlay"></div>
+                {% endif %}
+            </div>
+        {% endif %}
+        <div class="section-featured-product-banner-product-details">
+            <h2 class="section-featured-product-banner-product-title special-heading-size-medium">{{ product.title }}</h2>
+            <div class="section-featured-product-banner-product-price paragraph-size-large">
+                {% if product.compare_at_price and product.compare_at_price > product.price %}
+                    <span data-price-compare>{{ product.compare_at_price | money }}</span>
+                {% endif %}
+                <span data-price>{{ product.price | money }}</span>
+            </div>
+            <div class="section-featured-product-banner-product-description">{{ product.description | truncatewords: 50 }}</div>
+            {% if section.settings.product_button_text != blank %}
+                <a href="{{ product.url }}" class="section-featured-product-banner-product-more btn-{{ section.settings.product_button_style }}">{{ section.settings.product_button_text }}</a>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="section-featured-product-banner-background">
+            <div class="section-featured-product-banner-background-media">
+                {% for i in (1..2) %}
+                    {% assign placeholder_image = 'product-' | append: forloop.index %}
+                    {{ placeholder_image | placeholder_svg_tag: 'placeholder placeholder-featured-product-banner' }}
+                {% endfor %}
+            </div>
+
+            {% if section.settings.product_background_overlay %}
+                <div class="section-featured-product-banner-background-overlay"></div>
+            {% endif %}
+        </div>
+        <div class="section-featured-product-banner-product-details">
+            <h2 class="section-featured-product-banner-product-title special-heading-size-medium">{{ 'products.placeholder.title' | t }}</h2>
+            <div class="section-featured-product-banner-product-price paragraph-size-large">
+                <span data-price>{{ 'products.placeholder.price' | t }}</span>
+            </div>
+            <div class="section-featured-product-banner-product-description"><p>{{ 'products.placeholder.description' | t }}</p></div>
+            {% if section.settings.product_button_text != blank %}
+                <a href="{{ routes.root_url }}" class="section-featured-product-banner-product-more btn-{{ section.settings.product_button_style }}">{{ section.settings.product_button_text }}</a>
+            {% endif %}
+        </div>
+    {% endif %}
+  </div>
+</div>
+{% if section.settings.separator %}
+  <div class="section-separator{% liquid 
+echo ' ' | append: section.settings.color_scheme
+ %}"><hr class="separator"></div>
+{% endif %}
+
+
+
+
+
+{% schema %}
+{
+    "name": "t:sections.featured_product_banner.name",
+    "settings": [
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__general.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "fullwidth",
+            "label": "t:sections.common.settings.fullwidth.label",
+            "info": "t:sections.common.settings.fullwidth.info",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "width",
+            "min": 500,
+            "max": 2000,
+            "step": 20,
+            "unit": "px",
+            "label": "t:sections.common.settings.width.label",
+            "default": 1320,
+            "info": "t:sections.common.settings.width.info"
+        },
+        {
+            "type": "select",
+            "id": "side_margin_choice",
+            "label": "t:sections.common.settings.side_margin_choice.label",
+            "options": [
+                {
+                    "value": "level-0",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__4.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__5.label"
+                }
+            ],
+            "info": "t:sections.common.settings.side_margin_choice.info",
+            "default": "level-4"
+        },
+        {
+            "type": "color_scheme",
+            "id": "color_scheme",
+            "default": "scheme_1",
+            "label": "t:sections.common.settings.color_scheme.label"
+        },
+        {
+            "type": "checkbox",
+            "id": "inset",
+            "label": "t:sections.featured_product_banner.settings.inset.label",
+            "default": false
+        },
+        {
+            "type": "select",
+            "id": "inset_choice",
+            "label": "t:sections.common.settings.inset_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.inset_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.inset_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.inset_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.inset_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.inset_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__product.content"
+        },
+        {
+            "type": "product",
+            "id": "product_choice",
+            "label": "t:sections.featured_product_banner.settings.product_choice.label"
+        },
+        {
+            "type": "checkbox",
+            "id": "product_background_overlay",
+            "label": "t:sections.featured_product_banner.settings.product_background_overlay.label",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "product_background_overlay_color",
+            "label": "t:sections.featured_product_banner.settings.product_background_overlay_color.label",
+            "default": "#000000",
+            "info": "t:sections.featured_product_banner.settings.product_background_overlay_color.info"
+        },
+        {
+            "type": "color_background",
+            "id": "product_background_gradient_overlay",
+            "label": "t:sections.featured_product_banner.settings.product_background_gradient_overlay.label",
+            "info": "t:sections.featured_product_banner.settings.product_background_gradient_overlay.info"
+        },
+        {
+            "type": "range",
+            "id": "product_background_overlay_opacity",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "t:sections.featured_product_banner.settings.product_background_overlay_opacity.label",
+            "default": 40,
+            "info": "t:sections.featured_product_banner.settings.product_background_overlay_opacity.info"
+        },
+        {
+            "type": "text",
+            "id": "product_button_text",
+            "label": "t:sections.featured_product_banner.settings.product_button_text.label",
+            "default": "Explore this product",
+            "info": "t:sections.featured_product_banner.settings.product_button_text.info"
+        },
+        {
+            "type": "select",
+            "id": "product_button_style",
+            "label": "t:sections.common.settings.product_button_style.label",
+            "options": [
+                {
+                    "value": "outline",
+                    "label": "t:sections.common.settings.product_button_style.options.option__0.label"
+                },
+                {
+                    "value": "fill",
+                    "label": "t:sections.common.settings.product_button_style.options.option__1.label"
+                },
+                {
+                    "value": "outline-secondary",
+                    "label": "t:sections.common.settings.product_button_style.options.option__2.label"
+                },
+                {
+                    "value": "fill-secondary",
+                    "label": "t:sections.common.settings.product_button_style.options.option__3.label"
+                },
+                {
+                    "value": "link",
+                    "label": "t:sections.common.settings.product_button_style.options.option__4.label"
+                }
+            ],
+            "default": "fill"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__separator.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "separator",
+            "label": "t:sections.common.settings.separator.label",
+            "info": "t:sections.common.settings.separator.info",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "separator_width",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "t:sections.common.settings.separator_width.label",
+            "default": 100,
+            "info": "t:sections.common.settings.separator_width.info"
+        },
+        {
+            "type": "checkbox",
+            "id": "separator_use_custom_color",
+            "label": "t:sections.common.settings.separator_use_custom_color.label",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "separator_custom_color",
+            "label": "t:sections.common.settings.separator_custom_color.label",
+            "default": "#CCCCCC"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__spacing.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "spacing",
+            "label": "t:sections.common.settings.spacing.label",
+            "info": "t:sections.common.settings.spacing.info",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "spacing_choice",
+            "label": "t:sections.common.settings.spacing_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        },
+        {
+            "type": "select",
+            "id": "spacing_placement",
+            "label": "t:sections.common.settings.spacing_placement.label",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__0.label"
+                },
+                {
+                    "value": "2",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__1.label"
+                },
+                {
+                    "value": "3",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__2.label"
+                }
+            ],
+            "default": "1",
+            "info": "t:sections.common.settings.spacing_placement.info"
+        }
+    ],
+    "presets": [
+        {
+            "name": "t:sections.featured_product_banner.presets.featured_product_banner.name"
+        }
+    ],
+    "disabled_on": {
+        "groups": [
+            "*"
+        ]
+    }
+}
+{% endschema %}
+

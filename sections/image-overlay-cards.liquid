@@ -1,0 +1,836 @@
+
+{% style %}
+#shopify-section-{{ section.id }} {
+
+  {% if section.settings.gap %}
+    --theme-image-overlay-cards-gap: var(--theme-gap-{{ section.settings.gap_choice }});
+    {% else %}
+      --theme-image-overlay-cards-gap: 0px;
+  {% endif %}
+
+
+  --theme-image-overlay-cards-aspect-ratio: {{ section.settings.aspect_ratio }}
+
+}
+{% endstyle %}
+
+
+
+{% style %}
+
+{% for block in section.blocks %}
+  #shopify-section-{{ section.id }} .block-{{ block.id }} {
+
+
+    {% if block.settings.hover_background %}
+      --theme-image-overlay-cards-card-hover-background-color: {{ block.settings.hover_background_color }};
+    {% endif %}
+
+  }
+{% endfor %}
+
+{% endstyle %}
+
+
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    {% unless section.settings.fullwidth %}
+      --theme-section-custom-width: {{ section.settings.width | append: 'px' }};
+    {% endunless %}
+
+  {% if section.settings.inset %}
+    --theme-section-content-padding: var(--theme-section-content-padding-{{ section.settings.inset_choice }});
+  {% endif %}
+
+  {% if section.settings.side_margin_choice != 'level-0' %}
+    --theme-section-side-margin: var(--theme-section-side-margin-{{ section.settings.side_margin_choice }});
+  {% endif %}
+  }
+{% endstyle %}
+
+{% if section.settings.separator %}
+  {% style %}
+  #shopify-section-{{ section.id }} .separator{
+    --theme-section-separator-width: {{ section.settings.separator_width | append: '%' }};
+
+    {% if section.settings.separator_use_custom_color %}
+      --theme-section-separator-color: {{ section.settings.separator_custom_color }};
+    {% endif %}
+  }
+  {% endstyle %}
+{% endif %}
+
+{% if section.settings.spacing %}
+  {% style %}
+  #shopify-section-{{ section.id }}{
+    
+      {% unless section.settings.spacing_placement == '3' %}
+--theme-section-spacing-top: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+{% unless section.settings.spacing_placement == '2' %}
+      --theme-section-spacing-bottom: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+
+  }
+  {% endstyle %}
+{% endif %}
+
+
+<div class="section-image-overlay-cards{% liquid
+
+    
+  if section.settings.fullwidth
+    echo ' has-fullwidth'
+  else
+    echo ' has-custom-width'
+  endif
+
+  if section.settings.side_margin_choice != 'level-0'
+    echo ' has-side-margin'
+  endif
+
+  if section.settings.inset
+    echo ' has-section-padding'
+  endif
+
+  echo ' ' | append: section.settings.color_scheme
+
+  if settings.animation_sections
+    echo ' has-animation'
+  endif
+
+%}">
+  <div class="section-image-overlay-cards-container section-container">
+    {% if section.settings.text_1 != blank or section.settings.text_2 != blank or section.settings.button_text != blank %}
+    <div class="section-image-overlay-cards-header">
+      {% if section.settings.text_1 != blank or section.settings.text_2 != blank %}
+        <div class="section-image-overlay-cards-header__left">
+          {% if section.settings.text_1 != blank %}
+            <h2 class="section-image-overlay-cards-header__heading heading-size-{{ section.settings.text_1_size }}">{{ section.settings.text_1 }}</h2>
+          {% endif %}
+
+          {% if section.settings.text_2 != blank %}
+            <p class="section-image-overlay-cards-header__description paragraph-size-{{ section.settings.text_2_size }}">{{ section.settings.text_2 }}</p>
+          {% endif %}
+        </div>
+      {% endif %}
+      {% if section.settings.button_text != blank %}
+        {% render 'button', 
+            button_text: section.settings.button_text,  
+            button_url: section.settings.button_url,
+            button_style: section.settings.button_style,
+            button_classes: 'section-image-overlay-cards-button',
+            button_target: section.settings.button_target
+        %}
+      {% endif %}
+    </div>
+    {% endif %}
+  
+    <div class="section-image-overlay-cards-content">
+        {% for block in section.blocks %}
+            <div class="section-image-overlay-cards-card block-{{ block.id }}{% liquid 
+
+                if block.settings.hover_expand
+                  echo ' has-expand-on-hover'
+                endif
+
+                echo ' ' | append: block.settings.color_scheme
+            
+            %}" {{ block.shopify_attributes }}>
+            <span class="section-image-overlay-cards-card-sizer"></span>
+            <div class="section-image-overlay-cards-card-front">
+              <div class="section-image-overlay-cards-card-front__background">
+                {% if block.settings.image != blank %}
+                    {% render 'section-image-processor', image: block.settings.image %}
+                {% else %}
+                    {{ 'image' | placeholder_svg_tag: 'placeholder placeholder-image-overlay-cards' }}
+                {% endif %}
+              </div>
+              <div class="section-image-overlay-cards-card-front__content">
+                {% if block.settings.text_1 != blank %}
+                  <h3 class="section-image-overlay-cards-card-front__heading special-heading-size-{{ block.settings.text_1_size }}">{{ block.settings.text_1 }}</h3>
+                {% endif %}
+
+              </div>
+            </div>
+            <div class="section-image-overlay-cards-card-hover">
+              {% if block.settings.hover_background %}
+                <div class="section-image-overlay-cards-card-hover__background"></div>
+              {% endif %}
+              <div class="section-image-overlay-cards-card-hover__content">
+                {% if block.settings.text_1 != blank %}
+                  <h3 class="section-image-overlay-cards-card-hover__heading special-heading-size-{{ block.settings.text_1_size }}">{{ block.settings.text_1 }}</h3>
+                {% endif %}
+
+                {% if block.settings.text_2 != blank %}
+                  <p class="section-image-overlay-cards-card-hover__description paragraph-size-{{ block.settings.text_2_size }}">{{ block.settings.text_2 }}</p>
+                
+                {% endif %}
+
+                {% if block.settings.button_text != blank %}
+                  {% render 'button', 
+                      button_text: block.settings.button_text,  
+                      button_url: block.settings.button_url,
+                      button_style: block.settings.button_style,
+                      button_classes: 'section-image-overlay-cards-card-hover__button',
+                      button_target: block.settings.button_target
+                  %}
+                {% endif %}
+              </div>
+            </div>
+            </div>
+        {% endfor %}
+    </div>
+  </div>
+</div>
+{% if section.settings.separator %}
+  <div class="section-separator{% liquid 
+echo ' ' | append: section.settings.color_scheme
+ %}"><hr class="separator"></div>
+{% endif %}
+
+  
+
+
+{% schema %}
+{
+    "name": "t:sections.image_overlay_cards.name",
+    "settings": [
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__general.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "fullwidth",
+            "label": "t:sections.common.settings.fullwidth.label",
+            "info": "t:sections.common.settings.fullwidth.info",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "width",
+            "min": 500,
+            "max": 2000,
+            "step": 20,
+            "unit": "px",
+            "label": "t:sections.common.settings.width.label",
+            "default": 1320,
+            "info": "t:sections.common.settings.width.info"
+        },
+        {
+            "type": "select",
+            "id": "side_margin_choice",
+            "label": "t:sections.common.settings.side_margin_choice.label",
+            "options": [
+                {
+                    "value": "level-0",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__4.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__5.label"
+                }
+            ],
+            "info": "t:sections.common.settings.side_margin_choice.info",
+            "default": "level-4"
+        },
+        {
+            "type": "color_scheme",
+            "id": "color_scheme",
+            "default": "scheme_1",
+            "label": "t:sections.common.settings.color_scheme.label"
+        },
+        {
+            "type": "checkbox",
+            "id": "inset",
+            "label": "t:sections.image_overlay_cards.settings.inset.label",
+            "default": false
+        },
+        {
+            "type": "select",
+            "id": "inset_choice",
+            "label": "t:sections.common.settings.inset_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.inset_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.inset_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.inset_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.inset_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.inset_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__cards.content"
+        },
+        {
+            "type": "select",
+            "id": "aspect_ratio",
+            "label": "t:sections.image_overlay_cards.settings.aspect_ratio.label",
+            "options": [
+                {
+                    "value": "1/1",
+                    "label": "t:sections.image_overlay_cards.settings.aspect_ratio.options.option__0.label"
+                },
+                {
+                    "value": "2/1",
+                    "label": "t:sections.image_overlay_cards.settings.aspect_ratio.options.option__1.label"
+                },
+                {
+                    "value": "3/2",
+                    "label": "t:sections.image_overlay_cards.settings.aspect_ratio.options.option__2.label"
+                },
+                {
+                    "value": "4/3",
+                    "label": "t:sections.image_overlay_cards.settings.aspect_ratio.options.option__3.label"
+                },
+                {
+                    "value": "5/4",
+                    "label": "t:sections.image_overlay_cards.settings.aspect_ratio.options.option__4.label"
+                },
+                {
+                    "value": "6/7",
+                    "label": "t:sections.image_overlay_cards.settings.aspect_ratio.options.option__5.label"
+                },
+                {
+                    "value": "7/8",
+                    "label": "t:sections.image_overlay_cards.settings.aspect_ratio.options.option__6.label"
+                },
+                {
+                    "value": "8/9",
+                    "label": "t:sections.image_overlay_cards.settings.aspect_ratio.options.option__7.label"
+                },
+                {
+                    "value": "9/10",
+                    "label": "t:sections.image_overlay_cards.settings.aspect_ratio.options.option__8.label"
+                }
+            ],
+            "default": "4/3"
+        },
+        {
+            "type": "checkbox",
+            "id": "gap",
+            "label": "t:sections.image_overlay_cards.settings.gap.label",
+            "info": "t:sections.image_overlay_cards.settings.gap.info",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "gap_choice",
+            "label": "t:sections.common.settings.gap_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.gap_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.gap_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.gap_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.gap_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.gap_choice.options.option__4.label"
+                },
+                {
+                    "value": "level-6",
+                    "label": "t:sections.common.settings.gap_choice.options.option__5.label"
+                },
+                {
+                    "value": "level-7",
+                    "label": "t:sections.common.settings.gap_choice.options.option__6.label"
+                }
+            ],
+            "default": "level-4",
+            "info": "t:sections.common.settings.gap_choice.info"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__heading.content"
+        },
+        {
+            "type": "text",
+            "id": "text_1",
+            "label": "t:sections.image_overlay_cards.settings.text_1.label",
+            "default": "Image overlay cards"
+        },
+        {
+            "type": "select",
+            "id": "text_1_size",
+            "label": "t:sections.image_overlay_cards.settings.text_1_size.label",
+            "options": [
+                {
+                    "value": "x-small",
+                    "label": "t:sections.image_overlay_cards.settings.text_1_size.options.option__0.label"
+                },
+                {
+                    "value": "small",
+                    "label": "t:sections.image_overlay_cards.settings.text_1_size.options.option__1.label"
+                },
+                {
+                    "value": "medium",
+                    "label": "t:sections.image_overlay_cards.settings.text_1_size.options.option__2.label"
+                },
+                {
+                    "value": "large",
+                    "label": "t:sections.image_overlay_cards.settings.text_1_size.options.option__3.label"
+                },
+                {
+                    "value": "x-large",
+                    "label": "t:sections.image_overlay_cards.settings.text_1_size.options.option__4.label"
+                },
+                {
+                    "value": "big",
+                    "label": "t:sections.image_overlay_cards.settings.text_1_size.options.option__5.label"
+                },
+                {
+                    "value": "huge",
+                    "label": "t:sections.image_overlay_cards.settings.text_1_size.options.option__6.label"
+                }
+            ],
+            "default": "x-large"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__description.content"
+        },
+        {
+            "type": "text",
+            "id": "text_2",
+            "label": "t:sections.image_overlay_cards.settings.text_2.label",
+            "default": "This is simple description for Image cards section."
+        },
+        {
+            "type": "select",
+            "id": "text_2_size",
+            "label": "t:sections.image_overlay_cards.settings.text_2_size.label",
+            "options": [
+                {
+                    "value": "x-small",
+                    "label": "t:sections.image_overlay_cards.settings.text_2_size.options.option__0.label"
+                },
+                {
+                    "value": "small",
+                    "label": "t:sections.image_overlay_cards.settings.text_2_size.options.option__1.label"
+                },
+                {
+                    "value": "medium",
+                    "label": "t:sections.image_overlay_cards.settings.text_2_size.options.option__2.label"
+                },
+                {
+                    "value": "large",
+                    "label": "t:sections.image_overlay_cards.settings.text_2_size.options.option__3.label"
+                }
+            ],
+            "default": "large"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__button.content"
+        },
+        {
+            "type": "text",
+            "id": "button_text",
+            "label": "t:sections.image_overlay_cards.settings.button_text.label",
+            "default": "Button text"
+        },
+        {
+            "type": "url",
+            "id": "button_url",
+            "label": "t:sections.image_overlay_cards.settings.button_url.label"
+        },
+        {
+            "type": "select",
+            "id": "button_target",
+            "label": "t:sections.image_overlay_cards.settings.button_target.label",
+            "options": [
+                {
+                    "value": "_self",
+                    "label": "t:sections.image_overlay_cards.settings.button_target.options.option__0.label"
+                },
+                {
+                    "value": "_blank",
+                    "label": "t:sections.image_overlay_cards.settings.button_target.options.option__1.label"
+                }
+            ],
+            "default": "_self",
+            "info": "t:sections.image_overlay_cards.settings.button_target.info"
+        },
+        {
+            "type": "select",
+            "id": "button_style",
+            "label": "t:sections.common.settings.button_style.label",
+            "options": [
+                {
+                    "value": "outline",
+                    "label": "t:sections.common.settings.button_style.options.option__0.label"
+                },
+                {
+                    "value": "fill",
+                    "label": "t:sections.common.settings.button_style.options.option__1.label"
+                },
+                {
+                    "value": "outline-secondary",
+                    "label": "t:sections.common.settings.button_style.options.option__2.label"
+                },
+                {
+                    "value": "fill-secondary",
+                    "label": "t:sections.common.settings.button_style.options.option__3.label"
+                },
+                {
+                    "value": "link",
+                    "label": "t:sections.common.settings.button_style.options.option__4.label"
+                }
+            ],
+            "default": "fill"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__separator.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "separator",
+            "label": "t:sections.common.settings.separator.label",
+            "info": "t:sections.common.settings.separator.info",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "separator_width",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "t:sections.common.settings.separator_width.label",
+            "default": 100,
+            "info": "t:sections.common.settings.separator_width.info"
+        },
+        {
+            "type": "checkbox",
+            "id": "separator_use_custom_color",
+            "label": "t:sections.common.settings.separator_use_custom_color.label",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "separator_custom_color",
+            "label": "t:sections.common.settings.separator_custom_color.label",
+            "default": "#CCCCCC"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__spacing.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "spacing",
+            "label": "t:sections.common.settings.spacing.label",
+            "info": "t:sections.common.settings.spacing.info",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "spacing_choice",
+            "label": "t:sections.common.settings.spacing_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        },
+        {
+            "type": "select",
+            "id": "spacing_placement",
+            "label": "t:sections.common.settings.spacing_placement.label",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__0.label"
+                },
+                {
+                    "value": "2",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__1.label"
+                },
+                {
+                    "value": "3",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__2.label"
+                }
+            ],
+            "default": "1",
+            "info": "t:sections.common.settings.spacing_placement.info"
+        }
+    ],
+    "blocks": [
+        {
+            "name": "t:sections.image_overlay_cards.blocks.card.name",
+            "type": "card",
+            "limit": 2,
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "t:sections.image_overlay_cards.blocks.card.settings.header__general.content"
+                },
+                {
+                    "type": "color_scheme",
+                    "id": "color_scheme",
+                    "default": "scheme_2",
+                    "label": "t:sections.image_overlay_cards.blocks.card.settings.color_scheme.label"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "t:sections.image_overlay_cards.blocks.card.settings.image.label"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.image_overlay_cards.blocks.card.settings.header__hover_style.content"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "hover_background",
+                    "label": "t:sections.image_overlay_cards.blocks.card.settings.hover_background.label",
+                    "default": true
+                },
+                {
+                    "type": "color",
+                    "id": "hover_background_color",
+                    "label": "t:sections.image_overlay_cards.blocks.card.settings.hover_background_color.label",
+                    "default": "#000000",
+                    "info": "t:sections.image_overlay_cards.blocks.card.settings.hover_background_color.info"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "hover_expand",
+                    "label": "t:sections.image_overlay_cards.blocks.card.settings.hover_expand.label",
+                    "default": true
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.image_overlay_cards.blocks.card.settings.header__heading.content"
+                },
+                {
+                    "type": "text",
+                    "id": "text_1",
+                    "label": "t:sections.image_overlay_cards.blocks.card.settings.text_1.label",
+                    "default": "Card heading"
+                },
+                {
+                    "type": "select",
+                    "id": "text_1_size",
+                    "label": "t:sections.image_overlay_cards.blocks.card.settings.text_1_size.label",
+                    "options": [
+                        {
+                            "value": "x-small",
+                            "label": "t:sections.image_overlay_cards.blocks.card.settings.text_1_size.options.option__0.label"
+                        },
+                        {
+                            "value": "small",
+                            "label": "t:sections.image_overlay_cards.blocks.card.settings.text_1_size.options.option__1.label"
+                        },
+                        {
+                            "value": "medium",
+                            "label": "t:sections.image_overlay_cards.blocks.card.settings.text_1_size.options.option__2.label"
+                        },
+                        {
+                            "value": "large",
+                            "label": "t:sections.image_overlay_cards.blocks.card.settings.text_1_size.options.option__3.label"
+                        }
+                    ],
+                    "default": "small"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.image_overlay_cards.blocks.card.settings.header__description.content"
+                },
+                {
+                    "type": "text",
+                    "id": "text_2",
+                    "label": "t:sections.image_overlay_cards.blocks.card.settings.text_2.label",
+                    "default": "This is card description for image overlay cards"
+                },
+                {
+                    "type": "select",
+                    "id": "text_2_size",
+                    "label": "t:sections.image_overlay_cards.blocks.card.settings.text_2_size.label",
+                    "options": [
+                        {
+                            "value": "x-small",
+                            "label": "t:sections.image_overlay_cards.blocks.card.settings.text_2_size.options.option__0.label"
+                        },
+                        {
+                            "value": "small",
+                            "label": "t:sections.image_overlay_cards.blocks.card.settings.text_2_size.options.option__1.label"
+                        },
+                        {
+                            "value": "medium",
+                            "label": "t:sections.image_overlay_cards.blocks.card.settings.text_2_size.options.option__2.label"
+                        },
+                        {
+                            "value": "large",
+                            "label": "t:sections.image_overlay_cards.blocks.card.settings.text_2_size.options.option__3.label"
+                        }
+                    ],
+                    "default": "large"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.image_overlay_cards.blocks.card.settings.header__button_1.content"
+                },
+                {
+                    "type": "text",
+                    "id": "button_text",
+                    "label": "t:sections.image_overlay_cards.blocks.card.settings.button_text.label",
+                    "default": "Button text",
+                    "info": "t:sections.image_overlay_cards.blocks.card.settings.button_text.info"
+                },
+                {
+                    "type": "url",
+                    "id": "button_url",
+                    "label": "t:sections.image_overlay_cards.blocks.card.settings.button_url.label"
+                },
+                {
+                    "type": "select",
+                    "id": "button_target",
+                    "label": "t:sections.image_overlay_cards.blocks.card.settings.button_target.label",
+                    "options": [
+                        {
+                            "value": "_self",
+                            "label": "t:sections.image_overlay_cards.blocks.card.settings.button_target.options.option__0.label"
+                        },
+                        {
+                            "value": "_blank",
+                            "label": "t:sections.image_overlay_cards.blocks.card.settings.button_target.options.option__1.label"
+                        }
+                    ],
+                    "default": "_self",
+                    "info": "t:sections.image_overlay_cards.blocks.card.settings.button_target.info"
+                },
+                {
+                    "type": "select",
+                    "id": "button_style",
+                    "label": "t:sections.image_overlay_cards.blocks.card.settings.button_style.label",
+                    "options": [
+                        {
+                            "value": "outline",
+                            "label": "t:sections.image_overlay_cards.blocks.card.settings.button_style.options.option__0.label"
+                        },
+                        {
+                            "value": "fill",
+                            "label": "t:sections.image_overlay_cards.blocks.card.settings.button_style.options.option__1.label"
+                        },
+                        {
+                            "value": "outline-secondary",
+                            "label": "t:sections.image_overlay_cards.blocks.card.settings.button_style.options.option__2.label"
+                        },
+                        {
+                            "value": "fill-secondary",
+                            "label": "t:sections.image_overlay_cards.blocks.card.settings.button_style.options.option__3.label"
+                        },
+                        {
+                            "value": "link",
+                            "label": "t:sections.image_overlay_cards.blocks.card.settings.button_style.options.option__4.label"
+                        }
+                    ],
+                    "default": "fill"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "button_enable_width",
+                    "label": "t:sections.image_overlay_cards.blocks.card.settings.button_enable_width.label",
+                    "default": true,
+                    "info": "t:sections.image_overlay_cards.blocks.card.settings.button_enable_width.info"
+                },
+                {
+                    "type": "range",
+                    "id": "button_width",
+                    "min": 150,
+                    "max": 350,
+                    "step": 2,
+                    "unit": "px",
+                    "label": "t:sections.image_overlay_cards.blocks.card.settings.button_width.label",
+                    "default": 200,
+                    "info": "t:sections.image_overlay_cards.blocks.card.settings.button_width.info"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "t:sections.image_overlay_cards.presets.image_overlay_cards.name",
+            "blocks": [
+                {
+                    "type": "card"
+                },
+                {
+                    "type": "card"
+                }
+            ]
+        }
+    ],
+    "disabled_on": {
+        "groups": [
+            "*"
+        ]
+    }
+}
+{% endschema %}
+

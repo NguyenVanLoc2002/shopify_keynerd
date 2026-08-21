@@ -1,0 +1,1102 @@
+
+{% style %}
+#shopify-section-{{ section.id }} {
+
+  --theme-image-cards-carousel-vertcial-alignment: {{ section.settings.vertical_align }};
+
+  {% if section.settings.gap %}
+    --theme-image-cards-carousel-gap: var(--theme-gap-{{ section.settings.gap_choice }});
+  {% else %}
+    --theme-image-cards-carousel-gap: 0px;
+  {% endif %}
+
+  --theme-image-cards-carousel-columns-count: {{ section.settings.columns_count }};
+
+}
+
+{% for block in section.blocks %}
+  #shopify-section-{{ section.id }} .block-{{ block.id }} {
+
+    --theme-image-cards-carousel-card-aspect-ratio: {{ block.settings.image_aspect_ratio }};
+    
+    {% if block.settings.image_custom_width %}
+      --theme-image-cards-carousel-card-image-width: {{ block.settings.image_width | append: 'px' }};
+    {% endif %}
+
+    {% if block.settings.content_custom_width %}
+      --theme-image-cards-carousel-card-content-width: {{ block.settings.content_width | append: 'px' }};
+    {% endif %}
+
+  }
+{% endfor %}
+
+{% endstyle %}
+
+
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    {% unless section.settings.fullwidth %}
+      --theme-section-custom-width: {{ section.settings.width | append: 'px' }};
+    {% endunless %}
+
+  {% if section.settings.inset %}
+    --theme-section-content-padding: var(--theme-section-content-padding-{{ section.settings.inset_choice }});
+  {% endif %}
+
+  {% if section.settings.side_margin_choice != 'level-0' %}
+    --theme-section-side-margin: var(--theme-section-side-margin-{{ section.settings.side_margin_choice }});
+  {% endif %}
+  }
+{% endstyle %}
+
+{% if section.settings.separator %}
+  {% style %}
+  #shopify-section-{{ section.id }} .separator{
+    --theme-section-separator-width: {{ section.settings.separator_width | append: '%' }};
+
+    {% if section.settings.separator_use_custom_color %}
+      --theme-section-separator-color: {{ section.settings.separator_custom_color }};
+    {% endif %}
+  }
+  {% endstyle %}
+{% endif %}
+
+{% if section.settings.spacing %}
+  {% style %}
+  #shopify-section-{{ section.id }}{
+    
+      {% unless section.settings.spacing_placement == '3' %}
+--theme-section-spacing-top: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+{% unless section.settings.spacing_placement == '2' %}
+      --theme-section-spacing-bottom: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+
+  }
+  {% endstyle %}
+{% endif %}
+
+
+{% liquid 
+  
+  assign columns_count = section.settings.columns_count | plus: 0
+  
+  assign section_blocks_size = section.blocks.size
+
+
+  if section_blocks_size > columns_count and section.settings.carousel
+    assign has_carousel = true
+  endif
+
+  if section_blocks_size == blank
+    assign has_carousel = true
+  endif
+
+%}
+
+<div class="section-image-cards-carousel{% liquid 
+
+  if section.settings.fullwidth
+    echo ' has-fullwidth'
+  else
+    echo ' has-custom-width'
+  endif
+
+  if section.settings.side_margin_choice != 'level-0'
+    echo ' has-side-margin'
+  endif
+
+  if section.settings.inset
+    echo ' has-section-padding'
+  endif
+
+  echo ' ' | append: section.settings.color_scheme
+
+  if settings.animation_sections
+    echo ' has-animation'
+  endif
+
+%}">
+  <div class="section-image-cards-carousel-container section-container">
+    {% if section.settings.text_1 != blank or section.settings.text_2 != blank or section.settings.button_text != blank %}
+      <div class="section-image-cards-carousel-header">
+        {% if section.settings.text_1 != blank or section.settings.text_2 != blank %}
+          <div class="section-image-cards-carousel-header__left">
+            {% if section.settings.text_1 != blank %}
+              <h2 class="section-image-cards-carousel-header__heading heading-size-{{ section.settings.text_1_size }}">{{ section.settings.text_1 }}</h2>
+            {% endif %}
+
+            {% if section.settings.text_2 != blank %}
+              <p class="section-image-cards-carousel-header__description paragraph-size-{{ section.settings.text_2_size }}">{{ section.settings.text_2 }}</p>
+            {% endif %}
+          </div>
+        {% endif %}
+        {% if section.settings.button_text != blank %}
+          {% render 'button', 
+              button_text: section.settings.button_text,  
+              button_url: section.settings.button_url,
+              button_style: section.settings.button_style,
+              button_classes: 'section-image-cards-carousel-button',
+              button_target: section.settings.button_target
+          %}
+        {% endif %}
+      </div>
+    {% endif %}
+    <div class="section-image-cards-carousel-cards{% liquid 
+        if section.settings.columns_offset
+          echo ' has-carousel-columns-offset'
+        endif
+
+        if has_carousel
+          echo ' has-carousel splide'
+        endif
+        %}" {% liquid 
+        if has_carousel 
+
+          assign carousel_columns_count = columns_count
+          if section.settings.columns_offset
+            assign carousel_columns_count = columns_count | minus: 1
+          endif
+
+          assign data_carousel_offset = 'data-columns-offset="' | append: section.settings.columns_offset | append: '"'
+
+          echo data_carousel_offset
+
+          assign data_options = 'data-options={'
+            
+          assign data_options = data_options | append: '"rewind":' | append: section.settings.loop | append: ','
+          assign data_options = data_options | append: '"perMove":' | append: section.settings.per_move | append: ','
+          assign data_options = data_options | append: '"perPage":' | append: carousel_columns_count | append: ','
+
+          if section.settings.speed != blank
+            assign data_options = data_options | append: '"speed":"' | append: section.settings.speed | append: '",'
+          endif 
+          if section.settings.interval != blank
+            assign data_options = data_options | append: '"interval":"' | append: section.settings.interval | append: '",'
+          endif 
+          
+          assign data_options = data_options | append: '"autoplay":' | append: section.settings.autoplay | append: ','
+          assign data_options = data_options | append: '"drag":' | append: section.settings.mouse_drag | append: ','
+          assign data_options = data_options | append: '"arrows":' | append: section.settings.arrows | append: ','
+          assign data_options = data_options | append: '"pagination":' | append: section.settings.dots | append: ','
+
+          assign data_options = data_options | append: '"gap":' | append: '"var(--theme-image-cards-carousel-gap)"' | append: ','
+          
+          assign data_options = data_options | append: '"breakpoints":{'
+          assign data_options = data_options | append: '"768":{'
+          assign data_options = data_options | append: '"perPage":' | append: 2
+          assign data_options = data_options | append: '}'
+          assign data_options = data_options | append: '}' | append: ','
+
+          assign data_options_count = data_options | size | minus: 1
+          assign data_options = data_options | slice: 0, data_options_count
+          assign data_options = data_options | append: '}'
+
+          echo data_options
+
+          
+        endif
+
+      
+      %}>
+
+        {% if has_carousel %}
+          {% if section.settings.progress_bar %}
+            <div class="splide__progress">
+              <div class="splide__progress-bar"></div>
+            </div>
+          {% endif %}
+          <div class="splide__arrows">
+            <button class="splide__arrow splide__arrow--prev">
+              {% render 'icon-arrow-right' %}
+            </button>
+            <button class="splide__arrow splide__arrow--next">
+              {% render 'icon-arrow-right' %}
+            </button>
+          </div>
+          <div class="splide__track">
+              <ul class="splide__list">
+        {% endif %}
+      {% if section.blocks != blank %}
+        {% for block in section.blocks %}
+            {% liquid 
+              assign tag = 'div'
+              if has_carousel
+                assign tag = 'li' 
+              endif 
+            %}
+          <{{ tag }} class="section-image-cards-carousel-card{% liquid 
+              if has_carousel
+                echo ' splide__slide'
+              endif 
+
+              %} block-{{ block.id }}" {{ block.shopify_attributes }}>
+            
+            <div class="section-image-cards-carousel-card__image">
+            {% if block.settings.image_link %}
+                <a href="{{ block.settings.image_link }}" title="{{ block.settings.text_1 }}">
+            {% endif %}
+              {% if block.settings.image != blank %}
+                {% render 'section-image-processor', image: block.settings.image %}
+              {% else %}
+                {{ 'image' | placeholder_svg_tag: 'placeholder placeholder-image-cards' }}
+              {% endif %}
+            {% if block.settings.image_link %}
+                </a>
+            {% endif %}
+            </div>
+            
+            <div class="section-image-cards-carousel-card__content">
+              {% if block.settings.text_1 != blank %}
+                <h3 class="section-image-cards-carousel-card__heading special-heading-size-{{ block.settings.text_1_size }}">{{ block.settings.text_1 }}</h3>
+              {% endif %}
+              {% if block.settings.text_2 != blank %}
+                <div class="section-image-cards-carousel-card__additional-heading heading-size-{{ block.settings.text_2_size }}">{{ block.settings.text_2 }}</div>
+              {% endif %}
+              {% if block.settings.text_3 != blank %}
+                <p class="section-image-cards-carousel-card__description paragraph-size-{{ block.settings.text_3_size }}">{{ block.settings.text_3 }}</p>
+              {% endif %}
+
+              {% if block.settings.button_text != blank %}
+                {% render 'button', 
+                    button_text: block.settings.button_text,  
+                    button_url: block.settings.button_url,
+                    button_style: block.settings.button_style,
+                    button_classes: 'section-image-cards-carousel-card__button',
+                    button_target: block.settings.button_target
+                %}
+              {% endif %}
+            </div>
+        </{{ tag }}>
+        {% endfor %}
+      {% endif %}
+      {% if has_carousel %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% if section.settings.separator %}
+  <div class="section-separator{% liquid 
+echo ' ' | append: section.settings.color_scheme
+ %}"><hr class="separator"></div>
+{% endif %}
+
+
+
+{% schema %}
+{
+    "name": "t:sections.image_cards_carousel.name",
+    "settings": [
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__general.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "fullwidth",
+            "label": "t:sections.common.settings.fullwidth.label",
+            "info": "t:sections.common.settings.fullwidth.info",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "width",
+            "min": 500,
+            "max": 2000,
+            "step": 20,
+            "unit": "px",
+            "label": "t:sections.common.settings.width.label",
+            "default": 1320,
+            "info": "t:sections.common.settings.width.info"
+        },
+        {
+            "type": "select",
+            "id": "side_margin_choice",
+            "label": "t:sections.common.settings.side_margin_choice.label",
+            "options": [
+                {
+                    "value": "level-0",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__4.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__5.label"
+                }
+            ],
+            "info": "t:sections.common.settings.side_margin_choice.info",
+            "default": "level-4"
+        },
+        {
+            "type": "color_scheme",
+            "id": "color_scheme",
+            "default": "scheme_1",
+            "label": "t:sections.common.settings.color_scheme.label"
+        },
+        {
+            "type": "checkbox",
+            "id": "inset",
+            "label": "t:sections.image_cards_carousel.settings.inset.label",
+            "default": false
+        },
+        {
+            "type": "select",
+            "id": "inset_choice",
+            "label": "t:sections.common.settings.inset_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.inset_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.inset_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.inset_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.inset_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.inset_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        },
+        {
+            "type": "checkbox",
+            "id": "gap",
+            "label": "t:sections.image_cards_carousel.settings.gap.label",
+            "info": "t:sections.image_cards_carousel.settings.gap.info",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "gap_choice",
+            "label": "t:sections.common.settings.gap_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.gap_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.gap_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.gap_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.gap_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.gap_choice.options.option__4.label"
+                },
+                {
+                    "value": "level-6",
+                    "label": "t:sections.common.settings.gap_choice.options.option__5.label"
+                },
+                {
+                    "value": "level-7",
+                    "label": "t:sections.common.settings.gap_choice.options.option__6.label"
+                }
+            ],
+            "default": "level-4",
+            "info": "t:sections.common.settings.gap_choice.info"
+        },
+        {
+            "type": "select",
+            "id": "vertical_align",
+            "label": "t:sections.image_cards_carousel.settings.vertical_align.label",
+            "options": [
+                {
+                    "value": "normal",
+                    "label": "t:sections.image_cards_carousel.settings.vertical_align.options.option__0.label"
+                },
+                {
+                    "value": "flex-start",
+                    "label": "t:sections.image_cards_carousel.settings.vertical_align.options.option__1.label"
+                },
+                {
+                    "value": "flex-end",
+                    "label": "t:sections.image_cards_carousel.settings.vertical_align.options.option__2.label"
+                },
+                {
+                    "value": "center",
+                    "label": "t:sections.image_cards_carousel.settings.vertical_align.options.option__3.label"
+                }
+            ],
+            "default": "normal"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__heading.content"
+        },
+        {
+            "type": "text",
+            "id": "text_1",
+            "label": "t:sections.image_cards_carousel.settings.text_1.label",
+            "default": "This is Image cards carousel heading"
+        },
+        {
+            "type": "select",
+            "id": "text_1_size",
+            "label": "t:sections.image_cards_carousel.settings.text_1_size.label",
+            "options": [
+                {
+                    "value": "x-small",
+                    "label": "t:sections.image_cards_carousel.settings.text_1_size.options.option__0.label"
+                },
+                {
+                    "value": "small",
+                    "label": "t:sections.image_cards_carousel.settings.text_1_size.options.option__1.label"
+                },
+                {
+                    "value": "medium",
+                    "label": "t:sections.image_cards_carousel.settings.text_1_size.options.option__2.label"
+                },
+                {
+                    "value": "large",
+                    "label": "t:sections.image_cards_carousel.settings.text_1_size.options.option__3.label"
+                },
+                {
+                    "value": "x-large",
+                    "label": "t:sections.image_cards_carousel.settings.text_1_size.options.option__4.label"
+                },
+                {
+                    "value": "big",
+                    "label": "t:sections.image_cards_carousel.settings.text_1_size.options.option__5.label"
+                },
+                {
+                    "value": "huge",
+                    "label": "t:sections.image_cards_carousel.settings.text_1_size.options.option__6.label"
+                }
+            ],
+            "default": "medium"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__description.content"
+        },
+        {
+            "type": "text",
+            "id": "text_2",
+            "label": "t:sections.image_cards_carousel.settings.text_2.label",
+            "default": "This is simple description for Image cards carousel section."
+        },
+        {
+            "type": "select",
+            "id": "text_2_size",
+            "label": "t:sections.image_cards_carousel.settings.text_2_size.label",
+            "options": [
+                {
+                    "value": "x-small",
+                    "label": "t:sections.image_cards_carousel.settings.text_2_size.options.option__0.label"
+                },
+                {
+                    "value": "small",
+                    "label": "t:sections.image_cards_carousel.settings.text_2_size.options.option__1.label"
+                },
+                {
+                    "value": "medium",
+                    "label": "t:sections.image_cards_carousel.settings.text_2_size.options.option__2.label"
+                },
+                {
+                    "value": "large",
+                    "label": "t:sections.image_cards_carousel.settings.text_2_size.options.option__3.label"
+                }
+            ],
+            "default": "medium"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__button.content"
+        },
+        {
+            "type": "text",
+            "id": "button_text",
+            "label": "t:sections.image_cards_carousel.settings.button_text.label",
+            "default": "Button text"
+        },
+        {
+            "type": "url",
+            "id": "button_url",
+            "label": "t:sections.image_cards_carousel.settings.button_url.label"
+        },
+        {
+            "type": "select",
+            "id": "button_target",
+            "label": "t:sections.image_cards_carousel.settings.button_target.label",
+            "options": [
+                {
+                    "value": "_self",
+                    "label": "t:sections.image_cards_carousel.settings.button_target.options.option__0.label"
+                },
+                {
+                    "value": "_blank",
+                    "label": "t:sections.image_cards_carousel.settings.button_target.options.option__1.label"
+                }
+            ],
+            "default": "_self",
+            "info": "t:sections.image_cards_carousel.settings.button_target.info"
+        },
+        {
+            "type": "select",
+            "id": "button_style",
+            "label": "t:sections.common.settings.button_style.label",
+            "options": [
+                {
+                    "value": "outline",
+                    "label": "t:sections.common.settings.button_style.options.option__0.label"
+                },
+                {
+                    "value": "fill",
+                    "label": "t:sections.common.settings.button_style.options.option__1.label"
+                },
+                {
+                    "value": "outline-secondary",
+                    "label": "t:sections.common.settings.button_style.options.option__2.label"
+                },
+                {
+                    "value": "fill-secondary",
+                    "label": "t:sections.common.settings.button_style.options.option__3.label"
+                },
+                {
+                    "value": "link",
+                    "label": "t:sections.common.settings.button_style.options.option__4.label"
+                }
+            ],
+            "default": "fill"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__cards.content"
+        },
+        {
+            "type": "range",
+            "id": "columns_count",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "label": "t:sections.image_cards_carousel.settings.columns_count.label",
+            "default": 3
+        },
+        {
+            "type": "checkbox",
+            "id": "columns_offset",
+            "label": "t:sections.image_cards_carousel.settings.columns_offset.label",
+            "info": "t:sections.image_cards_carousel.settings.columns_offset.info",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__carousel_settings.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel",
+            "label": "t:sections.common.settings.carousel.label",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "per_move",
+            "min": 1,
+            "max": 4,
+            "step": 1,
+            "label": "t:sections.common.settings.per_move.label",
+            "info": "t:sections.common.settings.per_move.info",
+            "default": 1
+        },
+        {
+            "type": "checkbox",
+            "id": "autoplay",
+            "label": "t:sections.common.settings.autoplay.label",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "interval",
+            "min": 1000,
+            "max": 9000,
+            "step": 100,
+            "unit": "ms",
+            "label": "t:sections.common.settings.interval.label",
+            "default": 4000
+        },
+        {
+            "type": "checkbox",
+            "id": "loop",
+            "label": "t:sections.common.settings.loop.label",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "mouse_drag",
+            "label": "t:sections.common.settings.mouse_drag.label",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "arrows",
+            "label": "t:sections.common.settings.arrows.label",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "dots",
+            "label": "t:sections.common.settings.dots.label",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "speed",
+            "min": 100,
+            "max": 2000,
+            "step": 50,
+            "unit": "ms",
+            "label": "t:sections.common.settings.speed.label",
+            "default": 400
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__separator.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "separator",
+            "label": "t:sections.common.settings.separator.label",
+            "info": "t:sections.common.settings.separator.info",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "separator_width",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "t:sections.common.settings.separator_width.label",
+            "default": 100,
+            "info": "t:sections.common.settings.separator_width.info"
+        },
+        {
+            "type": "checkbox",
+            "id": "separator_use_custom_color",
+            "label": "t:sections.common.settings.separator_use_custom_color.label",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "separator_custom_color",
+            "label": "t:sections.common.settings.separator_custom_color.label",
+            "default": "#CCCCCC"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__spacing.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "spacing",
+            "label": "t:sections.common.settings.spacing.label",
+            "info": "t:sections.common.settings.spacing.info",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "spacing_choice",
+            "label": "t:sections.common.settings.spacing_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        },
+        {
+            "type": "select",
+            "id": "spacing_placement",
+            "label": "t:sections.common.settings.spacing_placement.label",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__0.label"
+                },
+                {
+                    "value": "2",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__1.label"
+                },
+                {
+                    "value": "3",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__2.label"
+                }
+            ],
+            "default": "1",
+            "info": "t:sections.common.settings.spacing_placement.info"
+        }
+    ],
+    "blocks": [
+        {
+            "name": "t:sections.image_cards_carousel.blocks.card.name",
+            "type": "card",
+            "limit": 12,
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "t:sections.image_cards_carousel.blocks.card.settings.header__general.content"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.image_cards_carousel.blocks.card.settings.header__image.content"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "t:sections.image_cards_carousel.blocks.card.settings.image.label"
+                },
+                {
+                    "type": "select",
+                    "id": "image_aspect_ratio",
+                    "label": "t:sections.image_cards_carousel.blocks.card.settings.image_aspect_ratio.label",
+                    "options": [
+                        {
+                            "value": "auto",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.image_aspect_ratio.options.option__0.label"
+                        },
+                        {
+                            "value": "1/1",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.image_aspect_ratio.options.option__1.label"
+                        },
+                        {
+                            "value": "3/2",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.image_aspect_ratio.options.option__2.label"
+                        },
+                        {
+                            "value": "4/3",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.image_aspect_ratio.options.option__3.label"
+                        },
+                        {
+                            "value": "5/4",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.image_aspect_ratio.options.option__4.label"
+                        },
+                        {
+                            "value": "2/3",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.image_aspect_ratio.options.option__5.label"
+                        },
+                        {
+                            "value": "3/4",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.image_aspect_ratio.options.option__6.label"
+                        },
+                        {
+                            "value": "4/5",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.image_aspect_ratio.options.option__7.label"
+                        }
+                    ],
+                    "default": "auto"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "image_custom_width",
+                    "label": "t:sections.image_cards_carousel.blocks.card.settings.image_custom_width.label",
+                    "default": false
+                },
+                {
+                    "type": "range",
+                    "id": "image_width",
+                    "min": 200,
+                    "max": 1200,
+                    "step": 10,
+                    "unit": "px",
+                    "label": "t:sections.image_cards_carousel.blocks.card.settings.image_width.label",
+                    "default": 520,
+                    "info": "t:sections.image_cards_carousel.blocks.card.settings.image_width.info"
+                },
+                {
+                    "type": "url",
+                    "id": "image_link",
+                    "label": "t:sections.image_cards_carousel.blocks.card.settings.image_link.label"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.image_cards_carousel.blocks.card.settings.header__content.content"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "content_custom_width",
+                    "label": "t:sections.image_cards_carousel.blocks.card.settings.content_custom_width.label",
+                    "default": false
+                },
+                {
+                    "type": "range",
+                    "id": "content_width",
+                    "min": 200,
+                    "max": 1200,
+                    "step": 10,
+                    "unit": "px",
+                    "label": "t:sections.image_cards_carousel.blocks.card.settings.content_width.label",
+                    "default": 450,
+                    "info": "t:sections.image_cards_carousel.blocks.card.settings.content_width.info"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.image_cards_carousel.blocks.card.settings.header__heading.content"
+                },
+                {
+                    "type": "text",
+                    "id": "text_1",
+                    "label": "t:sections.image_cards_carousel.blocks.card.settings.text_1.label",
+                    "default": "This is image card heading"
+                },
+                {
+                    "type": "select",
+                    "id": "text_1_size",
+                    "label": "t:sections.image_cards_carousel.blocks.card.settings.text_1_size.label",
+                    "options": [
+                        {
+                            "value": "x-small",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.text_1_size.options.option__0.label"
+                        },
+                        {
+                            "value": "small",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.text_1_size.options.option__1.label"
+                        },
+                        {
+                            "value": "medium",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.text_1_size.options.option__2.label"
+                        },
+                        {
+                            "value": "large",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.text_1_size.options.option__3.label"
+                        }
+                    ],
+                    "default": "small"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.image_cards_carousel.blocks.card.settings.header__additional_heading.content"
+                },
+                {
+                    "type": "text",
+                    "id": "text_2",
+                    "label": "t:sections.image_cards_carousel.blocks.card.settings.text_2.label",
+                    "default": "This is additional heading"
+                },
+                {
+                    "type": "select",
+                    "id": "text_2_size",
+                    "label": "t:sections.image_cards_carousel.blocks.card.settings.text_2_size.label",
+                    "options": [
+                        {
+                            "value": "x-small",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.text_2_size.options.option__0.label"
+                        },
+                        {
+                            "value": "small",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.text_2_size.options.option__1.label"
+                        },
+                        {
+                            "value": "medium",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.text_2_size.options.option__2.label"
+                        },
+                        {
+                            "value": "large",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.text_2_size.options.option__3.label"
+                        },
+                        {
+                            "value": "x-large",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.text_2_size.options.option__4.label"
+                        },
+                        {
+                            "value": "big",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.text_2_size.options.option__5.label"
+                        },
+                        {
+                            "value": "huge",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.text_2_size.options.option__6.label"
+                        }
+                    ],
+                    "default": "medium"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.image_cards_carousel.blocks.card.settings.header__description.content"
+                },
+                {
+                    "type": "text",
+                    "id": "text_3",
+                    "label": "t:sections.image_cards_carousel.blocks.card.settings.text_3.label",
+                    "default": "This is simple description for image card section"
+                },
+                {
+                    "type": "select",
+                    "id": "text_3_size",
+                    "label": "t:sections.image_cards_carousel.blocks.card.settings.text_3_size.label",
+                    "options": [
+                        {
+                            "value": "x-small",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.text_3_size.options.option__0.label"
+                        },
+                        {
+                            "value": "small",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.text_3_size.options.option__1.label"
+                        },
+                        {
+                            "value": "medium",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.text_3_size.options.option__2.label"
+                        },
+                        {
+                            "value": "large",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.text_3_size.options.option__3.label"
+                        }
+                    ],
+                    "default": "large"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.image_cards_carousel.blocks.card.settings.header__button.content"
+                },
+                {
+                    "type": "text",
+                    "id": "button_text",
+                    "label": "t:sections.image_cards_carousel.blocks.card.settings.button_text.label",
+                    "default": "Button text"
+                },
+                {
+                    "type": "url",
+                    "id": "button_url",
+                    "label": "t:sections.image_cards_carousel.blocks.card.settings.button_url.label"
+                },
+                {
+                    "type": "select",
+                    "id": "button_target",
+                    "label": "t:sections.image_cards_carousel.blocks.card.settings.button_target.label",
+                    "options": [
+                        {
+                            "value": "_self",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.button_target.options.option__0.label"
+                        },
+                        {
+                            "value": "_blank",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.button_target.options.option__1.label"
+                        }
+                    ],
+                    "default": "_self",
+                    "info": "t:sections.image_cards_carousel.blocks.card.settings.button_target.info"
+                },
+                {
+                    "type": "select",
+                    "id": "button_style",
+                    "label": "t:sections.image_cards_carousel.blocks.card.settings.button_style.label",
+                    "options": [
+                        {
+                            "value": "outline",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.button_style.options.option__0.label"
+                        },
+                        {
+                            "value": "fill",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.button_style.options.option__1.label"
+                        },
+                        {
+                            "value": "outline-secondary",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.button_style.options.option__2.label"
+                        },
+                        {
+                            "value": "fill-secondary",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.button_style.options.option__3.label"
+                        },
+                        {
+                            "value": "link",
+                            "label": "t:sections.image_cards_carousel.blocks.card.settings.button_style.options.option__4.label"
+                        }
+                    ],
+                    "default": "fill"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "t:sections.image_cards_carousel.presets.image_cards_carousel.name",
+            "blocks": [
+                {
+                    "type": "card",
+                    "settings": {
+                        "text_2": "",
+                        "button_text": ""
+                    }
+                },
+                {
+                    "type": "card",
+                    "settings": {
+                        "text_2": "",
+                        "button_text": ""
+                    }
+                },
+                {
+                    "type": "card",
+                    "settings": {
+                        "text_2": "",
+                        "button_text": ""
+                    }
+                },
+                {
+                    "type": "card",
+                    "settings": {
+                        "text_2": "",
+                        "button_text": ""
+                    }
+                }
+            ]
+        }
+    ],
+    "disabled_on": {
+        "groups": [
+            "*"
+        ]
+    }
+}
+{% endschema %}
+

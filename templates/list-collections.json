@@ -1,0 +1,75 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+
+{
+  "sections": {
+    "rich-text": {
+      "type": "rich-text",
+      "blocks": {
+        "special-heading-1": {
+          "type": "special-heading",
+          "settings": {
+            "text": "All collections",
+            "text_size": "large",
+            "text_custom_width": false,
+            "text_width": 450
+          }
+        },
+        "description-1": {
+          "type": "richtext",
+          "settings": {
+            "text": "<p>Discover high-performance activewear designed for every move—shop our latest collections tailored for comfort, style, and endurance.</p>",
+            "text_custom_width": true,
+            "text_width": 800
+          }
+        }
+      },
+      "block_order": [
+        "special-heading-1",
+        "description-1"
+      ],
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "side_margin_choice": "level-0",
+        "color_scheme": "",
+        "inset_choice": "level-5",
+        "alignment": "center",
+        "gap": true,
+        "gap_choice": "level-4",
+        "separator": false,
+        "separator_width": 100,
+        "separator_use_custom_color": false,
+        "separator_custom_color": "#CCCCCC",
+        "spacing": true,
+        "spacing_choice": "level-3",
+        "spacing_placement": "1"
+      }
+    },
+    "main": {
+      "type": "main-list-collections",
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "side_margin_choice": "level-5",
+        "color_scheme": "",
+        "inset": false,
+        "inset_choice": "level-3",
+        "spacing": true,
+        "spacing_choice": "level-3",
+        "spacing_placement": "1"
+      }
+    }
+  },
+  "order": [
+    "rich-text",
+    "main"
+  ]
+}

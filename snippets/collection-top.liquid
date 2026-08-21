@@ -1,0 +1,72 @@
+
+
+{% liquid 
+    
+    assign display_filters = true
+
+    if template == 'search'
+      assign source = search
+      assign filters = search.filters
+      assign products_count = search.results_count
+      assign sort_by = search.sort_by | default: search.default_sort_by
+
+      unless search.performed
+        assign display_filters = false
+      endunless
+
+      if products_count == 0
+        assign display_filters = false
+      endif
+
+    else
+      assign source = collection
+      assign filters = collection.filters
+      assign products_count = collection.products_count 
+      assign sort_by = collection.sort_by | default: collection.default_sort_by
+    endif 
+%}
+
+
+{% if section_settings.total_count %}
+    {% if template == 'search' %}
+    <div class="facet-filters-count">{{ 'general.search.results_total' | t: count: products_count }}</div>
+    {% else %}
+    <div class="facet-filters-count">{{ 'products.general.total_html' | t: count: products_count }}</div>
+    {% endif %}
+{% endif %}
+
+{% if section_settings.sorting %}
+    {% if source.sort_options != blank %}
+    <div class="facet-filters-sorting">
+        <div class="facet-filters-sorting-label">{{ 'products.general.sort_by' | t }}</div>
+        <div class="facet-filters-sorting-container">
+            <sorting-dropdown class="facet-filters-sorting-dropdown">
+            <button class="facet-filters-sorting-default" aria-expanded="false" aria-controls="SortingList">
+                <span>{%- liquid 
+                    for option in source.sort_options
+                        if option.value == sort_by
+                            echo option.name
+                        endif 
+                    endfor 
+                -%}</span>
+                {% render 'icon-chevron-down' %}
+            </button>
+            <ul id="SortingList" class="facet-filters-sorting-list" hidden="true">
+                {%- for option in source.sort_options -%}
+                    <li class="facet-filters-sorting-list__item {% liquid
+                        if option.value == sort_by
+                            echo 'selected'
+                        endif
+                    %}" data-value="{% echo option.value %}" tabindex="0">{{ option.name | escape }}</li>
+                {%- endfor -%}
+            </ul>
+            </sorting-dropdown>
+            <select name="sort_by" class="facet-filters-sorting-select" id="SortBy" aria-describedby="a11y-refresh-page-message">
+                {%- for option in source.sort_options -%}
+                    <option value="{{ option.value | escape }}"{% if option.value == sort_by %} selected="selected"{% endif %}>{{ option.name | escape }}</option>
+                {%- endfor -%}
+            </select>
+        </div>
+    </div>
+    {% endif %}
+{% endif %}

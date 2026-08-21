@@ -1,0 +1,659 @@
+
+{% style %}
+#shopify-section-{{ section.id }} {
+  
+  {% unless section.settings.fullwidth %}
+    --theme-section-custom-width: {{ section.settings.width | append: 'px' }};
+  {% endunless %}
+
+  {% if section.settings.inset %}
+    --theme-section-content-padding: var(--theme-section-content-padding-{{ section.settings.inset_choice }});
+  {% endif %}
+
+  {% if section.settings.side_margin_choice != 'level-0' %}
+    --theme-section-side-margin: var(--theme-section-side-margin-{{ section.settings.side_margin_choice }});
+  {% endif %}
+
+}
+{% endstyle %}
+
+
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    {% if section.settings.height_mobile != 'auto' %}
+      --theme-image-before-after-custom-height-mobile: {{ section.settings.height_mobile | append: 'px' }};
+    {% endif %}
+
+    {% if section.settings.height != 'auto' %}
+      --theme-image-before-after-custom-height-desktop: {{ section.settings.height | append: 'px' }};
+    {% endif %}
+  }
+{% endstyle %}
+
+
+{% if section.settings.separator %}
+  {% style %}
+  #shopify-section-{{ section.id }} .separator{
+    --theme-section-separator-width: {{ section.settings.separator_width | append: '%' }};
+
+    {% if section.settings.separator_use_custom_color %}
+      --theme-section-separator-color: {{ section.settings.separator_custom_color }};
+    {% endif %}
+  }
+  {% endstyle %}
+{% endif %}
+
+{% if section.settings.spacing %}
+  {% style %}
+  #shopify-section-{{ section.id }}{
+    
+      {% unless section.settings.spacing_placement == '3' %}
+--theme-section-spacing-top: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+{% unless section.settings.spacing_placement == '2' %}
+      --theme-section-spacing-bottom: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+
+  }
+  {% endstyle %}
+{% endif %}
+
+
+<div class="section-image-before-after{% liquid 
+
+  if section.settings.fullwidth
+    echo ' has-fullwidth'
+  else
+    echo ' has-custom-width'
+  endif
+
+  if section.settings.side_margin_choice != 'level-0'
+    echo ' has-side-margin'
+  endif
+
+  if section.settings.inset
+    echo ' has-section-padding'
+  endif
+
+  echo ' ' | append: section.settings.color_scheme
+
+  if settings.animation_sections
+    echo ' has-animation'
+  endif
+  
+%}">
+<div class="section-image-before-after-container section-container">
+    {% if section.settings.text_1 != blank or section.settings.text_2 != blank or section.settings.button_text != blank %}
+        <div class="section-image-before-after-header">
+        {% if section.settings.text_1 != blank or section.settings.text_2 != blank %}
+            <div class="section-image-before-after-header__left">
+            {% if section.settings.text_1 != blank %}
+                <h2 class="section-image-before-after-header__heading heading-size-{{ section.settings.text_1_size }}">{{ section.settings.text_1 }}</h2>
+            {% endif %}
+
+            {% if section.settings.text_2 != blank %}
+                <p class="section-image-before-after-header__description paragraph-size-{{ section.settings.text_2_size }}">{{ section.settings.text_2 }}</p>
+            {% endif %}
+            </div>
+        {% endif %}
+        {% if section.settings.button_text != blank %}
+            {% render 'button', 
+                button_text: section.settings.button_text,  
+                button_url: section.settings.button_url,
+                button_style: section.settings.button_style,
+                button_classes: 'section-image-before-after-button',
+                button_target: section.settings.button_target
+            %}
+        {% endif %}
+        </div>
+    {% endif %}
+    {% if section.blocks != blank %}
+    <before-after class="before-after section-image-before-after-content">
+        <div class="before-after-content">
+            {% for block in section.blocks %}
+                {% if block.type == 'image' %}
+                    <div class="before-after-image{% liquid
+  
+                        echo ' ' | append: block.settings.color_scheme
+
+                        %} block-{{ block.id }}" {{ block.shopify_attributes }}>
+                        <div class="before-after-image__image">
+                            {% liquid
+                                if block.settings.image != blank or block.settings.image_mobile != blank
+                                    render 'section-image-processor', image: block.settings.image, image_mobile: block.settings.image_mobile
+                                else 
+                                    assign placeholder_image = 'lifestyle-' | append: forloop.index
+                                    echo placeholder_image | placeholder_svg_tag: 'placeholder placeholder-image-before-after'
+                                endif
+                            %}
+                        </div>
+                        <h3 class="before-after-image__heading heading-size-{{ block.settings.text_size }}">{{ block.settings.text }}</h3>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="before-after-handler">
+            <span class="before-after-handler-button"></span>
+        </div>
+    </before-after>
+    {% endif %}
+</div>
+</div>
+{% if section.settings.separator %}
+  <div class="section-separator{% liquid 
+echo ' ' | append: section.settings.color_scheme
+ %}"><hr class="separator"></div>
+{% endif %}
+
+
+{% schema %}
+{
+    "name": "t:sections.before_and_after_image.name",
+    "settings": [
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__general.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "fullwidth",
+            "label": "t:sections.common.settings.fullwidth.label",
+            "info": "t:sections.common.settings.fullwidth.info",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "width",
+            "min": 500,
+            "max": 2000,
+            "step": 20,
+            "unit": "px",
+            "label": "t:sections.common.settings.width.label",
+            "default": 1320,
+            "info": "t:sections.common.settings.width.info"
+        },
+        {
+            "type": "select",
+            "id": "height_mobile",
+            "label": "t:sections.common.settings.height_mobile.label",
+            "options": [
+                {
+                    "value": "400",
+                    "label": "t:sections.common.settings.height_mobile.options.option__0.label"
+                },
+                {
+                    "value": "460",
+                    "label": "t:sections.common.settings.height_mobile.options.option__1.label"
+                },
+                {
+                    "value": "520",
+                    "label": "t:sections.common.settings.height_mobile.options.option__2.label"
+                },
+                {
+                    "value": "600",
+                    "label": "t:sections.common.settings.height_mobile.options.option__3.label"
+                },
+                {
+                    "value": "680",
+                    "label": "t:sections.common.settings.height_mobile.options.option__4.label"
+                },
+                {
+                    "value": "780",
+                    "label": "t:sections.common.settings.height_mobile.options.option__5.label"
+                },
+                {
+                    "value": "900",
+                    "label": "t:sections.common.settings.height_mobile.options.option__6.label"
+                },
+                {
+                    "value": "auto",
+                    "label": "t:sections.common.settings.height_mobile.options.option__7.label"
+                }
+            ],
+            "default": "460"
+        },
+        {
+            "type": "select",
+            "id": "height",
+            "label": "t:sections.before_and_after_image.settings.height.label",
+            "options": [
+                {
+                    "value": "400",
+                    "label": "t:sections.before_and_after_image.settings.height.options.option__0.label"
+                },
+                {
+                    "value": "460",
+                    "label": "t:sections.before_and_after_image.settings.height.options.option__1.label"
+                },
+                {
+                    "value": "520",
+                    "label": "t:sections.before_and_after_image.settings.height.options.option__2.label"
+                },
+                {
+                    "value": "600",
+                    "label": "t:sections.before_and_after_image.settings.height.options.option__3.label"
+                },
+                {
+                    "value": "680",
+                    "label": "t:sections.before_and_after_image.settings.height.options.option__4.label"
+                },
+                {
+                    "value": "780",
+                    "label": "t:sections.before_and_after_image.settings.height.options.option__5.label"
+                },
+                {
+                    "value": "900",
+                    "label": "t:sections.before_and_after_image.settings.height.options.option__6.label"
+                },
+                {
+                    "value": "auto",
+                    "label": "t:sections.before_and_after_image.settings.height.options.option__7.label"
+                }
+            ],
+            "default": "680"
+        },
+        {
+            "type": "select",
+            "id": "side_margin_choice",
+            "label": "t:sections.common.settings.side_margin_choice.label",
+            "options": [
+                {
+                    "value": "level-0",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__4.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__5.label"
+                }
+            ],
+            "info": "t:sections.common.settings.side_margin_choice.info",
+            "default": "level-4"
+        },
+        {
+            "type": "color_scheme",
+            "id": "color_scheme",
+            "default": "scheme_1",
+            "label": "t:sections.common.settings.color_scheme.label"
+        },
+        {
+            "type": "checkbox",
+            "id": "inset",
+            "label": "t:sections.before_and_after_image.settings.inset.label",
+            "default": false
+        },
+        {
+            "type": "select",
+            "id": "inset_choice",
+            "label": "t:sections.common.settings.inset_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.inset_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.inset_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.inset_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.inset_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.inset_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__heading.content"
+        },
+        {
+            "type": "text",
+            "id": "text_1",
+            "label": "t:sections.before_and_after_image.settings.text_1.label",
+            "default": "This is Image cards heading"
+        },
+        {
+            "type": "select",
+            "id": "text_1_size",
+            "label": "t:sections.before_and_after_image.settings.text_1_size.label",
+            "options": [
+                {
+                    "value": "x-small",
+                    "label": "t:sections.before_and_after_image.settings.text_1_size.options.option__0.label"
+                },
+                {
+                    "value": "small",
+                    "label": "t:sections.before_and_after_image.settings.text_1_size.options.option__1.label"
+                },
+                {
+                    "value": "medium",
+                    "label": "t:sections.before_and_after_image.settings.text_1_size.options.option__2.label"
+                },
+                {
+                    "value": "large",
+                    "label": "t:sections.before_and_after_image.settings.text_1_size.options.option__3.label"
+                },
+                {
+                    "value": "x-large",
+                    "label": "t:sections.before_and_after_image.settings.text_1_size.options.option__4.label"
+                },
+                {
+                    "value": "big",
+                    "label": "t:sections.before_and_after_image.settings.text_1_size.options.option__5.label"
+                },
+                {
+                    "value": "huge",
+                    "label": "t:sections.before_and_after_image.settings.text_1_size.options.option__6.label"
+                }
+            ],
+            "default": "medium"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__description.content"
+        },
+        {
+            "type": "text",
+            "id": "text_2",
+            "label": "t:sections.before_and_after_image.settings.text_2.label",
+            "default": "This is simple description for Image cards section."
+        },
+        {
+            "type": "select",
+            "id": "text_2_size",
+            "label": "t:sections.before_and_after_image.settings.text_2_size.label",
+            "options": [
+                {
+                    "value": "x-small",
+                    "label": "t:sections.before_and_after_image.settings.text_2_size.options.option__0.label"
+                },
+                {
+                    "value": "small",
+                    "label": "t:sections.before_and_after_image.settings.text_2_size.options.option__1.label"
+                },
+                {
+                    "value": "medium",
+                    "label": "t:sections.before_and_after_image.settings.text_2_size.options.option__2.label"
+                },
+                {
+                    "value": "large",
+                    "label": "t:sections.before_and_after_image.settings.text_2_size.options.option__3.label"
+                }
+            ],
+            "default": "medium"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__button.content"
+        },
+        {
+            "type": "text",
+            "id": "button_text",
+            "label": "t:sections.before_and_after_image.settings.button_text.label",
+            "default": "Button text"
+        },
+        {
+            "type": "url",
+            "id": "button_url",
+            "label": "t:sections.before_and_after_image.settings.button_url.label"
+        },
+        {
+            "type": "select",
+            "id": "button_target",
+            "label": "t:sections.before_and_after_image.settings.button_target.label",
+            "options": [
+                {
+                    "value": "_self",
+                    "label": "t:sections.before_and_after_image.settings.button_target.options.option__0.label"
+                },
+                {
+                    "value": "_blank",
+                    "label": "t:sections.before_and_after_image.settings.button_target.options.option__1.label"
+                }
+            ],
+            "default": "_self",
+            "info": "t:sections.before_and_after_image.settings.button_target.info"
+        },
+        {
+            "type": "select",
+            "id": "button_style",
+            "label": "t:sections.common.settings.button_style.label",
+            "options": [
+                {
+                    "value": "outline",
+                    "label": "t:sections.common.settings.button_style.options.option__0.label"
+                },
+                {
+                    "value": "fill",
+                    "label": "t:sections.common.settings.button_style.options.option__1.label"
+                },
+                {
+                    "value": "outline-secondary",
+                    "label": "t:sections.common.settings.button_style.options.option__2.label"
+                },
+                {
+                    "value": "fill-secondary",
+                    "label": "t:sections.common.settings.button_style.options.option__3.label"
+                },
+                {
+                    "value": "link",
+                    "label": "t:sections.common.settings.button_style.options.option__4.label"
+                }
+            ],
+            "default": "fill"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__separator.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "separator",
+            "label": "t:sections.common.settings.separator.label",
+            "info": "t:sections.common.settings.separator.info",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "separator_width",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "t:sections.common.settings.separator_width.label",
+            "default": 100,
+            "info": "t:sections.common.settings.separator_width.info"
+        },
+        {
+            "type": "checkbox",
+            "id": "separator_use_custom_color",
+            "label": "t:sections.common.settings.separator_use_custom_color.label",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "separator_custom_color",
+            "label": "t:sections.common.settings.separator_custom_color.label",
+            "default": "#CCCCCC"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__spacing.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "spacing",
+            "label": "t:sections.common.settings.spacing.label",
+            "info": "t:sections.common.settings.spacing.info",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "spacing_choice",
+            "label": "t:sections.common.settings.spacing_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        },
+        {
+            "type": "select",
+            "id": "spacing_placement",
+            "label": "t:sections.common.settings.spacing_placement.label",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__0.label"
+                },
+                {
+                    "value": "2",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__1.label"
+                },
+                {
+                    "value": "3",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__2.label"
+                }
+            ],
+            "default": "1",
+            "info": "t:sections.common.settings.spacing_placement.info"
+        }
+    ],
+    "blocks": [
+        {
+            "name": "t:sections.before_and_after_image.blocks.image.name",
+            "type": "image",
+            "limit": 2,
+            "settings": [
+                {
+                    "type": "color_scheme",
+                    "id": "color_scheme",
+                    "default": "scheme_1",
+                    "label": "t:sections.before_and_after_image.blocks.image.settings.color_scheme.label"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image_mobile",
+                    "label": "t:sections.before_and_after_image.blocks.image.settings.image_mobile.label",
+                    "info": "t:sections.before_and_after_image.blocks.image.settings.image_mobile.info"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "t:sections.before_and_after_image.blocks.image.settings.image.label",
+                    "info": "t:sections.before_and_after_image.blocks.image.settings.image.info"
+                },
+                {
+                    "type": "text",
+                    "id": "text",
+                    "label": "t:sections.before_and_after_image.blocks.image.settings.text.label",
+                    "default": "Image"
+                },
+                {
+                    "type": "select",
+                    "id": "text_size",
+                    "label": "t:sections.before_and_after_image.blocks.image.settings.text_size.label",
+                    "options": [
+                        {
+                            "value": "x-small",
+                            "label": "t:sections.before_and_after_image.blocks.image.settings.text_size.options.option__0.label"
+                        },
+                        {
+                            "value": "small",
+                            "label": "t:sections.before_and_after_image.blocks.image.settings.text_size.options.option__1.label"
+                        },
+                        {
+                            "value": "medium",
+                            "label": "t:sections.before_and_after_image.blocks.image.settings.text_size.options.option__2.label"
+                        },
+                        {
+                            "value": "large",
+                            "label": "t:sections.before_and_after_image.blocks.image.settings.text_size.options.option__3.label"
+                        },
+                        {
+                            "value": "x-large",
+                            "label": "t:sections.before_and_after_image.blocks.image.settings.text_size.options.option__4.label"
+                        },
+                        {
+                            "value": "big",
+                            "label": "t:sections.before_and_after_image.blocks.image.settings.text_size.options.option__5.label"
+                        },
+                        {
+                            "value": "huge",
+                            "label": "t:sections.before_and_after_image.blocks.image.settings.text_size.options.option__6.label"
+                        }
+                    ],
+                    "default": "medium"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "t:sections.before_and_after_image.presets.before_and_after_image.name",
+            "blocks": [
+                {
+                    "type": "image",
+                    "settings": {
+                        "text": "Before"
+                    }
+                },
+                {
+                    "type": "image",
+                    "settings": {
+                        "text": "After"
+                    }
+                }
+            ]
+        }
+    ],
+    "disabled_on": {
+        "groups": [
+            "*"
+        ]
+    }
+}
+{% endschema %}
+

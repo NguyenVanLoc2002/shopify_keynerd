@@ -1,0 +1,230 @@
+
+
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    {% unless section.settings.fullwidth %}
+      --theme-section-custom-width: {{ section.settings.width | append: 'px' }};
+    {% endunless %}
+
+  {% if section.settings.inset %}
+    --theme-section-content-padding: var(--theme-section-content-padding-{{ section.settings.inset_choice }});
+  {% endif %}
+  {% if section.settings.side_margin_choice != 'level-0' %}
+    --theme-section-side-margin: var(--theme-section-side-margin-{{ section.settings.side_margin_choice }});
+  {% endif %}
+  }
+{% endstyle %}
+
+<div class="section-breadcrumbs{% liquid 
+
+  if section.settings.fullwidth
+    echo ' has-fullwidth'
+  else
+    echo ' has-custom-width'
+  endif
+
+  if section.settings.side_margin_choice != 'level-0'
+    echo ' has-side-margin'
+  endif
+
+  if section.settings.inset
+    echo ' has-section-padding'
+  endif
+
+  echo ' ' | append: section.settings.color_scheme
+
+%}"> 
+    {%- unless template == 'index' or template == 'cart' or template == 'list-collections' or template == '404' -%}
+      {%- assign t = template | split: '.' | first -%}
+      <div class="section-breadcrumbs-container section-container">
+    
+        <nav class="breadcrumbs" role="navigation" aria-label="breadcrumbs">
+          <ul class="breadcrumbs__list">
+            <li class="breadcrumbs__item">
+              <a class="breadcrumbs__link" href="{{ routes.root_url }}">{{ 'sections.breadcrumbs.home_text' | t }}</a>
+            </li>
+            {%- case t -%}
+              {%- when 'page' -%}
+                <li class="breadcrumbs__item">
+                  <span class="breadcrumbs__text" href="{{ page.url }}" aria-current="page">{{ page.title }}</span>
+                </li>
+              {%- when 'product' -%}
+                {%- if collection.url -%}
+                  <li class="breadcrumbs__item">
+                    {{ collection.title | link_to: collection.url }}
+                  </li>
+                {%- endif -%}
+                <li class="breadcrumbs__item">
+                  <span class="breadcrumbs__text" href="{{ product.url }}" aria-current="page">{{ product.title }}</span>
+                </li>
+              {%- when 'collection' -%}
+                {% if collection.handle %}
+                  {%- if current_tags -%}
+                    <li class="breadcrumbs__item">
+                      {{ collection.title | link_to: collection.url }}
+                    </li>
+                    <li class="breadcrumbs__item">
+                      {%- capture tag_url -%}{{ collection.url }}/{{ current_tags | join: "+"}}{%- endcapture -%}
+                      <span class="breadcrumbs__text" href="{{ tag_url }}" aria-current="page">{{ current_tags | join: " + "}}</span>
+                    </li>
+                  {%- else -%}
+                    <li class="breadcrumbs__item">
+                      <span class="breadcrumbs__text" href="{{ collection.url }}" aria-current="page">{{ collection.title }}</span>
+                    </li>
+                  {%- endif -%}
+                {% endif %}
+              {%- when 'blog' -%}
+                {%- if current_tags -%}
+                  <li class="breadcrumbs__item">
+                    {{ blog.title | link_to: blog.url }}
+                  </li>
+                  <li class="breadcrumbs__item">
+                    {%- capture tag_url -%}{{blog.url}}/tagged/{{ current_tags | join: "+" }}{%- endcapture -%}
+                    <span class="breadcrumbs__text" href="{{ tag_url }}" aria-current="page">{{ current_tags | join: " + " }}</span>
+                  </li>
+                {%- else -%}
+                  <li class="breadcrumbs__item">
+                    <span class="breadcrumbs__text" href="{{ blog.url }}" aria-current="page">{{ blog.title }}</span>
+                  </li>
+                {%- endif -%}
+              {%- when 'article' -%}
+                <li class="breadcrumbs__item">
+                  {{ blog.title | link_to: blog.url }}
+                </li>
+                <li class="breadcrumbs__item">
+                  <span class="breadcrumbs__text" href="{{ article.url }}" aria-current="page">{{ article.title }}</span>
+                </li>
+              {%- else -%}
+                <li class="breadcrumbs__item">
+                  <span class="breadcrumbs__text" href="{{ request.path }}" aria-current="page">{{ page_title }}</span>
+                </li>
+            {%- endcase -%}
+          </ul>
+        </nav>
+      </div>
+    {%- endunless -%}
+
+</div>
+
+
+{% schema %}
+{
+    "name": "t:sections.breadcrumbs.name",
+    "settings": [
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__general.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "fullwidth",
+            "label": "t:sections.common.settings.fullwidth.label",
+            "info": "t:sections.common.settings.fullwidth.info",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "width",
+            "min": 500,
+            "max": 2000,
+            "step": 20,
+            "unit": "px",
+            "label": "t:sections.common.settings.width.label",
+            "default": 1320,
+            "info": "t:sections.common.settings.width.info"
+        },
+        {
+            "type": "select",
+            "id": "side_margin_choice",
+            "label": "t:sections.common.settings.side_margin_choice.label",
+            "options": [
+                {
+                    "value": "level-0",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__4.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__5.label"
+                }
+            ],
+            "info": "t:sections.common.settings.side_margin_choice.info",
+            "default": "level-4"
+        },
+        {
+            "type": "color_scheme",
+            "id": "color_scheme",
+            "default": "scheme_1",
+            "label": "t:sections.common.settings.color_scheme.label"
+        },
+        {
+            "type": "checkbox",
+            "id": "inset",
+            "label": "t:sections.breadcrumbs.settings.inset.label",
+            "default": false
+        },
+        {
+            "type": "select",
+            "id": "inset_choice",
+            "label": "t:sections.common.settings.inset_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.inset_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.inset_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.inset_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.inset_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.inset_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        }
+    ],
+    "presets": [
+        {
+            "name": "t:sections.breadcrumbs.presets.breadcrumbs.name"
+        }
+    ],
+    "disabled_on": {
+        "templates": [
+            "404",
+            "blog",
+            "list-collections",
+            "cart",
+            "index"
+        ],
+        "groups": [
+            "*"
+        ]
+    }
+}
+{% endschema %}
+

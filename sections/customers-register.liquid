@@ -1,0 +1,41 @@
+<!-- /templates/customers/register.liquid -->
+
+<div class="customers-wrapper customers-register-wrapper">
+    <div class="customers-register">
+        <div class="customers-register-header">
+            <h1 class="customers-form-title customers-register-title">{{ 'customer.register.title' | t }}</h1>
+        </div>
+        <div class="customers-form customers-register-form">
+            {% form 'create_customer' %}
+
+            {{ form.errors | default_errors }}
+
+            <label for="CustomerRegisterFirstname">
+                <span>{{ 'customer.register.first_name' | t }}</span>
+                <input id="CustomerRegisterFirstname" type="text" name="customer[first_name]" class="customer_first_name" />
+            </label>
+
+            <label for="CustomerRegisterLastname">
+                <span>{{ 'customer.register.last_name' | t }}</span>
+                <input id="CustomerRegisterLastname" type="text" name="customer[last_name]" class="customer_last_name" />
+            </label>
+            
+            <label for="CustomerRegisterEmail">
+                <span>{{ 'customer.register.email' | t }}</span>
+                <input id="CustomerRegisterEmail" type="email" name="customer[email]" class="customer_email" />
+            </label>
+
+            <label for="CustomerRegisterPassword">
+                <span>{{ 'customer.register.password' | t }}</span>
+                <input id="CustomerRegisterPassword" type="password" name="customer[password]" class="customer_password" />
+            </label>
+
+            <button type="submit" class="btn-fill">{{ 'customer.register.submit' | t }}</button>
+
+            {% endform %}
+        </div>
+        <div class="customers-register-login-link">   
+            {{ 'customer.register.login_label' | t }} {{ 'customer.register.login' | t | customer_login_link }}
+        </div>
+    </div>
+</div>

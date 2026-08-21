@@ -1,0 +1,52 @@
+
+<sticky-bar class="product-sticky-bar{% liquid
+    unless current_variant.available
+        echo ' product-currently-not-available'
+    endunless
+%}">
+    <div class="product-sticky-bar-content">
+        {% if current_variant.featured_image != blank or product.featured_image %}
+            {% liquid 
+                assign image = current_variant.featured_image
+                if image == blank
+                    assign image = product.featured_image 
+                endif
+            %}
+            <div class="product-sticky-bar-product-thumbnail">
+                {% render 'section-image-processor', image: image %}
+            </div>
+        {% endif %}
+        <div class="product-sticky-bar-details">
+            <div class="product-sticky-bar-product-title">
+                {{ product.title }}
+            </div>
+            <div class="product-sticky-bar-additional">
+                <div class="product-sticky-bar-product-price product-price{% liquid 
+                    if current_variant.available and current_variant.compare_at_price > current_variant.price 
+                        echo ' product-price-on-sale'
+                    endif 
+                %}" data-text-sale="{{ 'products.product.sale_badge' | t }}" {{ block.shopify_attributes }}>
+                    {% if current_variant.compare_at_price and current_variant.compare_at_price > current_variant.price %}
+                        <span data-price-compare>{{ current_variant.compare_at_price | money }}</span>
+                    {% endif %}
+                    <span data-price>{{ current_variant.price | money }}</span>
+                </div>
+                
+                {% unless product.has_only_default_variant %}
+                    <div class="product-sticky-bar-chosen-variant">{{ current_variant.title }}</div>
+                {% endunless %}
+            </div>
+            <button {% unless current_variant.available %}disabled{% endunless %} type="button" class="product-sticky-bar-add-to-cart btn-fill">
+                {% if current_variant.available %}
+                    <span data-text="{{ 'products.product.add_to_cart' | t }}">
+                        <span>{{ 'products.product.add_to_cart' | t }}</span>
+                    </span>
+                {% else %}
+                    <span data-text="{{ 'products.product.stock.sold_out' | t }}">
+                        <span>{{ 'products.product.stock.sold_out' | t }}</span>
+                    </span>
+                {% endif %}
+            </button>
+        </div>
+    </div>
+</sticky-bar>

@@ -1,0 +1,109 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+
+{
+  "name": "Header",
+  "type": "header",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement-bar-1": {
+          "type": "announcement",
+          "settings": {
+            "text": "Flash Sale: 25% Off All Activewear!",
+            "btn_text": "Shop Now",
+            "btn_url": "#",
+            "btn_target": "_self"
+          }
+        },
+        "announcement-bar-2": {
+          "type": "announcement",
+          "settings": {
+            "text": "This is announcement bar for displaying all kind of information.",
+            "btn_text": "",
+            "btn_url": "",
+            "btn_target": "_self"
+          }
+        }
+      },
+      "block_order": [
+        "announcement-bar-1",
+        "announcement-bar-2"
+      ],
+      "settings": {
+        "color_scheme": "",
+        "border_choice": "0",
+        "carousel": true,
+        "autoplay": true,
+        "interval": 4000,
+        "loop": true,
+        "mouse_drag": true,
+        "arrows": true,
+        "speed": 400
+      }
+    },
+    "header": {
+      "type": "header",
+      "blocks": {
+        "mega_menu_3Gfpyq": {
+          "type": "mega_menu",
+          "settings": {
+            "mega_menu_index": 3,
+            "mega_menu_card_1_text_1": "For Workout",
+            "mega_menu_card_1_text_2": "",
+            "mega_menu_card_1_link": "",
+            "mega_menu_card_1_target": "_self",
+            "mega_menu_card_2_text_1": "For athletes",
+            "mega_menu_card_2_text_2": "",
+            "mega_menu_card_2_link": "",
+            "mega_menu_card_2_target": "_self",
+            "mega_menu_card_3_text_1": "About us",
+            "mega_menu_card_3_text_2": "",
+            "mega_menu_card_3_link": "",
+            "mega_menu_card_3_target": "_self"
+          }
+        }
+      },
+      "block_order": [
+        "mega_menu_3Gfpyq"
+      ],
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "color_scheme": "",
+        "inset_choice": "level-3",
+        "header_style": "1",
+        "header_min_height": 70,
+        "logo_height": 20,
+        "primary_menu": "main-menu",
+        "account_icon": true,
+        "account_label": false,
+        "cart_icon": true,
+        "cart_label": false,
+        "search_icon": true,
+        "country_language_placement": "right",
+        "country_language_style": "2",
+        "country_selector": true,
+        "country_label_style": "2",
+        "language_selector": false,
+        "language_label_style": "2",
+        "primary_menu_collection_image_display": false,
+        "primary_menu_sticky": false,
+        "primary_menu_floating": false,
+        "floating_color_scheme": ""
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header"
+  ]
+}

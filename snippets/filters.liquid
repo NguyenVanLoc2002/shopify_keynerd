@@ -1,0 +1,308 @@
+
+
+<script src="{{ 'filters.js' | asset_url }}" defer></script>
+
+{% liquid 
+    
+    assign display_filters = true
+
+    if template == 'search'
+      assign source = search
+      assign filters = search.filters
+      assign products_count = search.results | size
+      assign sort_by = search.sort_by | default: search.default_sort_by
+
+      unless search.performed
+        assign display_filters = false
+      endunless
+
+      if products_count == 0
+        assign display_filters = false
+      endif
+
+    else
+      assign source = collection
+      assign filters = collection.filters
+      assign products_count = collection.products_count 
+      assign sort_by = collection.sort_by | default: collection.default_sort_by
+    endif 
+%}
+
+
+
+{% liquid 
+                                
+  if settings.product_option_swatches_name contains ','
+      assign swatch_names = settings.product_option_swatches_name | split: ', '
+  else
+      assign swatch_names = settings.product_option_swatches_name | join: ','
+  endif 
+
+  assign swatch_values = settings.product_option_swatches_list | strip_newlines | split: ','
+
+  assign swatch_metaobject_type = 'shopify--color-pattern'
+
+%}
+
+{% if display_filters %}
+<facet-filters class="facet-filters" data-id="{{ section.id }}">
+    {% if section_settings.filters %}
+      <div class="facet-filters-filters">
+        <div class="facet-filters-toggle">
+            {{- 'filters.title' | t -}}
+        </div>
+        <div class="facet-filters-content">
+        <form class="facet-filters-form filter-form">
+
+            <div class="active-filters">
+            {% if template == 'search' %}
+                <a href="{{ routes.search_url }}?sort_by={{ search.sort_by }}&q={{ search.terms }}" class="active-filters__clear">{{ 'filters.clear' | t }}</a>
+            {% else %}
+                <a href="{{ collection.url }}?sort_by={{ collection.sort_by }}" class="active-filters__clear">{{ 'filters.clear' | t }}</a>
+            {% endif %}
+        
+            {%- for filter in filters -%}
+                {%- if filter.type == "price_range" -%}
+                {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+                    <a class="active-filters__remove-filter" href="{{ filter.url_to_remove }}">
+                    {%- assign min_value = filter.min_value.value | default: 0 -%}
+                    {%- assign max_value = filter.max_value.value | default: filter.range_max -%}
+                    {{ min_value | money }} - {{ max_value | money }} X
+                    </a>
+                {%- endif -%}
+                {%- else -%}
+                {%- for filter_value in filter.active_values -%}
+                    <a class="active-filters__remove-filter" href="{{ filter_value.url_to_remove }}">
+                    {{ filter_value.label }} 
+                    {% render 'icon-close' %}
+                    </a>
+                {%- endfor -%}
+                {%- endif -%}
+            {%- endfor -%}
+            </div>
+            <div class="facet-filters-list">
+            <div class="facet-filters-list-header">
+                <h3 class="facet-filters-list-header__title">{{- 'filters.title' | t -}}</h3>
+            </div>
+            {%- for filter in filters -%}
+                <details class="filter-group" open>
+                    <summary class="filter-group-summary">
+                        <span>{{ filter.label }}</span>
+                        {%- if filter.active_values.size > 0 -%}
+                            <span>({{ filter.active_values.size }})</span>
+                        {%- endif -%}
+                        {%- render 'icon-chevron-down' -%}
+                    </summary>
+                
+                    <div class="filter-group-display">
+                        {% if filter.type == 'list' %}
+                        <div class="filter-group-display__header">
+                            <span class="filter-group-display__header-selected">{{ 'filters.selected_text' | t: count: filter.active_values.size }}</span>
+                
+                            {%- if filter.active_values.size > 0 -%}
+                            <a href="{{ filter.url_to_remove }}" class="filter-group-display__header-reset">{{ 'filters.reset' | t }}</a>
+                            {%- endif -%}
+                        </div>
+                        {% endif %}
+                        {%- case filter.type -%}
+                        {%- when 'boolean' or 'list' -%}
+                            {% liquid
+                                assign filter_type = ''
+                                if filter.presentation == 'text'
+                                    for swatch_name in swatch_names
+                                        assign swatch_color = blank
+                                        if swatch_name == filter.label
+                                            assign filter_type = 'swatches'
+                                        endif
+                                    endfor
+                                elsif filter.presentation == 'swatch'
+                                    assign filter_type =  'swatches'
+                                elsif filter.presentation == 'image'
+                                    assign filter_type =  'images'
+                                endif
+                            %}
+                            <ul class="filter-group-display__list filter-param-{{ filter.param_name | replace: 'filter.v.', '' | replace: '.', '_' }}{% liquid
+                                if filter_type != blank 
+                                    echo ' has-' | append: filter_type
+                                endif
+                                
+                                comment
+                                if filter.presentation == 'text'
+                                    for swatch_name in swatch_names
+                                        assign swatch_color = blank
+                                        if swatch_name == filter.label
+                                            echo ' has-swatches'
+                                        endif
+                                    endfor
+                                elsif filter.presentation == 'swatch'
+                                    echo ' has-swatches'
+                                elsif filter.presentation == 'image'
+                                    echo ' has-images'
+                                endif 
+                                endcomment
+                            %}">
+                            {%- for filter_value in filter.values -%}
+                                <li class="filter-group-display__list-item" tabindex="0">
+                                <label for="Filter-{{ filter.param_name }}-{{ forloop.index }}">
+                                    <input type="checkbox"
+                                    name="{{ filter_value.param_name }}"
+                                    value="{{ filter_value.value | replace: '&amp;', '&' | url_param_escape | replace: ',', '%2C' }}"
+                                    id="Filter-{{ filter.param_name }}-{{ forloop.index }}"
+                                    {% if filter_value.active -%}checked{%- endif %}
+                                    {% if filter_value.count == 0 and filter_value.active == false -%}disabled{%- endif %}
+                                    > 
+
+                                    {% if filter.presentation == 'text' %}
+                                        {% for swatch_name in swatch_names %}
+                                            {% assign swatch_color = blank %}
+                                            {% if swatch_name == filter.label %}
+                                                <span class="filter-group-display__list-item-swatch product-option-swatch" style="{% liquid 
+
+                                                    for swatch_value in swatch_values
+                                                        assign swatch_value_pair = swatch_value | split: ':'
+                                                        assign swatch_value_pair_name = swatch_value_pair[0] | strip
+                                            
+                                                        if swatch_value_pair_name == filter_value.value
+                                                            if swatch_value_pair[1] contains '.'
+                                                                assign swatch_url = swatch_value_pair[1] | strip | file_url
+                                                                assign swatch_color = 'url(' | append: swatch_url | append: ')'
+                                                            else
+                                                                assign swatch_color = swatch_value_pair[1]
+                                                            endif
+                                                        endif 
+                                                    endfor 
+
+
+                                                    for metaobject in shop.metaobjects[swatch_metaobject_type].values
+                                                        if metaobject.label == filter_value.value
+                                                          assign swatch_color = metaobject.color
+                                                        endif
+                                                    endfor 
+
+                                                    if swatch_color != blank
+                                                        echo '--product-swatch-value: ' | append: swatch_color
+                                                    else
+                                                        echo '--product-swatch-value: ' | append: filter_value.value
+                                                    endif
+                                                %}">
+                                                </span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                    
+                                    {% unless filter.presentation == 'text' %}
+                                        <span class="filter-group-display__list-item-swatch{% liquid 
+                                            echo ' product-option-' | append: filter.presentation
+                                        %}" style="{% liquid
+                                            if filter.presentation == 'swatch'
+                                                assign swatch_value = filter_value.swatch.color
+
+                                                if filter_value.swatch.image != blank
+                                                    assign swatch_image = filter_value.swatch.image | image_url
+                                                    assign swatch_value = 'url(' | append: swatch_image | append: ')'
+                                                endif
+                                            elsif filter.presentation == 'image'
+                                                assign swatch_image = filter_value.image | image_url
+                                                assign swatch_value = 'url(' | append: swatch_image | append: ')'
+                                            else
+                                                assign swatch_value = filter_value.label
+
+                                                for metaobject in shop.metaobjects[swatch_metaobject_type].values
+                                                    if metaobject.label == filter_value.value
+                                                      assign swatch_value = metaobject.color
+                                                    endif
+                                                endfor
+                                            endif
+
+                                            echo '--product-swatch-value: ' | append: swatch_value
+
+                                        %}">{% if filter.presentation == 'image' %}{% liquid
+                                            assign swatch_image = filter_value.image | image_url
+                                            assign swatch_value = 'url(' | append: swatch_image | append: ')'
+                                        %}
+                                            {% render 'section-image-processor', image: filter_value.image %}
+                                        {% endif %}</span>
+                                    {% endunless %}
+
+                                    <span class="filter-group-display__list-item-label">{{ filter_value.label }}</span>
+                                    {% if filter_type == 'swatches' %}
+                                        {% render 'icon-check-dual-tone' %}
+                                    {% else %}
+                                        {% render 'icon-check' %}
+                                    {% endif %}
+                                </label>
+                                </li>
+                            {%- endfor -%}
+                            </ul>
+                
+                            <div class="filter-group-display__submit">
+                            <button type="submit">{{ 'filters.submit' | t }}</button>
+                            </div>
+                        {%- when 'price_range' -%}
+                            {% assign max_price = filter.range_max | money_with_currency %}
+                            <div class="filter-group-display__price-range filter-param-{{ filter.param_name | replace: 'filter.v.', '' | replace: '.', '_' }}">
+                            <span>{{ 'filters.high_price_text_html' | t: max_price: max_price }}</span>
+                            <span class="filter-group-display__price-range-slider-handle filter-group-display__price-range-slider">
+                                <span class="filter-group-display__price-range-slider-handle--min price-range-handle-min" tabindex="0" style="width: 0.5%;"></span>
+                                <span class="filter-group-display__price-range-slider-handle--max price-range-handle-max" tabindex="0" style="width: 99.5%;"></span>
+                                <span class="filter-group-display__price-range-slider-handle--base price-range-handle-base"></span>
+                            </span>
+                            <div class="filter-group-display__price-range-from">
+                                <label for="Filter-{{ filter.min_value.param_name }}">
+                                <span class="filter-group-display__price-range-label">{{ 'filters.price.from' | t }}</span>
+                                <span class="filter-group-display__price-range-input">
+                                    <span>{{ cart.currency.symbol }}</span>
+                    
+                                    <input name="{{ filter.min_value.param_name }}"
+                                    id="Filter-{{ filter.min_value.param_name }}"
+                                    {% if filter.min_value.value -%}
+                                        value="{{ filter.min_value.value | money_without_currency }}"
+                                    {%- endif %}
+                                    type="number"
+                                    placeholder="0"
+                                    min="0"
+                                    max="{{ filter.range_max | money_without_currency }}"
+                                    >
+                                </span>
+                                </label>
+                            </div>
+                            <div class="filter-group-display__price-range-to">
+                                <label for="Filter-{{ filter.max_value.param_name }}">
+                                <span class="filter-group-display__price-range-label">{{ 'filters.price.to' | t }}</span>
+                                <span class="filter-group-display__price-range-input">
+                                    <span>{{ cart.currency.symbol }}</span>
+                
+                                    <input name="{{ filter.max_value.param_name }}"
+                                    id="Filter-{{ filter.max_value.param_name }}"
+                                    {% if filter.max_value.value -%}
+                                        value="{{ filter.max_value.value | money_without_currency }}"
+                                    {%- endif %}
+                                    type="number"
+                                    placeholder="{{ filter.range_max | money_without_currency }}"
+                                    min="0"
+                                    max="{{ filter.range_max | money_without_currency }}"
+                                    >
+                                </span>
+                                </label>
+                            </div>
+                            </div>
+                
+                            <div class="filter-group-display__submit">
+                            <button type="submit">{{ 'filters.submit' | t }}</button>
+                            </div>
+                        {%- endcase -%}
+                    </div>
+                </details>
+            {%- endfor -%}
+            </div>
+            <button type="submit" class="facet-filters-list-submit">{{ 'filters.submit_all' | t }}</button>
+            <span class="facet-filters-list-close">{% render 'icon-close' %}</span>
+
+        </form>
+            <div class="facet-filters-form-overlay"></div>
+    </div>
+      </div>
+    {% endif %}
+    
+</facet-filters>
+{% endif %}

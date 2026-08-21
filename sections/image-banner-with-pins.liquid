@@ -1,0 +1,337 @@
+
+
+{% style %}
+  {% for block in section.blocks %}
+    {% if block.type == 'pin' %}
+        #shopify-section-{{ section.id }} .block-{{ block.id }}{
+          --theme-image-with-pin-pin-offset-top: {{ block.settings.pin_top_offset | append: '%' }};
+          --theme-image-with-pin-pin-offset-left: {{ block.settings.pin_left_offset | append: '%' }};
+        }
+
+    {% endif %}
+
+  {% endfor %}
+{% endstyle %}
+
+
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+  
+  {% if section.settings.side_margin_choice != 'level-0' %}
+    --theme-section-side-margin: var(--theme-section-side-margin-{{ section.settings.side_margin_choice }});
+  {% endif %}
+  }
+{% endstyle %}
+
+{% if section.settings.separator %}
+  {% style %}
+  #shopify-section-{{ section.id }} .separator{
+    --theme-section-separator-width: {{ section.settings.separator_width | append: '%' }};
+
+    {% if section.settings.separator_use_custom_color %}
+      --theme-section-separator-color: {{ section.settings.separator_custom_color }};
+    {% endif %}
+  }
+  {% endstyle %}
+{% endif %}
+
+{% if section.settings.spacing %}
+  {% style %}
+  #shopify-section-{{ section.id }}{
+    
+      {% unless section.settings.spacing_placement == '3' %}
+--theme-section-spacing-top: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+{% unless section.settings.spacing_placement == '2' %}
+      --theme-section-spacing-bottom: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+
+  }
+  {% endstyle %}
+{% endif %}
+
+
+<div class="section-image-banner-with-pins{% liquid
+
+  if section.settings.side_margin_choice != 'level-0'
+    echo ' has-side-margin'
+  endif
+  
+  echo ' ' | append: section.settings.color_scheme
+
+  if settings.animation_sections
+    echo ' has-animation'
+  endif
+
+%}">
+    <div class="section-image-banner-with-pins-background">
+        <div class="section-image-banner-with-pins-background-media">
+        {% if section.settings.background_image != blank %}
+            {% render 'section-image-processor', image: section.settings.background_image %}
+        {% endif %}
+
+        {% if section.settings.background_image == blank %}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder placeholder-image-banner' }}
+        {% endif %}
+        </div>
+    </div>
+    <div class="section-image-banner-with-pins-content section-container">
+      {% if section.blocks != blank %}
+          <div class="section-image-banner-with-pins-pins-list has-product-size-small">
+              {% for block in section.blocks %}
+                  {% liquid 
+                      assign placeholder_image = 'product-' | append: forloop.index
+
+                      assign product_choice = block.settings.pin_product_choice
+                      assign product = all_products[product_choice]
+                  %}
+                  <shoppable-pin class="section-image-banner-with-pins-pins-list-item block-{{ block.id }}" {{ block.shopify_attributes }}>
+                      <span class="section-image-banner-with-pins-pins-list-item-pin" tabindex="0"></span>
+                      <div class="section-image-banner-with-pins-pins-list-item-product product">
+                        {% if product != blank %}
+                          {% render 'section-product-processor', product: product, section_settings: section.settings, prefix: 'section-image-banner-with-pins-pins-list-item-product', display_style: 'small' %}
+                        {% else %}
+                          <div class="product__top">
+                            <div class="product__image">
+                              {{ placeholder_image | placeholder_svg_tag: 'placeholder placeholder-handpicked-products' }}
+                            </div>
+                          </div>
+                          <div class="product__bottom">
+                            <h3 class="product__title">
+                                {{ 'products.placeholder.title' | t }}
+                            </h3>
+                            <p class="product__price">
+                                <span>{{ 'products.placeholder.price' | t }}</span>
+                            </p>
+                          </div>
+                        {% endif %}
+                      </div>
+                  </shoppable-pin>
+              {% endfor %}
+          </div>
+      {% endif %}
+    </div>
+</div>
+{% if section.settings.separator %}
+  <div class="section-separator{% liquid 
+echo ' ' | append: section.settings.color_scheme
+ %}"><hr class="separator"></div>
+{% endif %}
+
+
+{% schema %}
+{
+    "name": "t:sections.image_banner_with_pins.name",
+    "settings": [
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__general.content"
+        },
+        {
+            "type": "select",
+            "id": "side_margin_choice",
+            "label": "t:sections.common.settings.side_margin_choice.label",
+            "options": [
+                {
+                    "value": "level-0",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__4.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__5.label"
+                }
+            ],
+            "info": "t:sections.common.settings.side_margin_choice.info",
+            "default": "level-0"
+        },
+        {
+            "type": "color_scheme",
+            "id": "color_scheme",
+            "default": "scheme_1",
+            "label": "t:sections.common.settings.color_scheme.label"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__background.content"
+        },
+        {
+            "type": "image_picker",
+            "id": "background_image",
+            "label": "t:sections.image_banner_with_pins.settings.background_image.label",
+            "info": "t:sections.image_banner_with_pins.settings.background_image.info"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__separator.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "separator",
+            "label": "t:sections.common.settings.separator.label",
+            "info": "t:sections.common.settings.separator.info",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "separator_width",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "t:sections.common.settings.separator_width.label",
+            "default": 100,
+            "info": "t:sections.common.settings.separator_width.info"
+        },
+        {
+            "type": "checkbox",
+            "id": "separator_use_custom_color",
+            "label": "t:sections.common.settings.separator_use_custom_color.label",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "separator_custom_color",
+            "label": "t:sections.common.settings.separator_custom_color.label",
+            "default": "#CCCCCC"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__spacing.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "spacing",
+            "label": "t:sections.common.settings.spacing.label",
+            "info": "t:sections.common.settings.spacing.info",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "spacing_choice",
+            "label": "t:sections.common.settings.spacing_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        },
+        {
+            "type": "select",
+            "id": "spacing_placement",
+            "label": "t:sections.common.settings.spacing_placement.label",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__0.label"
+                },
+                {
+                    "value": "2",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__1.label"
+                },
+                {
+                    "value": "3",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__2.label"
+                }
+            ],
+            "default": "1",
+            "info": "t:sections.common.settings.spacing_placement.info"
+        }
+    ],
+    "blocks": [
+        {
+            "name": "t:sections.image_banner_with_pins.blocks.pin.name",
+            "type": "pin",
+            "limit": 12,
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "t:sections.image_banner_with_pins.blocks.pin.settings.header__general.content"
+                },
+                {
+                    "type": "product",
+                    "id": "pin_product_choice",
+                    "label": "t:sections.image_banner_with_pins.blocks.pin.settings.pin_product_choice.label"
+                },
+                {
+                    "type": "range",
+                    "id": "pin_top_offset",
+                    "min": 1,
+                    "max": 100,
+                    "step": 1,
+                    "unit": "%",
+                    "label": "t:sections.image_banner_with_pins.blocks.pin.settings.pin_top_offset.label",
+                    "default": 35
+                },
+                {
+                    "type": "range",
+                    "id": "pin_left_offset",
+                    "min": 1,
+                    "max": 100,
+                    "step": 1,
+                    "unit": "%",
+                    "label": "t:sections.image_banner_with_pins.blocks.pin.settings.pin_left_offset.label",
+                    "default": 35
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "t:sections.image_banner_with_pins.presets.image_banner_with_pins.name",
+            "blocks": [
+                {
+                    "type": "pin"
+                },
+                {
+                    "type": "pin",
+                    "settings": {
+                        "pin_top_offset": 50,
+                        "pin_left_offset": 70
+                    }
+                }
+            ]
+        }
+    ],
+    "disabled_on": {
+        "groups": [
+            "*"
+        ]
+    }
+}
+{% endschema %}
+

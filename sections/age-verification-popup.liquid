@@ -1,0 +1,297 @@
+
+{% liquid 
+
+  assign cookie_name = section.settings.cookie_name
+  assign popup_expiry = section.settings.expiry
+  assign popup_delay = section.settings.delay
+
+%}
+
+
+<popup-modal class="section-popup section-age-verification popup-modal inactive{% liquid 
+    if section.settings.display_position == 'bottom-right'
+        echo ' display-in-corner'
+    endif 
+    if section.settings.image != blank
+        echo ' has-image'
+    endif 
+%}" data-popup-type="onload" data-popup-onload="verification" data-popup-delay="{{ popup_delay }}" data-popup-expiry="{{ popup_expiry }}" data-popup-cookie-name="{{ cookie_name }}" style="display: none;">
+    <div class="popup-modal__overlay"></div>
+    <div class="popup-modal__inner {{ section.settings.color_scheme }}">
+        <div class="popup-modal__content">
+            {% if section.settings.image != blank %}
+                <div class="section-popup-image">
+                    {% render 'section-image-processor', image: section.settings.image %}
+                </div>
+            {% endif %}
+            <div class="section-popup-content">
+              {% if section.settings.text_1 != blank %}
+                <h2 class="section-popup-content__heading special-heading-size-{{ section.settings.text_1_size }}">{{ section.settings.text_1 }}</h2>
+              {% endif %}
+              {% if section.settings.text_2 != blank %}
+                <p class="section-popup-content__description paragraph-size-{{ section.settings.text_2_size }}">{{ section.settings.text_2 }}</p>
+              {% endif %}
+                
+              {% if section.settings.accept_button_text != blank or section.settings.decline_button_text != blank %}
+                <div class="section-age-verification-buttons">
+                  {% if section.settings.accept_button_text != blank %}
+
+                    {% render 'button', 
+                        button_text: section.settings.accept_button_text,  
+                        button_style: section.settings.accept_button_style,
+                        button_classes: 'section-popup-content__button section-age-verification-button confirm-button',
+                        button_tag: 'button'
+                    %}
+                  {% endif %}
+
+                  {% if section.settings.decline_button_text != blank %}
+
+                    {% render 'button', 
+                        button_text: section.settings.decline_button_text, 
+                        button_url: section.settings.decline_button_url, 
+                        button_style: section.settings.decline_button_style, 
+                        button_classes: 'section-popup-content__button section-age-verification-button'
+                    %}
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+        </div>
+        {% comment %} <button class="popup-modal__close">{% render 'icon-close' %}</button> {% endcomment %}
+    </div>
+</popup-modal>
+
+
+
+{% schema %}
+{
+    "name": "t:sections.age_verification_popup.name",
+    "limit": 1,
+    "settings": [
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__cookie.content"
+        },
+        {
+            "type": "text",
+            "id": "cookie_name",
+            "label": "t:sections.age_verification_popup.settings.cookie_name.label",
+            "default": "ageverify",
+            "info": "t:sections.age_verification_popup.settings.cookie_name.info"
+        },
+        {
+            "type": "number",
+            "id": "expiry",
+            "label": "t:sections.age_verification_popup.settings.expiry.label",
+            "default": 1,
+            "info": "t:sections.age_verification_popup.settings.expiry.info"
+        },
+        {
+            "type": "range",
+            "id": "delay",
+            "min": 0,
+            "max": 5000,
+            "step": 100,
+            "label": "t:sections.age_verification_popup.settings.delay.label",
+            "default": 500,
+            "info": "t:sections.age_verification_popup.settings.delay.info"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__general.content"
+        },
+        {
+            "type": "color_scheme",
+            "id": "color_scheme",
+            "default": "scheme_8",
+            "label": "t:sections.common.settings.color_scheme.label"
+        },
+        {
+            "type": "select",
+            "id": "display_position",
+            "label": "t:sections.age_verification_popup.settings.display_position.label",
+            "options": [
+                {
+                    "value": "center",
+                    "label": "t:sections.age_verification_popup.settings.display_position.options.option__0.label"
+                },
+                {
+                    "value": "bottom-right",
+                    "label": "t:sections.age_verification_popup.settings.display_position.options.option__1.label"
+                }
+            ],
+            "default": "center"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__image.content"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "t:sections.age_verification_popup.settings.image.label",
+            "info": "t:sections.age_verification_popup.settings.image.info"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__heading.content"
+        },
+        {
+            "type": "text",
+            "id": "text_1",
+            "label": "t:sections.age_verification_popup.settings.text_1.label",
+            "default": "Confirm your age"
+        },
+        {
+            "type": "select",
+            "id": "text_1_size",
+            "label": "t:sections.age_verification_popup.settings.text_1_size.label",
+            "options": [
+                {
+                    "value": "x-small",
+                    "label": "t:sections.age_verification_popup.settings.text_1_size.options.option__0.label"
+                },
+                {
+                    "value": "small",
+                    "label": "t:sections.age_verification_popup.settings.text_1_size.options.option__1.label"
+                },
+                {
+                    "value": "medium",
+                    "label": "t:sections.age_verification_popup.settings.text_1_size.options.option__2.label"
+                },
+                {
+                    "value": "large",
+                    "label": "t:sections.age_verification_popup.settings.text_1_size.options.option__3.label"
+                }
+            ],
+            "default": "x-small"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__description.content"
+        },
+        {
+            "type": "text",
+            "id": "text_2",
+            "label": "t:sections.age_verification_popup.settings.text_2.label",
+            "default": "Are you 18 years of age or older?"
+        },
+        {
+            "type": "select",
+            "id": "text_2_size",
+            "label": "t:sections.age_verification_popup.settings.text_2_size.label",
+            "options": [
+                {
+                    "value": "x-small",
+                    "label": "t:sections.age_verification_popup.settings.text_2_size.options.option__0.label"
+                },
+                {
+                    "value": "small",
+                    "label": "t:sections.age_verification_popup.settings.text_2_size.options.option__1.label"
+                },
+                {
+                    "value": "medium",
+                    "label": "t:sections.age_verification_popup.settings.text_2_size.options.option__2.label"
+                },
+                {
+                    "value": "large",
+                    "label": "t:sections.age_verification_popup.settings.text_2_size.options.option__3.label"
+                }
+            ],
+            "default": "medium"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__accept_button.content"
+        },
+        {
+            "type": "text",
+            "id": "accept_button_text",
+            "label": "t:sections.age_verification_popup.settings.accept_button_text.label",
+            "default": "Yes, I'm 18+"
+        },
+        {
+            "type": "select",
+            "id": "accept_button_style",
+            "label": "t:sections.common.settings.accept_button_style.label",
+            "options": [
+                {
+                    "value": "outline",
+                    "label": "t:sections.common.settings.accept_button_style.options.option__0.label"
+                },
+                {
+                    "value": "fill",
+                    "label": "t:sections.common.settings.accept_button_style.options.option__1.label"
+                },
+                {
+                    "value": "outline-secondary",
+                    "label": "t:sections.common.settings.accept_button_style.options.option__2.label"
+                },
+                {
+                    "value": "fill-secondary",
+                    "label": "t:sections.common.settings.accept_button_style.options.option__3.label"
+                },
+                {
+                    "value": "link",
+                    "label": "t:sections.common.settings.accept_button_style.options.option__4.label"
+                }
+            ],
+            "default": "fill"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__decline_button.content"
+        },
+        {
+            "type": "text",
+            "id": "decline_button_text",
+            "label": "t:sections.age_verification_popup.settings.decline_button_text.label",
+            "default": "No i'm not"
+        },
+        {
+            "type": "url",
+            "id": "decline_button_url",
+            "label": "t:sections.age_verification_popup.settings.decline_button_url.label"
+        },
+        {
+            "type": "select",
+            "id": "decline_button_style",
+            "label": "t:sections.common.settings.decline_button_style.label",
+            "options": [
+                {
+                    "value": "outline",
+                    "label": "t:sections.common.settings.decline_button_style.options.option__0.label"
+                },
+                {
+                    "value": "fill",
+                    "label": "t:sections.common.settings.decline_button_style.options.option__1.label"
+                },
+                {
+                    "value": "outline-secondary",
+                    "label": "t:sections.common.settings.decline_button_style.options.option__2.label"
+                },
+                {
+                    "value": "fill-secondary",
+                    "label": "t:sections.common.settings.decline_button_style.options.option__3.label"
+                },
+                {
+                    "value": "link",
+                    "label": "t:sections.common.settings.decline_button_style.options.option__4.label"
+                }
+            ],
+            "default": "outline-secondary"
+        }
+    ],
+    "presets": [
+        {
+            "name": "t:sections.age_verification_popup.presets.age_verification_popup.name"
+        }
+    ],
+    "enabled_on": {
+        "groups": [
+            "custom.overlay"
+        ]
+    }
+}
+{% endschema %}
+

@@ -1,0 +1,21 @@
+{% for block in section.blocks %}
+  {% render block %}
+{% endfor %}
+
+
+{% schema %}
+{
+    "name": "t:sections.app_wrapper.name",
+    "blocks": [
+        {
+            "type": "@app"
+        }
+    ],
+    "presets": [
+        {
+            "name": "t:sections.app_wrapper.presets.app_wrapper.name"
+        }
+    ]
+}
+{% endschema %}
+

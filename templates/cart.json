@@ -1,0 +1,32 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+
+{
+  "sections": {
+    "main-cart": {
+      "type": "main-cart",
+      "settings": {
+        "fullwidth": true,
+        "width": 1320,
+        "side_margin_choice": "level-5",
+        "color_scheme": "",
+        "inset": false,
+        "inset_choice": "level-3",
+        "heading": "Bag",
+        "heading_size": "medium",
+        "alignment": "center",
+        "count_show": true
+      }
+    }
+  },
+  "order": [
+    "main-cart"
+  ]
+}

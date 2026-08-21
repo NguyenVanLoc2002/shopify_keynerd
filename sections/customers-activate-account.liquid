@@ -1,0 +1,29 @@
+
+<div class="customers-wrapper customers-activate-wrapper">
+  <div class="customers-activate">
+    <div class="customers-activate-header">
+        <h1 class="customers-form-title customers-activate-title">{{ 'customer.activate_account.title' | t }}</h1>
+    </div>
+    <div class="customers-form customers-activate-form">
+      {% form 'activate_customer_password' %}
+
+        {{ form.errors | default_errors }}
+        
+        <label for="CustomerFormPassword">
+          <span>{{ 'customer.activate_account.password' | t }}</span>
+          <input id="CustomerFormPassword" type="password" value="" name="customer[password]" />
+        </label>
+        
+        <label for="CustomerFormPasswordConfirm">
+          <span>{{ 'customer.activate_account.password_confirm' | t }}</span>
+          <input id="CustomerFormPasswordConfirm" type="password" value="" name="customer[password_confirmation]" />
+        </label>
+        
+        <button type="submit" class="btn-fill">{{ 'customer.activate_account.submit' | t }}</button>
+        <button name="decline" class="btn-outline">{{ 'customer.activate_account.cancel' | t }}</button>
+        
+      {% endform %}
+  
+    </div>
+  </div>
+</div>

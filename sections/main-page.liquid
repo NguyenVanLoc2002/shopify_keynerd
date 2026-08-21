@@ -1,0 +1,295 @@
+{% style %}
+  #shopify-section-{{ section.id }} {
+    {% unless section.settings.fullwidth %}
+      --theme-section-custom-width: {{ section.settings.width | append: 'px' }};
+    {% endunless %}
+
+
+    {% if section.settings.side_margin_choice != 'level-0' %}
+      --theme-section-side-margin: var(--theme-section-side-margin-{{ section.settings.side_margin_choice }});
+    {% endif %}
+
+  }
+{% endstyle %}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    {% if section.settings.content_custom_width %}
+      --theme-main-page-content-width: {{ section.settings.content_width | append: 'px' }};
+    {% endif %}
+
+  }
+{% endstyle %}
+
+
+
+{% if section.settings.spacing %}
+  {% style %}
+  #shopify-section-{{ section.id }}{
+    
+      {% unless section.settings.spacing_placement == '3' %}
+--theme-section-spacing-top: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+{% unless section.settings.spacing_placement == '2' %}
+      --theme-section-spacing-bottom: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+
+  }
+  {% endstyle %}
+{% endif %}
+
+
+<div class="section-main-page{% liquid 
+
+  if section.settings.fullwidth
+    echo ' has-fullwidth'
+  else
+    echo ' has-custom-width'
+  endif
+
+  if section.settings.side_margin_choice != 'level-0'
+    echo ' has-side-margin'
+  endif
+      
+  echo ' has-alignment-' | append: section.settings.alignment
+
+  if settings.animation_sections
+    echo ' has-animation'
+  endif
+
+%}">
+    <div class="section-main-page-container section-container">
+        {% if page.title != blank %}
+            <h2 class="section-main-page-title special-heading-size-{{ section.settings.title_size }}">{{ page.title }}</h2>
+        {% endif %}
+        {% if page.content != blank %}
+            <div class="section-main-page-content rte paragraph-size-{{ section.settings.content_size }}">{{ page.content }}</div>
+        {% endif %}
+    </div>
+</div>
+
+
+
+{% schema %}
+{
+    "name": "t:sections.main_page.name",
+    "limit": 1,
+    "settings": [
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__general.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "fullwidth",
+            "label": "t:sections.common.settings.fullwidth.label",
+            "info": "t:sections.common.settings.fullwidth.info",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "width",
+            "min": 500,
+            "max": 2000,
+            "step": 20,
+            "unit": "px",
+            "label": "t:sections.common.settings.width.label",
+            "default": 1320,
+            "info": "t:sections.common.settings.width.info"
+        },
+        {
+            "type": "select",
+            "id": "side_margin_choice",
+            "label": "t:sections.common.settings.side_margin_choice.label",
+            "options": [
+                {
+                    "value": "level-0",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__4.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__5.label"
+                }
+            ],
+            "info": "t:sections.common.settings.side_margin_choice.info",
+            "default": "level-4"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__content.content"
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "t:sections.main_page.settings.title_size.label",
+            "options": [
+                {
+                    "value": "x-small",
+                    "label": "t:sections.main_page.settings.title_size.options.option__0.label"
+                },
+                {
+                    "value": "small",
+                    "label": "t:sections.main_page.settings.title_size.options.option__1.label"
+                },
+                {
+                    "value": "medium",
+                    "label": "t:sections.main_page.settings.title_size.options.option__2.label"
+                },
+                {
+                    "value": "large",
+                    "label": "t:sections.main_page.settings.title_size.options.option__3.label"
+                }
+            ],
+            "default": "medium"
+        },
+        {
+            "type": "select",
+            "id": "alignment",
+            "label": "t:sections.main_page.settings.alignment.label",
+            "options": [
+                {
+                    "value": "left",
+                    "label": "t:sections.main_page.settings.alignment.options.option__0.label"
+                },
+                {
+                    "value": "center",
+                    "label": "t:sections.main_page.settings.alignment.options.option__1.label"
+                },
+                {
+                    "value": "right",
+                    "label": "t:sections.main_page.settings.alignment.options.option__2.label"
+                }
+            ],
+            "default": "left"
+        },
+        {
+            "type": "select",
+            "id": "content_size",
+            "label": "t:sections.main_page.settings.content_size.label",
+            "options": [
+                {
+                    "value": "x-small",
+                    "label": "t:sections.main_page.settings.content_size.options.option__0.label"
+                },
+                {
+                    "value": "small",
+                    "label": "t:sections.main_page.settings.content_size.options.option__1.label"
+                },
+                {
+                    "value": "medium",
+                    "label": "t:sections.main_page.settings.content_size.options.option__2.label"
+                },
+                {
+                    "value": "large",
+                    "label": "t:sections.main_page.settings.content_size.options.option__3.label"
+                }
+            ],
+            "default": "large"
+        },
+        {
+            "type": "checkbox",
+            "id": "content_custom_width",
+            "label": "t:sections.common.settings.content_custom_width.label",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "content_width",
+            "min": 500,
+            "max": 2000,
+            "step": 20,
+            "unit": "px",
+            "label": "t:sections.common.settings.content_width.label",
+            "default": 1080,
+            "info": "t:sections.common.settings.content_width.info"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__spacing.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "spacing",
+            "label": "t:sections.common.settings.spacing.label",
+            "info": "t:sections.common.settings.spacing.info",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "spacing_choice",
+            "label": "t:sections.common.settings.spacing_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        },
+        {
+            "type": "select",
+            "id": "spacing_placement",
+            "label": "t:sections.common.settings.spacing_placement.label",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__0.label"
+                },
+                {
+                    "value": "2",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__1.label"
+                },
+                {
+                    "value": "3",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__2.label"
+                }
+            ],
+            "default": "1",
+            "info": "t:sections.common.settings.spacing_placement.info"
+        }
+    ],
+    "presets": [
+        {
+            "name": "t:sections.main_page.presets.main_page.name"
+        }
+    ],
+    "enabled_on": {
+        "templates": [
+            "page"
+        ]
+    }
+}
+{% endschema %}
+

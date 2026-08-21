@@ -1,0 +1,85 @@
+
+		{% form 'contact', class: 'contact-form' %}
+			<div class="contact-form-notice">
+				{% if form.posted_successfully? %} {{ 'sections.contact_form.notice.success' | t }} {% endif %}
+				{{ form.errors | default_errors }}
+			</div>
+			<div class="contact-form-content">
+				{% if section.blocks != blank %}
+					{% for block in section.blocks %}
+						<div class="contact-form-field block-{{ block.id }}" {{ block.shopify_attributes }}>
+							<label class="contact-form-label" for="ContactForm-{{ block.id }}">
+								<span>{{ block.settings.text }}</span>
+							</label>
+							{% case block.type %}
+								{% when 'text' %}
+									<input id="ContactForm-{{ block.id }}" type="text" name="contact[{{ block.settings.name }}]" class="contact-form-{{ block.settings.name }} contact-form-input" placeholder="{{ block.settings.text }}" {% if block.settings.required %}required{% endif %}>
+								{% when 'textarea' %}
+									<textarea id="ContactForm-{{ block.id }}" rows="7" name="contact[{{ block.settings.name }}]" class="contact-form-{{ block.settings.name }} contact-form-textarea" placeholder="{{ block.settings.text }}" {% if block.settings.required %}required{% endif %}></textarea>
+								{% when 'email' %}
+									<input id="ContactForm-{{ block.id }}" type="email" name="contact[{{ block.settings.name }}]" class="contact-form-{{ block.settings.name }} contact-form-input" placeholder="{{ block.settings.text }}" {% if block.settings.required %}required{% endif %}>
+								{% when 'tel' %}
+									<input id="ContactForm-{{ block.id }}" type="tel" name="contact[{{ block.settings.name }}]" class="contact-form-{{ block.settings.name }} contact-form-input" placeholder="{{ block.settings.text }}" {% if block.settings.required %}required{% endif %}>
+								{% when 'checkbox' %}
+									<div class="checkbox-field">
+										<label for="ContactForm-{{ block.id }}">{{ block.settings.text }}</label>
+										<input id="ContactForm-{{ block.id }}" type="checkbox" name="contact[{{ block.settings.name }}]" class="contact-form-{{ block.settings.name }} contact-form-input" placeholder="{{ block.settings.text }}" {% if block.settings.required %}required{% endif %}>
+                                    	{% render 'icon-check' %}
+									</div>
+								{% when 'multichoice' %}
+									{% assign options = block.settings.option_values | split: ',' %}
+									{% assign labels = block.settings.option_labels | split: ',' %}
+									{% case block.settings.multichoice_type %}
+										{% when 'select' %}
+											<div class="select-field">
+												<select id="ContactForm-{{ block.id }}" name="contact[{{ block.settings.name }}]" class="contact-form-{{ block.settings.name }} contact-form-select" {% if block.settings.required %}required{% endif %}>
+													{% for option in options %}
+														{% assign forloopindex = forloop.index0 %}
+														{% assign option = option | strip %}
+														<option value="{{ option }}">{{ labels[forloopindex] }}</option>
+													{% endfor %}
+												</select>
+												{% render 'icon-chevron-down' %}
+											</div>
+										{% when 'radio' %}
+											<div class="radio-field">
+												{% for option in options %}
+													{% assign forloopindex = forloop.index0 %}
+													{% assign option = option | strip %}
+													<div class="radio-field">
+														<label for="ContactForm-{{ block.id }}-{{ option }}">{{ labels[forloopindex] }}</label>
+														<input type="radio" id="ContactForm-{{ block.id }}-{{ option }}" name="contact[{{ block.settings.name }}]" value="{{ option }}">
+														{% render 'icon-check' %}
+													</div>
+												{% endfor %}
+											</div>
+									{% endcase %}
+							{% endcase %}
+						</div>
+					{% endfor %}
+				{% else %}
+					<label class="contact-form-label" for="ContactFormName">
+							<span>{{ 'sections.contact_form.name' | t }}</span>
+							<input id="ContactFormName" type="text" name="contact[name]" class="contact-form-name contact-form-input" placeholder="{{ 'sections.contact_form.placeholders.name' | t }}">
+					</label>
+					<label class="contact-form-label" for="ContactFormEmail">
+							<span>{{ 'sections.contact_form.email' | t }}</span>
+							<input id="ContactFormEmail" type="email" name="contact[email]" class="contact-form-email contact-form-input" placeholder="{{ 'sections.contact_form.placeholders.email' | t }}">
+					</label>
+					<label class="contact-form-label" for="ContactFormPhone">
+							<span>{{ 'sections.contact_form.phone' | t }}</span>
+							<input id="ContactFormPhone" type="tel" name="contact[phone]" class="contact-form-phone contact-form-input" placeholder="{{ 'sections.contact_form.placeholders.phone' | t }}">
+					</label>
+					<label class="contact-form-label" for="ContactFormMessage">
+							<span>{{ 'sections.contact_form.message' | t }}</span>
+							<textarea id="ContactFormMessage" rows="7" name="contact[body]" class="contact-form-message contact-form-textarea" placeholder="{{ 'sections.contact_form.placeholders.message' | t }}"></textarea>
+					</label>
+				{% endif %}
+				<button type="submit" class="contact-form-submit btn-fill">
+					<span data-text="{{ 'sections.contact_form.submit' | t }}">
+						<span>{{ 'sections.contact_form.submit' | t }}</span>
+					</span>
+				</button>
+
+			</div>
+		{% endform %}

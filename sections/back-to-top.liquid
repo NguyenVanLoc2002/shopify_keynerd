@@ -1,0 +1,25 @@
+<button class="back-to-top">
+    <span>{{ 'Back to top' }}</span>
+    {% render 'icon-arrow-right' %}
+</button>
+
+
+
+
+{% schema %}
+{
+    "name": "t:sections.back_to_top.name",
+    "limit": 1,
+    "presets": [
+        {
+            "name": "t:sections.back_to_top.presets.back_to_top.name"
+        }
+    ],
+    "enabled_on": {
+        "groups": [
+            "custom.overlay"
+        ]
+    }
+}
+{% endschema %}
+

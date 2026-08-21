@@ -1,0 +1,1615 @@
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+
+    {% if section.settings.gap %}
+      --theme-multicolumns-gap: var(--theme-gap-{{ section.settings.gap_choice }});
+      {% else %}
+      --theme-multicolumns-gap: 0px;
+    {% endif %}
+    --theme-multicolumns-count: {{ section.blocks | size }};
+  }
+
+  {% for block in section.blocks %}
+
+
+    #shopify-section-{{ section.id }} .block-{{ block.id }}{
+      {% if block.settings.inset %}
+        --theme-block-content-padding: var(--theme-block-content-padding-{{ block.settings.inset_choice }});
+      {% endif %}
+
+      {% if block.settings.gap %}
+      --theme-multicolumn-gap: var(--theme-gap-{{ block.settings.gap_choice }});
+      {% endif %}
+
+      --theme-multicolumn-width: {{ block.settings.width | append: '%' }};
+
+    }
+
+
+    {% for i in (1..3) %}
+
+      {% capture grid_inset_choice %}grid_{{i}}_inset_choice{% endcapture %}
+      {% capture grid_aspect_ratio %}grid_{{i}}_aspect_ratio{% endcapture %}
+      {% capture grid_text_2_outline %}grid_{{i}}_text_2_outline{% endcapture %}
+
+
+      #shopify-section-{{ section.id }} .block-{{ block.id }} .section-multicolumn-grid-{{ i }}{
+
+        --theme-multicolumn-grid-aspect-ratio: {{ block.settings[grid_aspect_ratio] }};
+        --theme-multicolumn-grid-text-2-outline: {{ block.settings[grid_text_2_outline] }};
+
+        --theme-multicolumn-grid-content-padding: var(--theme-block-content-padding-{{ block.settings[grid_inset_choice] }});
+        
+      }
+    {% endfor %}
+    
+  {% endfor %}
+{% endstyle %}
+
+
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    {% unless section.settings.fullwidth %}
+      --theme-section-custom-width: {{ section.settings.width | append: 'px' }};
+    {% endunless %}
+
+  {% if section.settings.side_margin_choice != 'level-0' %}
+    --theme-section-side-margin: var(--theme-section-side-margin-{{ section.settings.side_margin_choice }});
+  {% endif %}
+  }
+{% endstyle %}
+
+{% if section.settings.separator %}
+  {% style %}
+  #shopify-section-{{ section.id }} .separator{
+    --theme-section-separator-width: {{ section.settings.separator_width | append: '%' }};
+
+    {% if section.settings.separator_use_custom_color %}
+      --theme-section-separator-color: {{ section.settings.separator_custom_color }};
+    {% endif %}
+  }
+  {% endstyle %}
+{% endif %}
+
+{% if section.settings.spacing %}
+  {% style %}
+  #shopify-section-{{ section.id }}{
+    
+      {% unless section.settings.spacing_placement == '3' %}
+--theme-section-spacing-top: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+{% unless section.settings.spacing_placement == '2' %}
+      --theme-section-spacing-bottom: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+
+  }
+  {% endstyle %}
+{% endif %}
+
+
+<div class="section-multicolumns{% liquid 
+
+  if section.settings.fullwidth
+    echo ' has-fullwidth'
+  else
+    echo ' has-custom-width'
+  endif
+
+  if section.settings.side_margin_choice != 'level-0'
+    echo ' has-side-margin'
+  endif
+
+  if settings.animation_sections
+    echo ' has-animation'
+  endif
+  
+%}">
+  <div class="section-multicolumns-container section-container">
+    {% if section.blocks != blank %}
+      {% for block in section.blocks %}
+        <div class="section-multicolumn block-{{ block.id }}{% liquid 
+
+          echo ' has-display-style-' | append: block.settings.display_style
+
+        %}" {{ block.shopify_attributes }}>
+        {% for i in (1..3) %}
+            
+          {% assign block_settings_grid_show = true %}
+          {% if i != 1 %}
+            {% capture grid_show %}grid_{{i}}_show{% endcapture %}
+            {% assign block_settings_grid_show = block.settings[grid_show] %}
+          {% endif %}
+
+          {% capture grid_color_scheme %}grid_{{i}}_color_scheme{% endcapture %}
+          {% capture grid_inset_choice %}grid_{{i}}_inset_choice{% endcapture %}
+          {% capture grid_aspect_ratio %}grid_{{i}}_aspect_ratio{% endcapture %}
+          {% capture grid_vertical_align %}grid_{{i}}_vertical_align{% endcapture %}
+          {% capture grid_use_image %}grid_{{i}}_use_image{% endcapture %}
+          {% capture grid_image %}grid_{{i}}_image{% endcapture %}
+          {% capture grid_video %}grid_{{i}}_video{% endcapture %}
+          {% capture grid_button_1_text %}grid_{{i}}_button_1_text{% endcapture %}
+          {% capture grid_button_1_url %}grid_{{i}}_button_1_url{% endcapture %}
+          {% capture grid_button_1_target %}grid_{{i}}_button_1_target{% endcapture %}
+          {% capture grid_button_1_style %}grid_{{i}}_button_1_style{% endcapture %}
+          {% capture grid_button_2_text %}grid_{{i}}_button_2_text{% endcapture %}
+          {% capture grid_button_2_url %}grid_{{i}}_button_2_url{% endcapture %}
+          {% capture grid_button_2_target %}grid_{{i}}_button_2_target{% endcapture %}
+          {% capture grid_button_2_style %}grid_{{i}}_button_2_style{% endcapture %}
+
+          
+          {% if block_settings_grid_show %}
+          <div class="section-multicolumn-grid{% liquid 
+
+            echo ' section-multicolumn-grid-' | append: i
+
+            echo ' has-vertical-align-' | append: block.settings[grid_vertical_align]
+
+            if block.settings[grid_video] or block.settings[grid_image]
+              echo ' has-media'
+            endif
+            
+            
+            echo ' ' | append: block.settings[grid_color_scheme]
+
+            echo ' has-block-padding'
+
+
+          %}">
+
+            {% if block.settings[grid_use_image] %}
+              <div class="section-multicolumn-grid__media">
+                {% if block.settings[grid_video] %}
+                  <div class="section-multicolumn-grid__video video-player has-internal-video">
+                    {{ block.settings[grid_video] | video_tag: autoplay: true, loop: true, muted: true }}
+
+                    <div class="section-multicolumn-grid__video-controls section-multicolumn-grid-player-controls">
+                      <div class="section-multicolumn-grid__video-controls-play section-multicolumn-grid-player-controls-play video-play">
+                        <span class="video-player-icon--play">{% render 'icon-play' %}</span>
+                        <span class="video-player-icon--pause">{% render 'icon-pause' %}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                {% elsif block.settings[grid_image] %}
+                  <div class="section-multicolumn-grid__image">
+                    {% render 'section-image-processor', image: block.settings[grid_image] %}
+                  </div>
+                {% else %}
+                  {{ 'image' | placeholder_svg_tag: 'placeholder placeholder-multicolumn-grid' }}
+                {% endif %}
+              </div>
+            {% endif %}
+
+            <div class="section-multicolumn-grid__content">
+              {% capture grid_text_1 %}grid_{{ i }}_text_1{% endcapture %}
+              {% capture grid_text_1_choice %}grid_{{ i }}_text_1_choice{% endcapture %}
+              {% capture grid_text_1_size %}grid_{{ i }}_text_1_size{% endcapture %}
+              {% capture grid_text_1_url %}grid_{{ i }}_text_1_url{% endcapture %}
+
+              {% capture grid_text_2 %}grid_{{ i }}_text_2{% endcapture %}
+              {% capture grid_text_2_outline %}grid_{{ i }}_text_2_outline{% endcapture %}
+
+              {% capture grid_text_3 %}grid_{{ i }}_text_3{% endcapture %}
+              {% capture grid_text_3_size %}grid_{{ i }}_text_3_size{% endcapture %}
+
+              {% if block.settings[grid_text_2] != blank %}
+                <div class="section-multicolumn-grid__additional-heading{% liquid
+                  if block.settings[grid_text_2_outline]
+                    echo ' has-outline'
+                  endif
+                %}">{{ block.settings[grid_text_2] }}</div>
+              {% endif %}
+
+              {% if block.settings[grid_text_1] != blank %}
+                <h3 class="section-multicolumn-grid__heading {{ block.settings[grid_text_1_choice] }}-size-{{ block.settings[grid_text_1_size] }}">
+                  {% if block.settings[grid_text_1_url] != blank %}
+                    <a href="{{ block.settings[grid_text_1_url] }}">
+                  {% endif %}
+
+                  {{ block.settings[grid_text_1] }}
+                    
+                  {% if block.settings[grid_text_1_url] != blank %}
+                    </a>
+                  {% endif %}
+                </h3>
+              {% endif %}
+
+              {% if block.settings[grid_text_3] != blank %}
+                <p class="section-multicolumn-grid__description paragraph-size-{{ block.settings[grid_text_3_size] }}">{{ block.settings[grid_text_3] }}</p>
+              {% endif %}
+
+              {% if block.settings[grid_button_1_text] != blank or block.settings[grid_button_2_text] != blank %}
+                <div class="section-multicolumn-grid__buttons">
+                  {% if block.settings[grid_button_1_text] != blank %}
+                    {% render 'button', 
+                        button_text: block.settings[grid_button_1_text],  
+                        button_url: block.settings[grid_button_1_url],
+                        button_style: block.settings[grid_button_1_style],
+                        button_target: block.settings[grid_button_1_target],
+                        button_classes: 'section-multicolumn-grid__button'
+                    %}
+                  {% endif %}
+                  {% if block.settings[grid_button_2_text] != blank %}
+                    {% render 'button', 
+                        button_text: block.settings[grid_button_2_text],  
+                        button_url: block.settings[grid_button_2_url],
+                        button_style: block.settings[grid_button_2_style],
+                        button_target: block.settings[grid_button_2_target],
+                        button_classes: 'section-multicolumn-grid__button'
+                    %}
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+          {% endif %}
+        {% endfor %}
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+{% if section.settings.separator %}
+  <div class="section-separator{% liquid 
+echo ' ' | append: section.settings.color_scheme
+ %}"><hr class="separator"></div>
+{% endif %}
+
+
+{% schema %}
+{
+    "name": "t:sections.collage.name",
+    "settings": [
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__general.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "fullwidth",
+            "label": "t:sections.common.settings.fullwidth.label",
+            "info": "t:sections.common.settings.fullwidth.info",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "width",
+            "min": 500,
+            "max": 2000,
+            "step": 20,
+            "unit": "px",
+            "label": "t:sections.common.settings.width.label",
+            "default": 1320,
+            "info": "t:sections.common.settings.width.info"
+        },
+        {
+            "type": "select",
+            "id": "side_margin_choice",
+            "label": "t:sections.common.settings.side_margin_choice.label",
+            "options": [
+                {
+                    "value": "level-0",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__4.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__5.label"
+                }
+            ],
+            "info": "t:sections.common.settings.side_margin_choice.info",
+            "default": "level-4"
+        },
+        {
+            "type": "checkbox",
+            "id": "gap",
+            "label": "t:sections.collage.settings.gap.label",
+            "info": "t:sections.collage.settings.gap.info",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "gap_choice",
+            "label": "t:sections.common.settings.gap_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.gap_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.gap_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.gap_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.gap_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.gap_choice.options.option__4.label"
+                },
+                {
+                    "value": "level-6",
+                    "label": "t:sections.common.settings.gap_choice.options.option__5.label"
+                },
+                {
+                    "value": "level-7",
+                    "label": "t:sections.common.settings.gap_choice.options.option__6.label"
+                }
+            ],
+            "default": "level-4",
+            "info": "t:sections.common.settings.gap_choice.info"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__separator.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "separator",
+            "label": "t:sections.common.settings.separator.label",
+            "info": "t:sections.common.settings.separator.info",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "separator_width",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "t:sections.common.settings.separator_width.label",
+            "default": 100,
+            "info": "t:sections.common.settings.separator_width.info"
+        },
+        {
+            "type": "checkbox",
+            "id": "separator_use_custom_color",
+            "label": "t:sections.common.settings.separator_use_custom_color.label",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "separator_custom_color",
+            "label": "t:sections.common.settings.separator_custom_color.label",
+            "default": "#CCCCCC"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__spacing.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "spacing",
+            "label": "t:sections.common.settings.spacing.label",
+            "info": "t:sections.common.settings.spacing.info",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "spacing_choice",
+            "label": "t:sections.common.settings.spacing_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        },
+        {
+            "type": "select",
+            "id": "spacing_placement",
+            "label": "t:sections.common.settings.spacing_placement.label",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__0.label"
+                },
+                {
+                    "value": "2",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__1.label"
+                },
+                {
+                    "value": "3",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__2.label"
+                }
+            ],
+            "default": "1",
+            "info": "t:sections.common.settings.spacing_placement.info"
+        }
+    ],
+    "blocks": [
+        {
+            "name": "t:sections.collage.blocks.column.name",
+            "type": "column",
+            "limit": 3,
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "t:sections.collage.blocks.column.settings.header__general.content"
+                },
+                {
+                    "type": "range",
+                    "id": "width",
+                    "min": 1,
+                    "max": 100,
+                    "step": 1,
+                    "unit": "%",
+                    "label": "t:sections.collage.blocks.column.settings.width.label",
+                    "default": 33
+                },
+                {
+                    "type": "select",
+                    "id": "display_style",
+                    "label": "t:sections.collage.blocks.column.settings.display_style.label",
+                    "info": "t:sections.collage.blocks.column.settings.display_style.info",
+                    "options": [
+                        {
+                            "value": "1",
+                            "label": "t:sections.collage.blocks.column.settings.display_style.options.option__0.label"
+                        },
+                        {
+                            "value": "2",
+                            "label": "t:sections.collage.blocks.column.settings.display_style.options.option__1.label"
+                        },
+                        {
+                            "value": "3",
+                            "label": "t:sections.collage.blocks.column.settings.display_style.options.option__2.label"
+                        }
+                    ],
+                    "default": "1"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.collage.blocks.column.settings.header__grid_1.content"
+                },
+                {
+                    "type": "color_scheme",
+                    "id": "grid_1_color_scheme",
+                    "default": "scheme_4",
+                    "label": "t:sections.collage.blocks.column.settings.grid_1_color_scheme.label"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_1_inset_choice",
+                    "label": "t:sections.collage.blocks.column.settings.grid_1_inset_choice.label",
+                    "options": [
+                        {
+                            "value": "level-1",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_inset_choice.options.option__0.label"
+                        },
+                        {
+                            "value": "level-2",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_inset_choice.options.option__1.label"
+                        },
+                        {
+                            "value": "level-3",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_inset_choice.options.option__2.label"
+                        },
+                        {
+                            "value": "level-4",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_inset_choice.options.option__3.label"
+                        },
+                        {
+                            "value": "level-5",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_inset_choice.options.option__4.label"
+                        }
+                    ],
+                    "default": "level-3"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_1_aspect_ratio",
+                    "label": "t:sections.collage.blocks.column.settings.grid_1_aspect_ratio.label",
+                    "options": [
+                        {
+                            "value": "auto",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_aspect_ratio.options.option__0.label"
+                        },
+                        {
+                            "value": "1/1",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_aspect_ratio.options.option__1.label"
+                        },
+                        {
+                            "value": "2/1",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_aspect_ratio.options.option__2.label"
+                        },
+                        {
+                            "value": "3/2",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_aspect_ratio.options.option__3.label"
+                        },
+                        {
+                            "value": "4/3",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_aspect_ratio.options.option__4.label"
+                        },
+                        {
+                            "value": "5/4",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_aspect_ratio.options.option__5.label"
+                        },
+                        {
+                            "value": "1/2",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_aspect_ratio.options.option__6.label"
+                        },
+                        {
+                            "value": "2/3",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_aspect_ratio.options.option__7.label"
+                        },
+                        {
+                            "value": "3/4",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_aspect_ratio.options.option__8.label"
+                        },
+                        {
+                            "value": "4/5",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_aspect_ratio.options.option__9.label"
+                        }
+                    ],
+                    "default": "auto"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_1_vertical_align",
+                    "label": "t:sections.collage.blocks.column.settings.grid_1_vertical_align.label",
+                    "options": [
+                        {
+                            "value": "top",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_vertical_align.options.option__0.label"
+                        },
+                        {
+                            "value": "bottom",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_vertical_align.options.option__1.label"
+                        },
+                        {
+                            "value": "top-bottom",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_vertical_align.options.option__2.label"
+                        }
+                    ],
+                    "default": "top"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.collage.blocks.column.settings.header__media.content"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "grid_1_use_image",
+                    "label": "t:sections.collage.blocks.column.settings.grid_1_use_image.label",
+                    "default": false
+                },
+                {
+                    "type": "image_picker",
+                    "id": "grid_1_image",
+                    "label": "t:sections.collage.blocks.column.settings.grid_1_image.label"
+                },
+                {
+                    "type": "video",
+                    "id": "grid_1_video",
+                    "label": "t:sections.collage.blocks.column.settings.grid_1_video.label",
+                    "info": "t:sections.collage.blocks.column.settings.grid_1_video.info"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.collage.blocks.column.settings.header__heading.content"
+                },
+                {
+                    "type": "text",
+                    "id": "grid_1_text_1",
+                    "label": "t:sections.collage.blocks.column.settings.grid_1_text_1.label",
+                    "default": "Multicolumn grid heading"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_1_text_1_size",
+                    "label": "t:sections.collage.blocks.column.settings.grid_1_text_1_size.label",
+                    "options": [
+                        {
+                            "value": "x-small",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_text_1_size.options.option__0.label"
+                        },
+                        {
+                            "value": "small",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_text_1_size.options.option__1.label"
+                        },
+                        {
+                            "value": "medium",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_text_1_size.options.option__2.label"
+                        },
+                        {
+                            "value": "large",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_text_1_size.options.option__3.label"
+                        }
+                    ],
+                    "default": "medium"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_1_text_1_choice",
+                    "label": "t:sections.collage.blocks.column.settings.grid_1_text_1_choice.label",
+                    "options": [
+                        {
+                            "value": "heading",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_text_1_choice.options.option__0.label"
+                        },
+                        {
+                            "value": "special-heading",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_text_1_choice.options.option__1.label"
+                        }
+                    ],
+                    "default": "heading"
+                },
+                {
+                    "type": "url",
+                    "id": "grid_1_text_1_url",
+                    "label": "t:sections.collage.blocks.column.settings.grid_1_text_1_url.label"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.collage.blocks.column.settings.header__additional_heading.content"
+                },
+                {
+                    "type": "text",
+                    "id": "grid_1_text_2",
+                    "label": "t:sections.collage.blocks.column.settings.grid_1_text_2.label"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "grid_1_text_2_outline",
+                    "label": "t:sections.collage.blocks.column.settings.grid_1_text_2_outline.label",
+                    "default": false,
+                    "info": "t:sections.collage.blocks.column.settings.grid_1_text_2_outline.info"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.collage.blocks.column.settings.header__description.content"
+                },
+                {
+                    "type": "inline_richtext",
+                    "id": "grid_1_text_3",
+                    "label": "t:sections.collage.blocks.column.settings.grid_1_text_3.label",
+                    "default": "This is simple description for multicolumn grid blocks"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_1_text_3_size",
+                    "label": "t:sections.collage.blocks.column.settings.grid_1_text_3_size.label",
+                    "options": [
+                        {
+                            "value": "x-small",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_text_3_size.options.option__0.label"
+                        },
+                        {
+                            "value": "small",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_text_3_size.options.option__1.label"
+                        },
+                        {
+                            "value": "medium",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_text_3_size.options.option__2.label"
+                        },
+                        {
+                            "value": "large",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_text_3_size.options.option__3.label"
+                        }
+                    ],
+                    "default": "medium"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.collage.blocks.column.settings.header__button_1.content"
+                },
+                {
+                    "type": "text",
+                    "id": "grid_1_button_1_text",
+                    "label": "t:sections.collage.blocks.column.settings.grid_1_button_1_text.label",
+                    "default": "Button text"
+                },
+                {
+                    "type": "url",
+                    "id": "grid_1_button_1_url",
+                    "label": "t:sections.collage.blocks.column.settings.grid_1_button_1_url.label"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_1_button_1_target",
+                    "label": "t:sections.collage.blocks.column.settings.grid_1_button_1_target.label",
+                    "options": [
+                        {
+                            "value": "_self",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_button_1_target.options.option__0.label"
+                        },
+                        {
+                            "value": "_blank",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_button_1_target.options.option__1.label"
+                        }
+                    ],
+                    "default": "_self",
+                    "info": "t:sections.collage.blocks.column.settings.grid_1_button_1_target.info"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_1_button_1_style",
+                    "label": "t:sections.collage.blocks.column.settings.grid_1_button_1_style.label",
+                    "options": [
+                        {
+                            "value": "outline",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_button_1_style.options.option__0.label"
+                        },
+                        {
+                            "value": "fill",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_button_1_style.options.option__1.label"
+                        },
+                        {
+                            "value": "outline-secondary",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_button_1_style.options.option__2.label"
+                        },
+                        {
+                            "value": "fill-secondary",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_button_1_style.options.option__3.label"
+                        },
+                        {
+                            "value": "link",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_button_1_style.options.option__4.label"
+                        }
+                    ],
+                    "default": "link"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.collage.blocks.column.settings.header__button_2.content"
+                },
+                {
+                    "type": "text",
+                    "id": "grid_1_button_2_text",
+                    "label": "t:sections.collage.blocks.column.settings.grid_1_button_2_text.label"
+                },
+                {
+                    "type": "url",
+                    "id": "grid_1_button_2_url",
+                    "label": "t:sections.collage.blocks.column.settings.grid_1_button_2_url.label"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_1_button_2_target",
+                    "label": "t:sections.collage.blocks.column.settings.grid_1_button_2_target.label",
+                    "options": [
+                        {
+                            "value": "_self",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_button_2_target.options.option__0.label"
+                        },
+                        {
+                            "value": "_blank",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_button_2_target.options.option__1.label"
+                        }
+                    ],
+                    "default": "_self",
+                    "info": "t:sections.collage.blocks.column.settings.grid_1_button_2_target.info"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_1_button_2_style",
+                    "label": "t:sections.collage.blocks.column.settings.grid_1_button_2_style.label",
+                    "options": [
+                        {
+                            "value": "outline",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_button_2_style.options.option__0.label"
+                        },
+                        {
+                            "value": "fill",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_button_2_style.options.option__1.label"
+                        },
+                        {
+                            "value": "outline-secondary",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_button_2_style.options.option__2.label"
+                        },
+                        {
+                            "value": "fill-secondary",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_button_2_style.options.option__3.label"
+                        },
+                        {
+                            "value": "link",
+                            "label": "t:sections.collage.blocks.column.settings.grid_1_button_2_style.options.option__4.label"
+                        }
+                    ],
+                    "default": "link"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.collage.blocks.column.settings.header__grid_2.content"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "grid_2_show",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_show.label",
+                    "info": "t:sections.collage.blocks.column.settings.grid_2_show.info",
+                    "default": false
+                },
+                {
+                    "type": "color_scheme",
+                    "id": "grid_2_color_scheme",
+                    "default": "scheme_4",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_color_scheme.label"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "grid_2_inset",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_inset.label",
+                    "default": true
+                },
+                {
+                    "type": "select",
+                    "id": "grid_2_inset_choice",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_inset_choice.label",
+                    "options": [
+                        {
+                            "value": "level-1",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_inset_choice.options.option__0.label"
+                        },
+                        {
+                            "value": "level-2",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_inset_choice.options.option__1.label"
+                        },
+                        {
+                            "value": "level-3",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_inset_choice.options.option__2.label"
+                        },
+                        {
+                            "value": "level-4",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_inset_choice.options.option__3.label"
+                        },
+                        {
+                            "value": "level-5",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_inset_choice.options.option__4.label"
+                        }
+                    ],
+                    "default": "level-3"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_2_aspect_ratio",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_aspect_ratio.label",
+                    "options": [
+                        {
+                            "value": "auto",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_aspect_ratio.options.option__0.label"
+                        },
+                        {
+                            "value": "1/1",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_aspect_ratio.options.option__1.label"
+                        },
+                        {
+                            "value": "2/1",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_aspect_ratio.options.option__2.label"
+                        },
+                        {
+                            "value": "3/2",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_aspect_ratio.options.option__3.label"
+                        },
+                        {
+                            "value": "4/3",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_aspect_ratio.options.option__4.label"
+                        },
+                        {
+                            "value": "5/4",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_aspect_ratio.options.option__5.label"
+                        },
+                        {
+                            "value": "1/2",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_aspect_ratio.options.option__6.label"
+                        },
+                        {
+                            "value": "2/3",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_aspect_ratio.options.option__7.label"
+                        },
+                        {
+                            "value": "3/4",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_aspect_ratio.options.option__8.label"
+                        },
+                        {
+                            "value": "4/5",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_aspect_ratio.options.option__9.label"
+                        }
+                    ],
+                    "default": "auto"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_2_vertical_align",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_vertical_align.label",
+                    "options": [
+                        {
+                            "value": "top",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_vertical_align.options.option__0.label"
+                        },
+                        {
+                            "value": "bottom",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_vertical_align.options.option__1.label"
+                        },
+                        {
+                            "value": "top-bottom",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_vertical_align.options.option__2.label"
+                        }
+                    ],
+                    "default": "top"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.collage.blocks.column.settings.header__media.content"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "grid_2_use_image",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_use_image.label",
+                    "default": false
+                },
+                {
+                    "type": "image_picker",
+                    "id": "grid_2_image",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_image.label"
+                },
+                {
+                    "type": "video",
+                    "id": "grid_2_video",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_video.label",
+                    "info": "t:sections.collage.blocks.column.settings.grid_2_video.info"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.collage.blocks.column.settings.header__heading.content"
+                },
+                {
+                    "type": "text",
+                    "id": "grid_2_text_1",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_text_1.label",
+                    "default": "Multicolumn grid heading"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_2_text_1_choice",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_text_1_choice.label",
+                    "options": [
+                        {
+                            "value": "heading",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_text_1_choice.options.option__0.label"
+                        },
+                        {
+                            "value": "special-heading",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_text_1_choice.options.option__1.label"
+                        }
+                    ],
+                    "default": "heading"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_2_text_1_size",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_text_1_size.label",
+                    "options": [
+                        {
+                            "value": "x-small",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_text_1_size.options.option__0.label"
+                        },
+                        {
+                            "value": "small",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_text_1_size.options.option__1.label"
+                        },
+                        {
+                            "value": "medium",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_text_1_size.options.option__2.label"
+                        },
+                        {
+                            "value": "large",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_text_1_size.options.option__3.label"
+                        }
+                    ],
+                    "default": "medium"
+                },
+                {
+                    "type": "url",
+                    "id": "grid_2_text_1_url",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_text_1_url.label"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.collage.blocks.column.settings.header__additional_heading.content"
+                },
+                {
+                    "type": "text",
+                    "id": "grid_2_text_2",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_text_2.label"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "grid_2_text_2_outline",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_text_2_outline.label",
+                    "default": false,
+                    "info": "t:sections.collage.blocks.column.settings.grid_2_text_2_outline.info"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.collage.blocks.column.settings.header__description.content"
+                },
+                {
+                    "type": "inline_richtext",
+                    "id": "grid_2_text_3",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_text_3.label",
+                    "default": "This is simple description for multicolumn grid blocks"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_2_text_3_size",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_text_3_size.label",
+                    "options": [
+                        {
+                            "value": "x-small",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_text_3_size.options.option__0.label"
+                        },
+                        {
+                            "value": "small",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_text_3_size.options.option__1.label"
+                        },
+                        {
+                            "value": "medium",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_text_3_size.options.option__2.label"
+                        },
+                        {
+                            "value": "large",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_text_3_size.options.option__3.label"
+                        }
+                    ],
+                    "default": "medium"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.collage.blocks.column.settings.header__button_1.content"
+                },
+                {
+                    "type": "text",
+                    "id": "grid_2_button_1_text",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_button_1_text.label",
+                    "default": "Button text"
+                },
+                {
+                    "type": "url",
+                    "id": "grid_2_button_1_url",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_button_1_url.label"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_2_button_1_target",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_button_1_target.label",
+                    "options": [
+                        {
+                            "value": "_self",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_button_1_target.options.option__0.label"
+                        },
+                        {
+                            "value": "_blank",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_button_1_target.options.option__1.label"
+                        }
+                    ],
+                    "default": "_self",
+                    "info": "t:sections.collage.blocks.column.settings.grid_2_button_1_target.info"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_2_button_1_style",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_button_1_style.label",
+                    "options": [
+                        {
+                            "value": "outline",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_button_1_style.options.option__0.label"
+                        },
+                        {
+                            "value": "fill",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_button_1_style.options.option__1.label"
+                        },
+                        {
+                            "value": "outline-secondary",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_button_1_style.options.option__2.label"
+                        },
+                        {
+                            "value": "fill-secondary",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_button_1_style.options.option__3.label"
+                        },
+                        {
+                            "value": "link",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_button_1_style.options.option__4.label"
+                        }
+                    ],
+                    "default": "link"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.collage.blocks.column.settings.header__button_2.content"
+                },
+                {
+                    "type": "text",
+                    "id": "grid_2_button_2_text",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_button_2_text.label",
+                    "default": "Button text"
+                },
+                {
+                    "type": "url",
+                    "id": "grid_2_button_2_url",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_button_2_url.label"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_2_button_2_target",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_button_2_target.label",
+                    "options": [
+                        {
+                            "value": "_self",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_button_2_target.options.option__0.label"
+                        },
+                        {
+                            "value": "_blank",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_button_2_target.options.option__1.label"
+                        }
+                    ],
+                    "default": "_self",
+                    "info": "t:sections.collage.blocks.column.settings.grid_2_button_2_target.info"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_2_button_2_style",
+                    "label": "t:sections.collage.blocks.column.settings.grid_2_button_2_style.label",
+                    "options": [
+                        {
+                            "value": "outline",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_button_2_style.options.option__0.label"
+                        },
+                        {
+                            "value": "fill",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_button_2_style.options.option__1.label"
+                        },
+                        {
+                            "value": "outline-secondary",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_button_2_style.options.option__2.label"
+                        },
+                        {
+                            "value": "fill-secondary",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_button_2_style.options.option__3.label"
+                        },
+                        {
+                            "value": "link",
+                            "label": "t:sections.collage.blocks.column.settings.grid_2_button_2_style.options.option__4.label"
+                        }
+                    ],
+                    "default": "link"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.collage.blocks.column.settings.header__grid_3.content"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "grid_3_show",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_show.label",
+                    "info": "t:sections.collage.blocks.column.settings.grid_3_show.info",
+                    "default": false
+                },
+                {
+                    "type": "color_scheme",
+                    "id": "grid_3_color_scheme",
+                    "default": "scheme_4",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_color_scheme.label"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "grid_3_inset",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_inset.label",
+                    "default": true
+                },
+                {
+                    "type": "select",
+                    "id": "grid_3_inset_choice",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_inset_choice.label",
+                    "options": [
+                        {
+                            "value": "level-1",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_inset_choice.options.option__0.label"
+                        },
+                        {
+                            "value": "level-2",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_inset_choice.options.option__1.label"
+                        },
+                        {
+                            "value": "level-3",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_inset_choice.options.option__2.label"
+                        },
+                        {
+                            "value": "level-4",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_inset_choice.options.option__3.label"
+                        },
+                        {
+                            "value": "level-5",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_inset_choice.options.option__4.label"
+                        }
+                    ],
+                    "default": "level-3"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_3_aspect_ratio",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_aspect_ratio.label",
+                    "options": [
+                        {
+                            "value": "auto",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_aspect_ratio.options.option__0.label"
+                        },
+                        {
+                            "value": "1/1",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_aspect_ratio.options.option__1.label"
+                        },
+                        {
+                            "value": "2/1",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_aspect_ratio.options.option__2.label"
+                        },
+                        {
+                            "value": "3/2",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_aspect_ratio.options.option__3.label"
+                        },
+                        {
+                            "value": "4/3",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_aspect_ratio.options.option__4.label"
+                        },
+                        {
+                            "value": "5/4",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_aspect_ratio.options.option__5.label"
+                        },
+                        {
+                            "value": "1/2",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_aspect_ratio.options.option__6.label"
+                        },
+                        {
+                            "value": "2/3",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_aspect_ratio.options.option__7.label"
+                        },
+                        {
+                            "value": "3/4",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_aspect_ratio.options.option__8.label"
+                        },
+                        {
+                            "value": "4/5",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_aspect_ratio.options.option__9.label"
+                        }
+                    ],
+                    "default": "auto"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_3_vertical_align",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_vertical_align.label",
+                    "options": [
+                        {
+                            "value": "top",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_vertical_align.options.option__0.label"
+                        },
+                        {
+                            "value": "bottom",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_vertical_align.options.option__1.label"
+                        },
+                        {
+                            "value": "top-bottom",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_vertical_align.options.option__2.label"
+                        }
+                    ],
+                    "default": "top"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.collage.blocks.column.settings.header__media.content"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "grid_3_use_image",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_use_image.label",
+                    "default": false
+                },
+                {
+                    "type": "image_picker",
+                    "id": "grid_3_image",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_image.label"
+                },
+                {
+                    "type": "video",
+                    "id": "grid_3_video",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_video.label",
+                    "info": "t:sections.collage.blocks.column.settings.grid_3_video.info"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.collage.blocks.column.settings.header__heading.content"
+                },
+                {
+                    "type": "text",
+                    "id": "grid_3_text_1",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_text_1.label",
+                    "default": "Multicolumn grid heading"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_3_text_1_choice",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_text_1_choice.label",
+                    "options": [
+                        {
+                            "value": "heading",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_text_1_choice.options.option__0.label"
+                        },
+                        {
+                            "value": "special-heading",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_text_1_choice.options.option__1.label"
+                        }
+                    ],
+                    "default": "heading"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_3_text_1_size",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_text_1_size.label",
+                    "options": [
+                        {
+                            "value": "x-small",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_text_1_size.options.option__0.label"
+                        },
+                        {
+                            "value": "small",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_text_1_size.options.option__1.label"
+                        },
+                        {
+                            "value": "medium",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_text_1_size.options.option__2.label"
+                        },
+                        {
+                            "value": "large",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_text_1_size.options.option__3.label"
+                        }
+                    ],
+                    "default": "medium"
+                },
+                {
+                    "type": "url",
+                    "id": "grid_3_text_1_url",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_text_1_url.label"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.collage.blocks.column.settings.header__additional_heading.content"
+                },
+                {
+                    "type": "text",
+                    "id": "grid_3_text_2",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_text_2.label"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "grid_3_text_2_outline",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_text_2_outline.label",
+                    "default": false,
+                    "info": "t:sections.collage.blocks.column.settings.grid_3_text_2_outline.info"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.collage.blocks.column.settings.header__description.content"
+                },
+                {
+                    "type": "inline_richtext",
+                    "id": "grid_3_text_3",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_text_3.label",
+                    "default": "This is simple description for multicolumn grid blocks"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_3_text_3_size",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_text_3_size.label",
+                    "options": [
+                        {
+                            "value": "x-small",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_text_3_size.options.option__0.label"
+                        },
+                        {
+                            "value": "small",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_text_3_size.options.option__1.label"
+                        },
+                        {
+                            "value": "medium",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_text_3_size.options.option__2.label"
+                        },
+                        {
+                            "value": "large",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_text_3_size.options.option__3.label"
+                        }
+                    ],
+                    "default": "medium"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.collage.blocks.column.settings.header__button_1.content"
+                },
+                {
+                    "type": "text",
+                    "id": "grid_3_button_1_text",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_button_1_text.label",
+                    "default": "Button text"
+                },
+                {
+                    "type": "url",
+                    "id": "grid_3_button_1_url",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_button_1_url.label"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_3_button_1_target",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_button_1_target.label",
+                    "options": [
+                        {
+                            "value": "_self",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_button_1_target.options.option__0.label"
+                        },
+                        {
+                            "value": "_blank",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_button_1_target.options.option__1.label"
+                        }
+                    ],
+                    "default": "_self",
+                    "info": "t:sections.collage.blocks.column.settings.grid_3_button_1_target.info"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_3_button_1_style",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_button_1_style.label",
+                    "options": [
+                        {
+                            "value": "outline",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_button_1_style.options.option__0.label"
+                        },
+                        {
+                            "value": "fill",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_button_1_style.options.option__1.label"
+                        },
+                        {
+                            "value": "outline-secondary",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_button_1_style.options.option__2.label"
+                        },
+                        {
+                            "value": "fill-secondary",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_button_1_style.options.option__3.label"
+                        },
+                        {
+                            "value": "link",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_button_1_style.options.option__4.label"
+                        }
+                    ],
+                    "default": "link"
+                },
+                {
+                    "type": "header",
+                    "content": "t:sections.collage.blocks.column.settings.header__button_2.content"
+                },
+                {
+                    "type": "text",
+                    "id": "grid_3_button_2_text",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_button_2_text.label",
+                    "default": "Button text"
+                },
+                {
+                    "type": "url",
+                    "id": "grid_3_button_2_url",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_button_2_url.label"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_3_button_2_target",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_button_2_target.label",
+                    "options": [
+                        {
+                            "value": "_self",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_button_2_target.options.option__0.label"
+                        },
+                        {
+                            "value": "_blank",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_button_2_target.options.option__1.label"
+                        }
+                    ],
+                    "default": "_self",
+                    "info": "t:sections.collage.blocks.column.settings.grid_3_button_2_target.info"
+                },
+                {
+                    "type": "select",
+                    "id": "grid_3_button_2_style",
+                    "label": "t:sections.collage.blocks.column.settings.grid_3_button_2_style.label",
+                    "options": [
+                        {
+                            "value": "outline",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_button_2_style.options.option__0.label"
+                        },
+                        {
+                            "value": "fill",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_button_2_style.options.option__1.label"
+                        },
+                        {
+                            "value": "outline-secondary",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_button_2_style.options.option__2.label"
+                        },
+                        {
+                            "value": "fill-secondary",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_button_2_style.options.option__3.label"
+                        },
+                        {
+                            "value": "link",
+                            "label": "t:sections.collage.blocks.column.settings.grid_3_button_2_style.options.option__4.label"
+                        }
+                    ],
+                    "default": "link"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "t:sections.collage.presets.collage.name",
+            "blocks": [
+                {
+                    "type": "column"
+                },
+                {
+                    "type": "column",
+                    "settings": {
+                        "grid_1_aspect_ratio": "3/2",
+                        "grid_2_show": true,
+                        "grid_2_aspect_ratio": "3/2"
+                    }
+                },
+                {
+                    "type": "column",
+                    "settings": {
+                        "width": 34
+                    }
+                }
+            ]
+        }
+    ],
+    "disabled_on": {
+        "groups": [
+            "*"
+        ]
+    }
+}
+{% endschema %}
+

@@ -1,0 +1,34 @@
+{% comment %}
+    Renders collection
+
+    Accepts:
+    - collection: {Object} Collection object
+
+    Usage:
+    {% render 'section-collection-processor',
+      collection: product
+    %}
+{% endcomment %}
+
+<div class="{{ prefix | default: 'collection' }}__image collection__image featured-image">
+    <a href="{{ collection.url }}" title="{{ collection.title }}">
+        {% if collection.featured_image != blank %}
+            {% render 'section-image-processor', image: collection.featured_image %}
+        {% else %}
+            <span>{{ collection.title | escape }}</span>
+        {% endif %}
+    </a>
+</div>
+{% if collection.title != blank %}
+    <h3 class="{{ prefix | default: 'collection' }}__title collection__title">
+        <a href="{{ collection.url }}" title="{{ collection.title }}">
+        {{ collection.title | escape }}
+        {% if section_settings.collection_count %}
+            <span>({{ collection.products_count }})</span>
+        {% endif %}
+        </a>
+    </h3>
+{% endif %}
+{% comment %} {% if section_settings.collection_link %}
+    <a href="{{ collection.url }}">{{ 'collections.link_text' | t: title: collection.title }}</a>
+{% endif %} {% endcomment %}

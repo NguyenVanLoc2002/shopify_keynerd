@@ -1,0 +1,328 @@
+
+{% liquid 
+
+  assign cookie_name = section.settings.cookie_name
+  assign popup_expiry = section.settings.expiry
+  assign popup_delay = section.settings.delay
+
+%}
+
+
+<popup-modal class="section-popup popup-modal inactive{% liquid 
+    if section.settings.display_position == 'bottom-right'
+        echo ' display-in-corner'
+    endif 
+    if section.settings.image != blank
+        echo ' has-image'
+    endif 
+%}" data-popup-type="onload" data-popup-delay="{{ popup_delay }}" data-popup-expiry="{{ popup_expiry }}" data-popup-cookie-name="{{ cookie_name }}" style="display: none;">
+    <div class="popup-modal__overlay"></div>
+    <div class="popup-modal__inner {{ section.settings.color_scheme }}">
+        <div class="popup-modal__content">
+            {% if section.settings.image != blank %}
+                <div class="section-popup-image">
+                    {% render 'section-image-processor', image: section.settings.image %}
+                </div>
+            {% endif %}
+            <div class="section-popup-content">
+            {% if section.settings.text_1 != blank %}
+              <h2 class="section-popup-content__heading special-heading-size-{{ section.settings.text_1_size }}">{{ section.settings.text_1 }}</h2>
+            {% endif %}
+
+            {% if section.settings.text_2 != blank %}
+              <p class="section-popup-content__description paragraph-size-{{ section.settings.text_2_size }}">{{ section.settings.text_2 }}</p>
+            {% endif %}
+
+            {% if section.settings.type == 'newsletter' %}
+              {% render 'newsletter-form' section_id: section.id %}
+            {% elsif section.settings.type == 'promotional' %}
+                {% if section.settings.promotional_button_text != blank %}
+                    {% render 'button', 
+                        button_text: section.settings.promotional_button_text,  
+                        button_url: section.settings.promotional_button_url,
+                        button_style: section.settings.promotional_button_style,
+                        button_target: section.settings.promotional_button_target,
+                        button_classes: 'section-popup-content__button'
+                    %}
+                {% endif %}
+
+            {% endif %}
+
+            {% if section.settings.button_text != blank %}
+                {% render 'button', 
+                    button_text: section.settings.button_text,  
+                    button_url: section.settings.button_url,
+                    button_style: section.settings.button_style,
+                    button_target: section.settings.button_target,
+                    button_classes: 'section-popup-content__button section-popup-button-close'
+                %}
+            {% endif %}
+            </div>
+        </div>
+        <button class="popup-modal__close">{% render 'icon-close' %}</button>
+    </div>
+</popup-modal>
+
+
+
+{% schema %}
+{
+    "name": "t:sections.newsletter_or_promo_popup.name",
+    "limit": 1,
+    "settings": [
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__cookie.content"
+        },
+        {
+            "type": "text",
+            "id": "cookie_name",
+            "label": "t:sections.newsletter_or_promo_popup.settings.cookie_name.label",
+            "default": "popup",
+            "info": "t:sections.newsletter_or_promo_popup.settings.cookie_name.info"
+        },
+        {
+            "type": "number",
+            "id": "expiry",
+            "label": "t:sections.newsletter_or_promo_popup.settings.expiry.label",
+            "default": 1,
+            "info": "t:sections.newsletter_or_promo_popup.settings.expiry.info"
+        },
+        {
+            "type": "range",
+            "id": "delay",
+            "min": 0,
+            "max": 5000,
+            "step": 100,
+            "label": "t:sections.newsletter_or_promo_popup.settings.delay.label",
+            "default": 500,
+            "info": "t:sections.newsletter_or_promo_popup.settings.delay.info"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__general.content"
+        },
+        {
+            "type": "color_scheme",
+            "id": "color_scheme",
+            "default": "scheme_8",
+            "label": "t:sections.common.settings.color_scheme.label"
+        },
+        {
+            "type": "select",
+            "id": "type",
+            "label": "t:sections.newsletter_or_promo_popup.settings.type.label",
+            "options": [
+                {
+                    "value": "newsletter",
+                    "label": "t:sections.newsletter_or_promo_popup.settings.type.options.option__0.label"
+                },
+                {
+                    "value": "promotional",
+                    "label": "t:sections.newsletter_or_promo_popup.settings.type.options.option__1.label"
+                }
+            ]
+        },
+        {
+            "type": "text",
+            "id": "promotional_button_text",
+            "label": "t:sections.newsletter_or_promo_popup.settings.promotional_button_text.label",
+            "default": "Shop the sale - 20% Off.",
+            "info": "t:sections.newsletter_or_promo_popup.settings.promotional_button_text.info"
+        },
+        {
+            "type": "url",
+            "id": "promotional_button_url",
+            "label": "t:sections.newsletter_or_promo_popup.settings.promotional_button_url.label"
+        },
+        {
+            "type": "select",
+            "id": "promotional_button_target",
+            "label": "t:sections.newsletter_or_promo_popup.settings.promotional_button_target.label",
+            "options": [
+                {
+                    "value": "_self",
+                    "label": "t:sections.newsletter_or_promo_popup.settings.promotional_button_target.options.option__0.label"
+                },
+                {
+                    "value": "_blank",
+                    "label": "t:sections.newsletter_or_promo_popup.settings.promotional_button_target.options.option__1.label"
+                }
+            ],
+            "default": "_self",
+            "info": "t:sections.newsletter_or_promo_popup.settings.promotional_button_target.info"
+        },
+        {
+            "type": "select",
+            "id": "promotional_button_style",
+            "label": "t:sections.common.settings.promotional_button_style.label",
+            "options": [
+                {
+                    "value": "outline",
+                    "label": "t:sections.common.settings.promotional_button_style.options.option__0.label"
+                },
+                {
+                    "value": "fill",
+                    "label": "t:sections.common.settings.promotional_button_style.options.option__1.label"
+                },
+                {
+                    "value": "outline-secondary",
+                    "label": "t:sections.common.settings.promotional_button_style.options.option__2.label"
+                },
+                {
+                    "value": "fill-secondary",
+                    "label": "t:sections.common.settings.promotional_button_style.options.option__3.label"
+                },
+                {
+                    "value": "link",
+                    "label": "t:sections.common.settings.promotional_button_style.options.option__4.label"
+                }
+            ],
+            "default": "fill"
+        },
+        {
+            "type": "select",
+            "id": "display_position",
+            "label": "t:sections.newsletter_or_promo_popup.settings.display_position.label",
+            "options": [
+                {
+                    "value": "center",
+                    "label": "t:sections.newsletter_or_promo_popup.settings.display_position.options.option__0.label"
+                },
+                {
+                    "value": "bottom-right",
+                    "label": "t:sections.newsletter_or_promo_popup.settings.display_position.options.option__1.label"
+                }
+            ],
+            "default": "center"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__image.content"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "t:sections.newsletter_or_promo_popup.settings.image.label",
+            "info": "t:sections.newsletter_or_promo_popup.settings.image.info"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__heading.content"
+        },
+        {
+            "type": "text",
+            "id": "text_1",
+            "label": "t:sections.newsletter_or_promo_popup.settings.text_1.label",
+            "default": "Subscribe to our Newsletter"
+        },
+        {
+            "type": "select",
+            "id": "text_1_size",
+            "label": "t:sections.newsletter_or_promo_popup.settings.text_1_size.label",
+            "options": [
+                {
+                    "value": "x-small",
+                    "label": "t:sections.newsletter_or_promo_popup.settings.text_1_size.options.option__0.label"
+                },
+                {
+                    "value": "small",
+                    "label": "t:sections.newsletter_or_promo_popup.settings.text_1_size.options.option__1.label"
+                },
+                {
+                    "value": "medium",
+                    "label": "t:sections.newsletter_or_promo_popup.settings.text_1_size.options.option__2.label"
+                },
+                {
+                    "value": "large",
+                    "label": "t:sections.newsletter_or_promo_popup.settings.text_1_size.options.option__3.label"
+                }
+            ],
+            "default": "x-small"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__description.content"
+        },
+        {
+            "type": "text",
+            "id": "text_2",
+            "label": "t:sections.newsletter_or_promo_popup.settings.text_2.label",
+            "default": "We love to send ongoing offers & discounts"
+        },
+        {
+            "type": "select",
+            "id": "text_2_size",
+            "label": "t:sections.newsletter_or_promo_popup.settings.text_2_size.label",
+            "options": [
+                {
+                    "value": "x-small",
+                    "label": "t:sections.newsletter_or_promo_popup.settings.text_2_size.options.option__0.label"
+                },
+                {
+                    "value": "small",
+                    "label": "t:sections.newsletter_or_promo_popup.settings.text_2_size.options.option__1.label"
+                },
+                {
+                    "value": "medium",
+                    "label": "t:sections.newsletter_or_promo_popup.settings.text_2_size.options.option__2.label"
+                },
+                {
+                    "value": "large",
+                    "label": "t:sections.newsletter_or_promo_popup.settings.text_2_size.options.option__3.label"
+                }
+            ],
+            "default": "medium"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__button.content"
+        },
+        {
+            "type": "text",
+            "id": "button_text",
+            "label": "t:sections.newsletter_or_promo_popup.settings.button_text.label",
+            "default": "No thanks"
+        },
+        {
+            "type": "select",
+            "id": "button_style",
+            "label": "t:sections.common.settings.button_style.label",
+            "options": [
+                {
+                    "value": "outline",
+                    "label": "t:sections.common.settings.button_style.options.option__0.label"
+                },
+                {
+                    "value": "fill",
+                    "label": "t:sections.common.settings.button_style.options.option__1.label"
+                },
+                {
+                    "value": "outline-secondary",
+                    "label": "t:sections.common.settings.button_style.options.option__2.label"
+                },
+                {
+                    "value": "fill-secondary",
+                    "label": "t:sections.common.settings.button_style.options.option__3.label"
+                },
+                {
+                    "value": "link",
+                    "label": "t:sections.common.settings.button_style.options.option__4.label"
+                }
+            ],
+            "default": "link"
+        }
+    ],
+    "presets": [
+        {
+            "name": "t:sections.newsletter_or_promo_popup.presets.newsletter_or_promo_popup.name"
+        }
+    ],
+    "enabled_on": {
+        "groups": [
+            "custom.overlay"
+        ]
+    }
+}
+{% endschema %}
+

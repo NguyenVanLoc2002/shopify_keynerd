@@ -1,0 +1,411 @@
+
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    {% unless section.settings.fullwidth %}
+      --theme-section-custom-width: {{ section.settings.width | append: 'px' }};
+    {% endunless %}
+
+  {% if section.settings.inset %}
+    --theme-section-content-padding: var(--theme-section-content-padding-{{ section.settings.inset_choice }});
+  {% endif %}
+
+  {% if section.settings.side_margin_choice != 'level-0' %}
+    --theme-section-side-margin: var(--theme-section-side-margin-{{ section.settings.side_margin_choice }});
+  {% endif %}
+  }
+{% endstyle %}
+
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --theme-blog-columns-count: {{ section.settings.columns_count }}
+
+  }
+{% endstyle %}
+
+{% if section.settings.separator %}
+  {% style %}
+  #shopify-section-{{ section.id }} .separator{
+    --theme-section-separator-width: {{ section.settings.separator_width | append: '%' }};
+
+    {% if section.settings.separator_use_custom_color %}
+      --theme-section-separator-color: {{ section.settings.separator_custom_color }};
+    {% endif %}
+  }
+  {% endstyle %}
+{% endif %}
+
+{% if section.settings.spacing %}
+  {% style %}
+  #shopify-section-{{ section.id }}{
+    
+      {% unless section.settings.spacing_placement == '3' %}
+--theme-section-spacing-top: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+{% unless section.settings.spacing_placement == '2' %}
+      --theme-section-spacing-bottom: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+
+  }
+  {% endstyle %}
+{% endif %}
+
+
+
+
+{% liquid 
+  capture prev_next_icon 
+   render 'icon-chevron-down'
+  endcapture
+
+  assign next_html = 'general.pagination.next' | t | append: prev_next_icon
+  assign prev_html = 'general.pagination.previous' | t | append: prev_next_icon
+
+  assign articles_count = 6
+%}
+
+<div class="blog section-blog{% liquid 
+
+  if section.settings.fullwidth
+    echo ' has-fullwidth'
+  else
+    echo ' has-custom-width'
+  endif
+
+  if section.settings.side_margin_choice != 'level-0'
+    echo ' has-side-margin'
+  endif
+
+  if section.settings.inset
+    echo ' has-section-padding'
+  endif
+
+  echo ' ' | append: section.settings.color_scheme
+
+  if settings.animation_sections
+    echo ' has-animation'
+  endif
+
+%}">
+{% paginate blog.articles by articles_count %}
+  <div class="blog-container section-container">
+    <div class="blog-header">
+      <h1 class="blog-title">{{ blog.title }}</h1>
+      {% if blog.all_tags != blank %}
+        <ul class="blog-tags-list">
+          {% for tag in blog.all_tags %}
+            <li class="blog-tags-list-item">{{ tag | link_to_add_tag: tag }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    {% if blog.articles != blank %}
+      <div class="blog-content">
+        {% for article in blog.articles %}
+          <article class="post">
+            {% if article.image != blank %}
+              <div class="post__thumbnail">
+                <a href="{{ article.url }}">{% render 'section-image-processor', image: article.image %}</a>
+              </div>
+            {% endif %}
+            <div class="post__details">
+              {% if section.settings.tag_show %}
+                <div class="post__tags">
+                  {% for tag in article.tags %}
+                    <span>{{ tag | link_to_add_tag: tag }}</span>
+                  {% endfor %}
+                  {% comment %} {{ article.tags }} {% endcomment %}
+                </div>
+              {% endif %}
+              {% if section.settings.meta_show %}
+                <div class="post__meta">
+                  <span>{{ article.created_at | date: '%B %d, %Y' }}</span>
+                  <span>{{ 'by' }} {{ article.author }}</span>
+                </div>
+              {% endif %}
+              <h3 class="post__title">
+                <a href="{{ article.url }}">{{ article.title }}</a>
+              </h3>
+              {% if section.settings.excerpt_show %}
+                <div class="post__excerpt">
+                  <p>{{ article.excerpt_or_content | strip_html | truncatewords: 30 }}</p>
+                </div>
+              {% endif %}
+              {% if section.settings.read_more_link_show %}
+                <a href="{{ article.url }}" class="post__read-more btn-outline-secondary">
+                  <span data-text="{{ 'blog.link_text' | t }}">
+                    <span>{{ 'blog.link_text' | t }}</span>
+                  </span>
+                </a>
+              {% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      {{ '<p>no posts found</p>' }}
+    {% endif %}
+    {% if paginate.pages > 1 %}
+      <div class="blog-pagination pagination">
+        {{ paginate | default_pagination: next: next_html, previous: prev_html }}
+      </div>
+    {% endif %}
+  </div>
+{% endpaginate %}
+</div>
+
+{% if section.settings.separator %}
+  <div class="section-separator{% liquid 
+echo ' ' | append: section.settings.color_scheme
+ %}"><hr class="separator"></div>
+{% endif %}
+
+
+
+
+{% schema %}
+{
+    "name": "t:sections.main_blog.name",
+    "limit": 1,
+    "settings": [
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__general.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "fullwidth",
+            "label": "t:sections.common.settings.fullwidth.label",
+            "info": "t:sections.common.settings.fullwidth.info",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "width",
+            "min": 500,
+            "max": 2000,
+            "step": 20,
+            "unit": "px",
+            "label": "t:sections.common.settings.width.label",
+            "default": 1320,
+            "info": "t:sections.common.settings.width.info"
+        },
+        {
+            "type": "select",
+            "id": "side_margin_choice",
+            "label": "t:sections.common.settings.side_margin_choice.label",
+            "options": [
+                {
+                    "value": "level-0",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__4.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__5.label"
+                }
+            ],
+            "info": "t:sections.common.settings.side_margin_choice.info",
+            "default": "level-4"
+        },
+        {
+            "type": "color_scheme",
+            "id": "color_scheme",
+            "default": "scheme_1",
+            "label": "t:sections.common.settings.color_scheme.label"
+        },
+        {
+            "type": "checkbox",
+            "id": "inset",
+            "label": "t:sections.main_blog.settings.inset.label",
+            "default": false
+        },
+        {
+            "type": "select",
+            "id": "inset_choice",
+            "label": "t:sections.common.settings.inset_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.inset_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.inset_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.inset_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.inset_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.inset_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__posts.content"
+        },
+        {
+            "type": "range",
+            "id": "columns_count",
+            "label": "t:sections.main_blog.settings.columns_count.label",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "checkbox",
+            "id": "tag_show",
+            "label": "t:sections.main_blog.settings.tag_show.label",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "meta_show",
+            "label": "t:sections.main_blog.settings.meta_show.label",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "excerpt_show",
+            "label": "t:sections.main_blog.settings.excerpt_show.label",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "read_more_link_show",
+            "label": "t:sections.main_blog.settings.read_more_link_show.label",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__separator.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "separator",
+            "label": "t:sections.common.settings.separator.label",
+            "info": "t:sections.common.settings.separator.info",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "separator_width",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "t:sections.common.settings.separator_width.label",
+            "default": 100,
+            "info": "t:sections.common.settings.separator_width.info"
+        },
+        {
+            "type": "checkbox",
+            "id": "separator_use_custom_color",
+            "label": "t:sections.common.settings.separator_use_custom_color.label",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "separator_custom_color",
+            "label": "t:sections.common.settings.separator_custom_color.label",
+            "default": "#CCCCCC"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__spacing.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "spacing",
+            "label": "t:sections.common.settings.spacing.label",
+            "info": "t:sections.common.settings.spacing.info",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "spacing_choice",
+            "label": "t:sections.common.settings.spacing_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        },
+        {
+            "type": "select",
+            "id": "spacing_placement",
+            "label": "t:sections.common.settings.spacing_placement.label",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__0.label"
+                },
+                {
+                    "value": "2",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__1.label"
+                },
+                {
+                    "value": "3",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__2.label"
+                }
+            ],
+            "default": "1",
+            "info": "t:sections.common.settings.spacing_placement.info"
+        }
+    ],
+    "presets": [
+        {
+            "name": "t:sections.main_blog.presets.main_blog.name"
+        }
+    ],
+    "enabled_on": {
+        "templates": [
+            "blog"
+        ]
+    }
+}
+{% endschema %}
+

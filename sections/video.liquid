@@ -1,0 +1,515 @@
+
+
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    {% unless section.settings.fullwidth %}
+      --theme-section-custom-width: {{ section.settings.width | append: 'px' }};
+    {% endunless %}
+
+  {% if section.settings.inset %}
+    --theme-section-content-padding: var(--theme-section-content-padding-{{ section.settings.inset_choice }});
+  {% endif %}
+
+  {% if section.settings.side_margin_choice != 'level-0' %}
+    --theme-section-side-margin: var(--theme-section-side-margin-{{ section.settings.side_margin_choice }});
+  {% endif %}
+  }
+{% endstyle %}
+
+{% if section.settings.separator %}
+  {% style %}
+  #shopify-section-{{ section.id }} .separator{
+    --theme-section-separator-width: {{ section.settings.separator_width | append: '%' }};
+
+    {% if section.settings.separator_use_custom_color %}
+      --theme-section-separator-color: {{ section.settings.separator_custom_color }};
+    {% endif %}
+  }
+  {% endstyle %}
+{% endif %}
+
+{% if section.settings.spacing %}
+  {% style %}
+  #shopify-section-{{ section.id }}{
+    
+      {% unless section.settings.spacing_placement == '3' %}
+--theme-section-spacing-top: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+{% unless section.settings.spacing_placement == '2' %}
+      --theme-section-spacing-bottom: var(--theme-spacing-{{ section.settings.spacing_choice }});
+{% endunless %}
+
+  }
+  {% endstyle %}
+{% endif %}
+
+
+<div class="section-video{% liquid 
+
+  if section.settings.fullwidth
+    echo ' has-fullwidth'
+  else
+    echo ' has-custom-width'
+  endif
+
+  if section.settings.side_margin_choice != 'level-0'
+    echo ' has-side-margin'
+  endif
+
+  if section.settings.inset
+    echo ' has-section-padding'
+  endif
+
+  echo ' ' | append: section.settings.color_scheme
+
+  if settings.animation_sections
+    echo ' has-animation'
+  endif
+
+%}">
+  <div class="section-video-container section-container">
+    {% if section.settings.text_1 != blank or section.settings.text_2 != blank or section.settings.button_text != blank %}
+      <div class="section-video-header">
+        {% if section.settings.text_1 != blank %}
+          <h2 class="section-video-header__heading heading-size-{{ section.settings.text_1_size }}">{{ section.settings.text_1 }}</h2>
+        {% endif %}
+        {% if section.settings.text_2 != blank %}
+          <p class="section-video-header__description paragraph-size-{{ section.settings.text_2_size }}">{{ section.settings.text_2 }}</p>
+        {% endif %}
+
+      </div>
+    {% endif %}
+    <div class="section-video-content">
+      <div class="section-video-player video-player{% liquid 
+        if section.settings.video_source == 'internal'
+          echo ' has-internal-video'
+        else
+          echo ' has-external-video'
+
+          if section.settings.video_url.type == 'youtube'
+            echo ' has-youtube-video'
+          else
+            echo ' has-vimeo-video'
+          endif
+
+        endif
+    
+        if section.settings.cover_image != blank 
+          echo ' has-cover-image'
+        endif
+
+        if section.settings.autoplay_muted
+          echo ' playing'
+        endif
+      %}">
+        {% if section.settings.video_source == 'internal' %}
+          <div class="section-video-player--internal">
+            {% if section.settings.video != blank %}
+              {{ section.settings.video | video_tag: autoplay: section.settings.autoplay_muted, loop: section.settings.loop, muted: section.settings.autoplay_muted  }}
+            {% else %}
+              {% liquid
+                assign video_url = '_9VUPq3SxOc'
+                if section.settings.autoplay_muted
+                  assign video_url = video_url | append: '?autoplay=1&muted=1'
+                endif
+              %}
+              <div style="--aspect-ratio: 16/9; width: 100%;">
+                <iframe src="https://www.youtube.com/embed/{{ video_url }}" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen title="{{ section.settings.video_alt | escape }}"></iframe>
+              </div>
+            {% endif %}
+          </div>
+        {% elsif section.settings.video_source == 'external' %}
+        {% liquid 
+          assign video_url = section.settings.video_url.id
+          if video_url == blank
+            assign video_url = '_9VUPq3SxOc'
+          endif
+
+          if section.settings.autoplay_muted
+            assign video_url = video_url | append: '?autoplay=1&muted=1'
+          endif
+        %}
+          <div class="section-video-player--external">
+            {% if section.settings.video_url.type == 'vimeo' %}
+              <iframe src="https://player.vimeo.com/video/{{ video_url }}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen title="{{ section.settings.video_alt | escape }}"></iframe>
+            {% else %}
+              <iframe src="https://www.youtube.com/embed/{{ video_url }}" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen title="{{ section.settings.video_alt | escape }}"></iframe>
+            {% endif %}
+          </div>
+        {% endif %}
+        
+        {% if section.settings.cover_image != blank %}
+          <div class="section-video-cover-image">
+            {% render 'section-image-processor', image: section.settings.cover_image %}
+          </div>
+        {% endif %}
+
+        {% if section.settings.cover_image == blank and section.settings.video_url == blank and section.settings.video == blank %}
+          <div class="section-video-cover-image">
+            {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder placeholder-video' }}
+          </div>
+        {% endif %}
+
+        <div class="section-video-player-controls">
+          <div class="section-video-player-controls__play video-play">
+            {% render 'icon-play' %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% if section.settings.separator %}
+  <div class="section-separator{% liquid 
+echo ' ' | append: section.settings.color_scheme
+ %}"><hr class="separator"></div>
+{% endif %}
+
+
+
+{% schema %}
+{
+    "name": "t:sections.video.name",
+    "settings": [
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__general.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "fullwidth",
+            "label": "t:sections.common.settings.fullwidth.label",
+            "info": "t:sections.common.settings.fullwidth.info",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "width",
+            "min": 500,
+            "max": 2000,
+            "step": 20,
+            "unit": "px",
+            "label": "t:sections.common.settings.width.label",
+            "default": 1320,
+            "info": "t:sections.common.settings.width.info"
+        },
+        {
+            "type": "select",
+            "id": "side_margin_choice",
+            "label": "t:sections.common.settings.side_margin_choice.label",
+            "options": [
+                {
+                    "value": "level-0",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__4.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.side_margin_choice.options.option__5.label"
+                }
+            ],
+            "info": "t:sections.common.settings.side_margin_choice.info",
+            "default": "level-0"
+        },
+        {
+            "type": "color_scheme",
+            "id": "color_scheme",
+            "default": "scheme_1",
+            "label": "t:sections.common.settings.color_scheme.label"
+        },
+        {
+            "type": "checkbox",
+            "id": "inset",
+            "label": "t:sections.video.settings.inset.label",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "inset_choice",
+            "label": "t:sections.common.settings.inset_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.inset_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.inset_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.inset_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.inset_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.inset_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__heading.content"
+        },
+        {
+            "type": "text",
+            "id": "text_1",
+            "label": "t:sections.video.settings.text_1.label",
+            "default": "This is video heading"
+        },
+        {
+            "type": "select",
+            "id": "text_1_size",
+            "label": "t:sections.video.settings.text_1_size.label",
+            "options": [
+                {
+                    "value": "x-small",
+                    "label": "t:sections.video.settings.text_1_size.options.option__0.label"
+                },
+                {
+                    "value": "small",
+                    "label": "t:sections.video.settings.text_1_size.options.option__1.label"
+                },
+                {
+                    "value": "medium",
+                    "label": "t:sections.video.settings.text_1_size.options.option__2.label"
+                },
+                {
+                    "value": "large",
+                    "label": "t:sections.video.settings.text_1_size.options.option__3.label"
+                },
+                {
+                    "value": "x-large",
+                    "label": "t:sections.video.settings.text_1_size.options.option__4.label"
+                },
+                {
+                    "value": "big",
+                    "label": "t:sections.video.settings.text_1_size.options.option__5.label"
+                },
+                {
+                    "value": "huge",
+                    "label": "t:sections.video.settings.text_1_size.options.option__6.label"
+                }
+            ],
+            "default": "medium"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__description.content"
+        },
+        {
+            "type": "text",
+            "id": "text_2",
+            "label": "t:sections.video.settings.text_2.label",
+            "default": "This is simple description of video section"
+        },
+        {
+            "type": "select",
+            "id": "text_2_size",
+            "label": "t:sections.video.settings.text_2_size.label",
+            "options": [
+                {
+                    "value": "x-small",
+                    "label": "t:sections.video.settings.text_2_size.options.option__0.label"
+                },
+                {
+                    "value": "small",
+                    "label": "t:sections.video.settings.text_2_size.options.option__1.label"
+                },
+                {
+                    "value": "medium",
+                    "label": "t:sections.video.settings.text_2_size.options.option__2.label"
+                },
+                {
+                    "value": "large",
+                    "label": "t:sections.video.settings.text_2_size.options.option__3.label"
+                }
+            ],
+            "default": "medium"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__video.content"
+        },
+        {
+            "type": "select",
+            "id": "video_source",
+            "label": "t:sections.video.settings.video_source.label",
+            "options": [
+                {
+                    "value": "internal",
+                    "label": "t:sections.video.settings.video_source.options.option__0.label"
+                },
+                {
+                    "value": "external",
+                    "label": "t:sections.video.settings.video_source.options.option__1.label"
+                }
+            ],
+            "default": "internal"
+        },
+        {
+            "type": "video",
+            "id": "video",
+            "label": "t:sections.video.settings.video.label"
+        },
+        {
+            "type": "video_url",
+            "id": "video_url",
+            "accept": [
+                "youtube",
+                "vimeo"
+            ],
+            "label": "t:sections.video.settings.video_url.label"
+        },
+        {
+            "type": "text",
+            "id": "video_alt",
+            "label": "t:sections.video.settings.video_alt.label"
+        },
+        {
+            "type": "image_picker",
+            "id": "cover_image",
+            "label": "t:sections.video.settings.cover_image.label",
+            "info": "t:sections.video.settings.cover_image.info"
+        },
+        {
+            "type": "checkbox",
+            "id": "autoplay_muted",
+            "label": "t:sections.common.settings.autoplay_muted.label",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "loop",
+            "label": "t:sections.common.settings.loop.label",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__separator.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "separator",
+            "label": "t:sections.common.settings.separator.label",
+            "info": "t:sections.common.settings.separator.info",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "separator_width",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "t:sections.common.settings.separator_width.label",
+            "default": 100,
+            "info": "t:sections.common.settings.separator_width.info"
+        },
+        {
+            "type": "checkbox",
+            "id": "separator_use_custom_color",
+            "label": "t:sections.common.settings.separator_use_custom_color.label",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "separator_custom_color",
+            "label": "t:sections.common.settings.separator_custom_color.label",
+            "default": "#CCCCCC"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.common.settings.header__spacing.content"
+        },
+        {
+            "type": "checkbox",
+            "id": "spacing",
+            "label": "t:sections.common.settings.spacing.label",
+            "info": "t:sections.common.settings.spacing.info",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "spacing_choice",
+            "label": "t:sections.common.settings.spacing_choice.label",
+            "options": [
+                {
+                    "value": "level-1",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__0.label"
+                },
+                {
+                    "value": "level-2",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__1.label"
+                },
+                {
+                    "value": "level-3",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__2.label"
+                },
+                {
+                    "value": "level-4",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__3.label"
+                },
+                {
+                    "value": "level-5",
+                    "label": "t:sections.common.settings.spacing_choice.options.option__4.label"
+                }
+            ],
+            "default": "level-3"
+        },
+        {
+            "type": "select",
+            "id": "spacing_placement",
+            "label": "t:sections.common.settings.spacing_placement.label",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__0.label"
+                },
+                {
+                    "value": "2",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__1.label"
+                },
+                {
+                    "value": "3",
+                    "label": "t:sections.common.settings.spacing_placement.options.option__2.label"
+                }
+            ],
+            "default": "1",
+            "info": "t:sections.common.settings.spacing_placement.info"
+        }
+    ],
+    "presets": [
+        {
+            "name": "t:sections.video.presets.video.name"
+        }
+    ],
+    "disabled_on": {
+        "groups": [
+            "custom.overlay",
+            "header"
+        ]
+    }
+}
+{% endschema %}
+

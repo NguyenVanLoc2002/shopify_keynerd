@@ -1,0 +1,62 @@
+{% liquid
+
+    assign hidden = false
+    assign has_lazy_loading = true 
+    assign image_width = width | default: image.width
+    assign image_height = height | default: image.height
+    assign image_alt = alt | default: image.alt
+    assign hidden_by_default = hidden_by_default | strip
+
+    if width != blank and image.width > width and height == blank
+        assign image_width_float = image.width | times: 1.0
+        assign image_ratio = width | divided_by: image_width_float
+        assign image_height = image.height | times: image_ratio | round: 0
+    endif
+    
+    if hidden_by_default == 'true'
+        assign hidden = true
+    endif
+
+%}
+
+<figure class="lazy-loading-image">
+
+    {% if image_mobile != blank %}
+        <picture class="lazy-loading-image--picture">
+            {% if image != blank %}
+                <source media="(min-width:768px)" srcset="{{ image | image_url }}">
+            {% endif %}
+
+        {% assign image = image_mobile %}
+    {% endif %}
+
+    {% if image != blank %}
+        {{ image | image_url: width: 1500 | image_tag:
+            aria-hidden: hidden,
+            loading: 'lazy',
+            width: image_width,
+            height: image_height,
+            sizes: '(min-width: 750px) 50vw, 100vw',
+            widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840',
+            class: 'lazy-loading-image--main',
+            alt: image_alt | escape
+        }}
+    {% endif %}
+
+    {% if image_mobile != blank %}
+        </picture>
+    {% endif %}
+
+    {% if has_lazy_loading %}
+        {% if image != blank %}
+            {{ image | image_url: width: 10 | image_tag:
+                class: 'lazy-loading-image--placeholder',
+                loading: 'lazy',
+                width: 10,
+                alt: image_alt | escape
+            }}
+        {% endif %}
+    {% endif %}
+
+
+</figure>

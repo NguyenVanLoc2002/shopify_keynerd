@@ -1,0 +1,316 @@
+{% liquid
+
+    assign current_variant = product.selected_or_first_available_variant
+    
+
+    assign has_slider = false
+    assign enable_lightbox = true
+    assign product_gallery_slider = true
+    assign product_image_count = product.media | size
+
+
+    if section.settings.enable_lightbox == false
+        assign enable_lightbox = false
+    endif
+
+    if product_image_count > 1 and product_gallery_slider == true and template != 'product.quickview'
+        assign has_slider = true
+    endif
+
+
+
+    capture product_thumbnails_data_options
+        assign product_thumbnails_data_options = 'data-options={'
+
+        assign product_thumbnails_data_options = product_thumbnails_data_options | append: '"rewind":' | append: false | append: ','
+        assign product_thumbnails_data_options = product_thumbnails_data_options | append: '"perPage":' | append: '4' | append: ','
+        assign product_thumbnails_data_options = product_thumbnails_data_options | append: '"arrows":' | append: true | append: ','
+        
+        assign data_options_count = product_thumbnails_data_options | size | minus: 1
+        assign product_thumbnails_data_options = product_thumbnails_data_options | slice: 0, data_options_count
+        assign product_thumbnails_data_options = product_thumbnails_data_options | append: '}'
+    
+    
+        echo product_thumbnails_data_options
+
+    endcapture
+
+    capture product_gallery_data_options
+
+        assign product_gallery_data_options = 'data-options={'
+                    
+        assign product_gallery_data_options = product_gallery_data_options | append: '"type":"' | append: section.settings.product_gallery_type | append: '",'
+        
+        assign product_gallery_data_options = product_gallery_data_options | append: '"perPage":"' | append: '1' | append: '",'
+        assign product_gallery_data_options = product_gallery_data_options | append: '"drag":' | append: section.settings.product_gallery_mouse_drag | append: ','
+        assign product_gallery_data_options = product_gallery_data_options | append: '"arrows":' | append: section.settings.product_gallery_arrows | append: ','
+        assign product_gallery_data_options = product_gallery_data_options | append: '"pagination":' | append: section.settings.product_gallery_dots | append: ','
+        
+    
+        assign data_options_count = product_gallery_data_options | size | minus: 1
+        assign product_gallery_data_options = product_gallery_data_options | slice: 0, data_options_count
+        assign product_gallery_data_options = product_gallery_data_options | append: '}'
+    
+    
+        echo product_gallery_data_options
+
+    endcapture
+
+
+%}
+{% if product != blank  %}
+{% if product.media != blank %}
+    <div class="product-media">
+    {% if product_image_count > 0 %}
+        <product-gallery class="product-gallery">
+            {% if product_image_count > 1 and template != 'product.quickview' %}
+                <div class="product-gallery-thumbnails{% liquid 
+                    if has_slider
+                        echo ' splide'
+                    endif 
+                    %}" {% liquid 
+                        if has_slider
+                            echo product_thumbnails_data_options
+                        endif
+                    %}>
+                    {% if has_slider %}
+                        <div class="splide__track">
+                            <ul class="splide__list">
+                    {% endif %}
+
+                    {% if current_variant.featured_media != null %}
+                    {% liquid 
+                        assign media = current_variant.featured_media
+                        assign thumbnail_index = 1
+                    %}
+                        <li class="product-gallery-thumbnails-thumbnail product-image-has-variant-ids product-gallery-thumbnails-thumbnail-{{ thumbnail_index }}{% liquid 
+                            if has_slider
+                            echo ' splide__slide'
+                            endif 
+                
+                            %}" data-variant-ids="{% liquid
+
+                                for product_image in product.images
+                                    
+                                    if product_image == media
+                                        for variant in product_image.variants
+                                            if forloop.index != 1
+                                                echo ','
+                                            endif
+                                            echo variant.id
+                                        endfor 
+                                    endif
+                                endfor 
+
+                            %}" data-thumbnail-index="{{ thumbnail_index }}" tabindex="0">
+                            {% render 'product-thumbnail-processor', image: media %}
+                        </li>
+                    {% endif %}
+                    
+                    {% for media in product.media %}
+                        {% unless current_variant.featured_media.id == media.id %}
+                            {% assign thumbnail_index = thumbnail_index | plus: 1 %}
+                            <li class="product-gallery-thumbnails-thumbnail product-image-has-variant-ids product-gallery-thumbnails-thumbnail-{{ thumbnail_index }}{% liquid 
+                                if has_slider
+                                echo ' splide__slide'
+                                endif 
+                    
+                                %}" data-variant-ids="{% liquid
+
+                                    for product_image in product.images
+                                        
+                                        if product_image == media
+                                            for variant in product_image.variants
+                                                if forloop.index != 1
+                                                    echo ','
+                                                endif
+                                                echo variant.id
+                                            endfor 
+                                        endif
+                                    endfor 
+
+                                %}" data-thumbnail-index="{{ thumbnail_index }}" tabindex="0">
+                                {% render 'product-thumbnail-processor', image: media %}
+                            </li>
+                        {% endunless %}
+                    {% endfor %}
+                    {% if has_slider %}
+                            </ul>
+                        </div>
+                            <div class="splide__arrows">
+                            <button class="splide__arrow splide__arrow--prev">
+                                {% render 'icon-arrow-right' %}
+                            </button>
+                            <button class="splide__arrow splide__arrow--next">
+                                {% render 'icon-arrow-right' %}
+                            </button>
+                            </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <div class="product-gallery-images{% liquid 
+                if enable_lightbox
+                echo ' has-lightbox'
+                endif
+
+                if has_slider
+                echo ' splide'
+                endif 
+                %}" {% liquid 
+                    if has_slider
+                        echo product_gallery_data_options
+                    endif
+                %}>
+                {% if has_slider %}
+                {% if section.settings.product_gallery_arrows %}
+                    <div class="splide__arrows">
+                    <button class="splide__arrow splide__arrow--prev">
+                        {% render 'icon-arrow-right' %}
+                    </button>
+                    <button class="splide__arrow splide__arrow--next">
+                        {% render 'icon-arrow-right' %}
+                    </button>
+                    </div>
+                {% endif %}
+                <div class="splide__track">
+                    <ul class="splide__list">
+                {% endif %}
+
+                {% if current_variant.featured_media != null %}
+                    {% liquid 
+                        assign media = current_variant.featured_media
+                    %}
+                    {% liquid 
+                        assign tag = 'div'
+                        if has_slider
+                        assign tag = 'li' 
+                        endif 
+                    %}
+                    <{{ tag }} class="product-gallery-images__image product-gallery-images-image product-gallery-images__image-{{ forloop.index }}{% liquid 
+                        if has_slider
+                            echo ' splide__slide'
+                        endif 
+
+                        if has_slider == false
+                            echo ' product-image-has-variant-ids'
+                        endif
+
+                    %}" {% liquid 
+                        if has_slider == false
+                            echo 'data-variant-ids="'
+                            for product_image in product.images
+                                if product_image == media
+                                    for variant in product_image.variants
+                                        if forloop.index != 1
+                                            echo ','
+                                        endif
+                                        echo variant.id
+                                    endfor 
+                                endif
+                            endfor 
+                            echo '"'
+                        endif
+                    %}>
+
+                        {% render 'product-media-processor', image: media, enable_lightbox: enable_lightbox %}
+
+                    </{{ tag }}>
+                {% endif %}
+
+                {% for media in product.media %}
+                
+                    {% unless current_variant.featured_media.id == media.id %}
+                        {% liquid 
+                            assign tag = 'div'
+                            if has_slider
+                                assign tag = 'li' 
+                            endif 
+                        %}
+                        <{{ tag }} class="product-gallery-images__image product-gallery-images-image product-gallery-images__image-{{ forloop.index }}{% liquid 
+                        if has_slider
+                            echo ' splide__slide'
+                        endif 
+
+                        if has_slider == false
+                            echo ' product-image-has-variant-ids'
+                        endif
+
+                        %}" {% liquid 
+                            if has_slider == false
+                                echo 'data-variant-ids="'
+                                for product_image in product.images
+                                    if product_image == media
+                                        for variant in product_image.variants
+                                            if forloop.index != 1
+                                                echo ','
+                                            endif
+                                            echo variant.id
+                                        endfor 
+                                    endif
+                                endfor 
+                                echo '"'
+                            endif
+                        %}>
+
+                        {% render 'product-media-processor', image: media, enable_lightbox: enable_lightbox %}
+
+                        </{{ tag }}>
+                    {% endunless %}
+                {% endfor %}
+                {% if has_slider %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </product-gallery>
+    {% endif %}
+    </div>
+{% endif %}
+{% else %}
+    <div class="product-media">
+        <product-gallery class="product-gallery">  
+            <div class="product-gallery-thumbnails splide">
+                <div class="splide__track">
+                    <ul class="splide__list">
+                    {% for i in (1..4) %}
+                        <li class="product-gallery-thumbnails-thumbnail splide__slide">
+                            {{ 'image' | placeholder_svg_tag: 'placeholder placeholder-product' }}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+                <div class="splide__arrows">
+                    <button class="splide__arrow splide__arrow--prev">
+                        {% render 'icon-arrow-right' %}
+                    </button>
+                    <button class="splide__arrow splide__arrow--next">
+                        {% render 'icon-arrow-right' %}
+                    </button>
+                </div>
+            </div>
+            <div class="product-gallery-images has-lightbox splide" {% echo product_gallery_data_options %}>
+                <div class="splide__track">
+                    <ul class="splide__list">
+                    {% for i in (1..4) %}
+                        <li class="product-gallery-images__image product-gallery-images-image product-gallery-images__image- splide__slide">
+                            <a href="#">
+                                {{ 'image' | placeholder_svg_tag: 'placeholder placeholder-product' }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+                
+                <div class="splide__arrows">
+                    <button class="splide__arrow splide__arrow--prev">
+                        {% render 'icon-arrow-right' %}
+                    </button>
+                    <button class="splide__arrow splide__arrow--next">
+                        {% render 'icon-arrow-right' %}
+                    </button>
+                </div>
+            </div>
+        </product-gallery>
+    </div>
+{% endif %}

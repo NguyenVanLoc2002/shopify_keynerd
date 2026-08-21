@@ -1,0 +1,66 @@
+
+{% liquid
+  assign pick_up_availabilities = variant.store_availabilities | where: 'pick_up_enabled', true 
+  assign closest_location = pick_up_availabilities.first
+
+%}
+  
+{% if pick_up_availabilities.size > 0 %}
+    <div class="pickup-availability-information">
+        <div class="pickup-availability-information__icon">
+            {% render 'icon-check' %}
+        </div>
+        <div class="pickup-availability-information__details">
+            <div class="pickup-availability-information__text">
+              {% if closest_location.available %}
+                <span>{{ 'products.product.pickup_availability.pick_up_available_at_html' | t: location_name: closest_location.location.name }}</span>
+                <span>{{ closest_location.pick_up_time }}</span>
+              {% else %}
+                <span>{{ 'products.product.pickup_availability.pick_up_unavailable_at_html' | t: location_name: closest_location.location.name }}</span>
+              {% endif %}
+            </div>
+            <button type="button" class="pickup-availability-information__button" aria-haspopup="dialog">
+                {% if pick_up_availabilities.size == 1 %}
+                    {{ 'products.product.pickup_availability.view_store_info' | t }}
+                {% else %}
+                    {{ 'products.product.pickup_availability.check_other_stores' | t }}
+                {% endif %}
+            </button>
+        </div>                                  
+    </div>
+    <div class="pickup-availability-panel">
+        <div class="pickup-availability-panel-header">
+            <h4 class="pickup-availability-panel-header__variant-title" data-pickup-availability-modal-variant-title>{{ variant.title }}</h4>
+        </div>
+        <div class="pickup-availability-panel-container">
+          <ul class="pickup-availability-panel-list" role="list">
+            {%- for availability in pick_up_availabilities -%}
+              <li class="pickup-availability-panel-list-item">
+                <h6 class="pickup-availability-panel-list-item__location">
+                  {{ availability.location.name }} <span>({{ forloop.index }}/{{ forloop.length }})</span>
+                </h6>
+                <div class="pickup-availability-panel-list-item__stock">
+                  {%- if availability.available -%}
+                    {% render 'icon-check' %} {{ 'products.product.pickup_availability.pick_up_available' | t }}, {{ availability.pick_up_time | downcase }}
+                  {%- else -%}
+                    {{ 'products.product.pickup_availability.pick_up_unavailable_at_html' | t: location_name: closest_location.location.name }}
+                  {%- endif -%}
+                </div>
+                {%- assign address = availability.location.address -%}
+                <address class="pickup-availability-panel-list-item__address">
+                  {{ address | format_address }}
+                </address>
+                {%- if address.phone.size > 0 -%}
+                  <p class="pickup-availability-panel-list-item__phone">
+                    {{ address.phone }}<br>
+                  </p>
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+        <button type="button" class="pickup-availability-panel__close" aria-label="{{ 'accessibility.close' | t }}">
+          {% render 'icon-close' %}
+        </button>
+      </div>
+{% endif %}

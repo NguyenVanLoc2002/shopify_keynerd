@@ -1,0 +1,43 @@
+{% comment %}
+    Renders country selector
+
+    Accepts:
+    - label_style: {String} Number to label style
+
+    Usage:
+    {% render 'country-selector',
+      label_style: '1'
+    %}
+{% endcomment %}
+
+{% if localization.available_countries.size > 1 %}
+    <localization-form>
+      {% form 'localization' %}
+
+        <div class="disclosure">
+          <button type="button" class="disclosure__button" aria-expanded="false">
+            {% if label_style == '2' %}
+              <span>{{ localization.country.currency.iso_code }} {{ localization.country.currency.symbol }}</span>
+            {% else %}
+              <span>{{ localization.country.name }} ({{ localization.country.currency.iso_code }} {{ localization.country.currency.symbol }})</span>
+            {% endif %}
+            <span>{% render 'icon-chevron-down' %}</span>
+          </button>
+  
+          <ul role="list" class="disclosure__list" hidden>
+            {% for country in localization.available_countries %}
+              <li class="disclosure__item" tabindex="-1">
+                <a href="{{ routes.root_url }}"{% if country.iso_code == localization.country.iso_code %} aria-current="true"{% endif %} data-value="{{ country.iso_code }}">
+                  {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+  
+          <input type="hidden" name="country_code" value="{{ localization.country.iso_code }}">
+          <input type="hidden" name="language_code" value="{{ localization.language.iso_code }}">
+        </div>
+
+      {% endform %}
+    </localization-form>
+  {% endif %}

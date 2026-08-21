@@ -1,0 +1,78 @@
+localization-form .disclosure {
+  position: relative;
+  cursor: pointer;
+}
+localization-form .disclosure__button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding: 8px;
+  background-color: transparent;
+  border: 1px solid;
+  border-radius: 20px;
+  font-size: var(--theme-body-font-size-x-small);
+  text-wrap: nowrap;
+  transition: all 0.2s ease;
+}
+localization-form .disclosure__button > span {
+  display: flex;
+  -webkit-text-decoration-line: none;
+          text-decoration-line: none;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25ch;
+}
+localization-form .disclosure__button svg {
+  width: 12px;
+  height: 6px;
+}
+localization-form .disclosure__button svg path {
+  stroke: currentColor;
+}
+localization-form .disclosure__list {
+  --theme-header-country-language-background-color: var(--theme-background-color, #ffffff);
+  --theme-header-country-language-border-color: var(--theme-lines-color-secondary);
+}
+localization-form .disclosure__list:not([hidden]) {
+  position: absolute;
+  right: 0;
+  margin: 0;
+  margin-top: -1px;
+  padding: 12px 15px;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: var(--theme-body-font-size-small);
+  background-color: var(--theme-header-country-language-background-color);
+  border: 1px solid;
+  max-height: 400px;
+  overflow-y: scroll;
+  z-index: 9;
+}
+localization-form .disclosure__list.place-above:not([hidden]) {
+  bottom: 0;
+  margin-bottom: 29px;
+}
+localization-form .disclosure__list li {
+  list-style: none;
+  margin-bottom: 0;
+}
+localization-form .disclosure__list a {
+  -webkit-text-decoration-line: none;
+          text-decoration-line: none;
+}
+localization-form .disclosure__list a:hover {
+  text-decoration: underline;
+}
+localization-form .disclosure__button[aria-expanded=true], localization-form .disclosure__list:not([hidden]) {
+  border-radius: 0;
+}
+localization-form .disclosure__button[aria-expanded=true] > span:hover, localization-form .disclosure__list:not([hidden]) > span:hover {
+  -webkit-text-decoration-line: underline;
+          text-decoration-line: underline;
+}
+localization-form .disclosure__button:hover > span {
+  -webkit-text-decoration-line: underline;
+          text-decoration-line: underline;
+}

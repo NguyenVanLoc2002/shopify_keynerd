@@ -1,0 +1,150 @@
+
+<header-drawer class="header-drawer">
+    <div class="header-drawer-toggle">
+        <span class="header-drawer-toggle__open">{% render 'icon-hamburger' %}</span>
+        <span class="header-drawer-toggle__close">{% render 'icon-menu-close' %}</span>
+    </div>
+    <div class="header-drawer-details{% liquid
+        echo ' ' | append: section.settings.color_scheme
+    %}">
+
+        {% if section.settings.search_icon %}
+            {% render 'search-dropdown' %}
+        {% endif %}
+        {% if section.settings.primary_menu != blank %}
+        <nav class="header-drawer-main-menu">
+            <ul class="header-drawer-main-menu-items">
+                {% for primary_menu_item in section.settings.primary_menu.links %}
+                {% assign primary_menu_for_loop_index = forloop.index %}
+                <li class="header-drawer-main-menu-item{% liquid 
+                    if primary_menu_item.links != blank 
+                        echo ' has-children'
+                    endif 
+                    %}">
+                    <div class="header-drawer-main-menu-item-label">
+                        <a href="{{ primary_menu_item.url }}" class="header-drawer-main-menu-item__link{% liquid 
+                                if primary_menu_item.current 
+                                    echo ' current' 
+                                endif 
+                            %}" {% liquid 
+                                if primary_menu_item.current 
+                                        echo 'aria-current="page"' 
+                                endif 
+                            %}>
+                            <span class="header-drawer-main-menu-item-text">{{ primary_menu_item.title | escape }}</span>
+                        </a>
+                        {% if primary_menu_item.links != blank %}
+                            <span class="header-drawer-main-menu-item-icon">{% render 'icon-chevron-down' %}</span>
+                        {% endif %}
+                    </div>
+                    {% if primary_menu_item.links != blank %}
+                    <div class="header-drawer-main-menu-subitems-panel">
+                        <div class="header-drawer-main-menu-subitems-panel__title">
+                            <span>{{ primary_menu_item.title | escape }}</span>
+                            {% if primary_menu_item.links != blank %}
+                                <span class="header-drawer-main-menu-subitems-panel__toggle">{% render 'icon-chevron-down' %}</span>
+                            {% endif %}
+                        </div>
+                        <ul class="header-drawer-main-menu-subitems">
+                            {% for primary_menu_subitem in primary_menu_item.links %}
+                            <li class="header-drawer-main-menu-subitem{% liquid 
+                                if primary_menu_subitem.links != blank 
+                                    echo ' has-children'
+                                endif 
+                                %}">
+                                <div class="header-drawer-main-menu-item-label">
+                                    <a href="{{ primary_menu_subitem.url }}" class="header-drawer-main-menu-subitem__link{% liquid 
+                                                if primary_menu_subitem.current 
+                                                    echo ' current' 
+                                                endif 
+                                            %}" {% liquid 
+                                                if primary_menu_subitem.current 
+                                                    echo 'aria-current="page"' 
+                                                endif
+                                        %}>
+                                        <span class="header-drawer-main-menu-item-text">{{ primary_menu_subitem.title | escape }}</span>
+                                    </a>
+                                    {% if primary_menu_subitem.links != blank %}
+                                        <span class="header-drawer-main-menu-item-icon">{% render 'icon-chevron-down' %}</span>
+                                    {% endif %}
+                                </div>
+                                {% if primary_menu_subitem.links != blank %}
+                                <ul class="header-drawer-main-menu-subitems">
+                                    {% for primary_menu_sub_subitem in primary_menu_subitem.links %}
+                                    <li class="header-drawer-main-menu-subitem{% liquid 
+                                        if primary_menu_sub_subitem.links != blank 
+                                            echo ' has-children'
+                                        endif 
+                                        %}">
+                                        <div class="header-drawer-main-menu-item-label">
+                                            <a href="{{ primary_menu_sub_subitem.url }}" class="header-drawer-main-menu-subitem__link{% liquid 
+                                                                if primary_menu_sub_subitem.current 
+                                                                    echo ' current' 
+                                                                endif 
+                                                            %}" {% liquid 
+                                                                if primary_menu_sub_subitem.current
+                                                echo 'aria-current="page"' 
+                                                endif 
+                                            %}>
+                                                <span class="header-drawer-main-menu-item-text">{{ primary_menu_sub_subitem.title | escape }}</span>
+                                            </a>
+                                            {% if primary_menu_sub_subitem.links != blank %}
+                                                <span class="header-drawer-main-menu-item-icon">{% render 'icon-chevron-down' %}</span>
+                                            {% endif %}
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+        
+                        </ul>
+                    </div>
+                    {% endif %}
+                </li>
+    
+                {% endfor %}
+            </ul>
+        </nav>
+        {% endif %}
+        <div class="header-drawer-additional">
+            {% if section.settings.country_selector or section.settings.language_selector %}
+                <div class="header-drawer-localization">
+                    {% if section.settings.country_selector %}
+                        <div class="header-drawer-country-selector">
+                            {% render 'country-selector' %}
+                        </div>
+                    {% endif %}
+                    {% if section.settings.language_selector %}
+                        <div class="header-drawer-language-selector">
+                            {% render 'language-selector' %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <div class="header-drawer-icons">
+                {% if shop.customer_accounts_enabled %}
+                    <div class="header-drawer-icons__account">
+                        {% if customer %}
+                            <a href="{{ routes.account_url }}" class="header-drawer-icons__account--account">
+                              <span class="header-drawer-icons-account-icon">{% render 'icon-user' %}</span>
+                              <span>{{ 'customer.account_fallback' | t }}</span>
+                            </a>
+                        {% else %}
+                            <a href="{{ routes.account_login_url }}" class="header-drawer-icons__account--login">
+                              <span class="header-drawer-icons-account-icon">{% render 'icon-user' %}</span>
+                              <span>{{ 'customer.log_in' | t }}</span>
+                            </a>
+                        {% endif %} 
+                    </div>
+                {% endif %}
+
+                {% comment %} {% if section.settings.search_icon %}
+                    {% render 'search-dropdown' %}
+                {% endif %} {% endcomment %}
+            </div>
+        </div>
+    </div>
+</header-drawer>

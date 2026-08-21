@@ -1,0 +1,613 @@
+
+{% liquid 
+    assign current_variant = product.selected_or_first_available_variant
+    assign featured_image = current_variant.featured_image | default: product.featured_image 
+
+%}
+
+<div class="product-summary">
+    {% if product != blank %}
+        
+        {% form 'product', product, class: 'product-options-form product-summary__product-options-form', novalidate: 'novalidate', data-type: 'add-to-cart-form' %}
+            {% if section.blocks != blank %}
+                {% for block in section.blocks %}
+                    {% case block.type %}
+                        {% when 'complementary' %}
+                            <div class="product-summary__complementary product-complementary block-{{ block.id }}{% liquid
+
+                                echo ' ' | append: block.settings.color_scheme
+                            %}" {{ block.shopify_attributes }}>
+                                {% if block.settings.heading != blank %}
+                                <div class="product-complementary-header">
+                                    <h3 class="product-complementary-header__heading heading-size-{{ block.settings.heading_size }}">{{ block.settings.heading | escape }}</h3>
+                                </div>
+                                {% endif %}
+
+                                <product-recommendations class="product-recommendations complementary-products" 
+                                    data-product-id="{{ product.id }}" 
+                                    data-intent="complementary" 
+                                    data-limit="{{ block.settings.total_count }}" 
+                                    data-columns-count="2" 
+                                    data-carousel="{{ block.settings.carousel }}" 
+                                    {% liquid 
+                                    assign data_options = 'data-options={'
+                                    
+                                    assign data_options = data_options | append: '"rewind":' | append: block.settings.loop | append: ','
+                                    assign data_options = data_options | append: '"perMove":"' | append: block.settings.per_move | append: '",'
+                                    assign data_options = data_options | append: '"perPage":"' | append: 2 | append: '",'
+
+                                    if block.settings.speed != blank
+                                    assign data_options = data_options | append: '"speed":"' | append: block.settings.speed | append: '",'
+                                    endif 
+                                    if block.settings.interval != blank
+                                    assign data_options = data_options | append: '"interval":"' | append: block.settings.interval | append: '",'
+                                    endif 
+                                    
+                                    assign data_options = data_options | append: '"autoplay":' | append: block.settings.autoplay | append: ','
+                                    assign data_options = data_options | append: '"drag":' | append: block.settings.mouse_drag | append: ','
+                                    assign data_options = data_options | append: '"arrows":' | append: block.settings.arrows | append: ','
+                                    assign data_options = data_options | append: '"pagination":' | append: false | append: ','
+
+                                    assign data_options = data_options | append: '"gap":' | append: '"var(--theme-product-complementary-gap)"' | append: ','
+                                    
+                                    assign data_options = data_options | append: '"breakpoints":{"768":{'
+                                    assign data_options = data_options | append: '"perPage":' | append: 1
+                                    assign data_options = data_options | append: '}}' | append: ','
+
+
+                                    assign data_options_count = data_options | size | minus: 1
+                                    assign data_options = data_options | slice: 0, data_options_count
+                                    assign data_options = data_options | append: '}'
+
+
+                                    echo data_options
+                                
+                                %}>
+                                <div class="splide__arrows">
+                                    <button type="button" class="splide__arrow splide__arrow--prev">
+                                    {% render 'icon-arrow-right' %}
+                                    </button>
+                                    <button type="button" class="splide__arrow splide__arrow--next">
+                                    {% render 'icon-arrow-right' %}
+                                    </button>
+                                </div>
+                                </product-recommendations>
+
+                            </div>
+                        {% when 'title_price' %}
+                            <div class="product-summary__title-price block-{{ block.id }}" {{ block.shopify_attributes }}>
+                                <div class="product-summary__title-price--left">
+                                    <h1 class="product-summary__title">
+                                        {% if template == 'product.quickview' %}
+                                            <a href="{{ product.url }}">{{ product.title }}</a>
+                                        {% else %}
+                                            {{ product.title }}
+                                        {% endif %}
+                                    </h1>
+                                    {% if block.settings.show_price %}
+                                        {% if current_variant.compare_at_price and current_variant.compare_at_price > current_variant.price %}
+                                            <span class="product-sale-badge">{{ 'products.product.sale_badge' | t }}</span>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                                {% if block.settings.show_price %}
+                                    <div class="product-summary__title-price--right">
+                                        <div class="product-summary__price product-price{% liquid 
+                                            if current_variant.available and current_variant.compare_at_price > current_variant.price 
+                                                echo ' product-price-on-sale'
+                                            endif 
+                                            if current_variant.available and current_variant.unit_price_measurement 
+                                                echo ' product-price-unit-available'
+                                            endif 
+                                        %} block-{{ block.id }}" data-text-sale="{{ 'products.product.sale_badge' | t }}">
+                                        
+                                            {% if current_variant.compare_at_price and current_variant.compare_at_price > current_variant.price %}
+                                                <span data-price-compare>{{ current_variant.compare_at_price | money }}</span>
+                                            {% endif %}
+                                            <span data-price>{{ current_variant.price | money }}</span>
+                                            {% if current_variant.unit_price_measurement %}
+                                                <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.unit_price' | t }}</span>
+                                                <span class="product-price-unit">
+                                                    {%- capture unit_price_separator -%}
+                                                    <span aria-hidden="true">/</span><span class="visually-hidden">{{ 'accessibility.unit_price_separator' | t }}&nbsp;</span>
+                                                    {%- endcapture -%}
+                                                    {%- capture unit_price_base_unit -%}
+                                                    <span class="product-price-unit-base" data-price-unit-base>
+                                                        {%- if current_variant.available and current_variant.unit_price_measurement -%}
+                                                            {%- if current_variant.unit_price_measurement.reference_value != 1 -%}
+                                                                {{- current_variant.unit_price_measurement.reference_value -}}
+                                                            {%- endif -%}
+                                                            {{- current_variant.unit_price_measurement.reference_unit -}}
+                                                        {%- endif -%}
+                                                    </span>
+                                                    {%- endcapture -%}
+                                                    <span class="product-price-unit-price" data-price-unit-price>{{ current_variant.unit_price | money }}</span>{{- unit_price_separator -}}{{- unit_price_base_unit -}}
+                                                </span>
+                                            {% endif %}
+
+                                            {%- if cart.taxes_included or shop.shipping_policy.body != blank -%}
+                                                <div class="product-tax">
+                                                    {%- if cart.taxes_included -%}
+                                                        {{ 'products.product.include_taxes' | t }}
+                                                    {%- endif -%}
+                                                    {%- if shop.shipping_policy.body != blank -%}
+                                                        {{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}
+                                                    {%- endif -%}
+                                                </div>
+                                            {%- endif -%}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                        {% when 'title' %}
+
+                            <h1 class="product-summary__title {{ block.settings.title_choice }}-size-{{ block.settings.title_size }} block-{{ block.id }}" {{ block.shopify_attributes }}>
+                                {% if template == 'product.quickview' %}
+                                    <a href="{{ product.url }}">{{ product.title }}</a>
+                                {% else %}
+                                    {{ product.title }}
+                                {% endif %}
+                            </h1>
+                            {% comment %} {% if template == 'product.quickview' %}
+                                <div class="quickview-product-link">
+                                    <a href="{{ product.url }}">{{ 'products.product.quickview_link' | t }}</a>
+                                </div>
+                            {% endif %} {% endcomment %}
+                        {% when 'price' %}
+                            <div class="product-summary__price product-price{% liquid 
+                                if current_variant.available and current_variant.compare_at_price > current_variant.price 
+                                    echo ' product-price-on-sale'
+                                endif 
+                                if current_variant.available and current_variant.unit_price_measurement 
+                                    echo ' product-price-unit-available'
+                                endif 
+                            %} block-{{ block.id }}" data-text-sale="{{ 'products.product.sale_badge' | t }}" {{ block.shopify_attributes }}>
+                            
+                                {% if current_variant.compare_at_price and current_variant.compare_at_price > current_variant.price %}
+                                    <span class="product-sale-badge">{{ 'products.product.sale_badge' | t }}</span>
+                                {% endif %}
+                                {% if current_variant.compare_at_price and current_variant.compare_at_price > current_variant.price %}
+                                    <span data-price-compare>{{ current_variant.compare_at_price | money }}</span>
+                                {% endif %}
+                                <span data-price>{{ current_variant.price | money }}</span>
+                                {% if current_variant.unit_price_measurement %}
+                                    <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.unit_price' | t }}</span>
+                                    <span class="product-price-unit">
+                                        {%- capture unit_price_separator -%}
+                                        <span aria-hidden="true">/</span><span class="visually-hidden">{{ 'accessibility.unit_price_separator' | t }}&nbsp;</span>
+                                        {%- endcapture -%}
+                                        {%- capture unit_price_base_unit -%}
+                                        <span class="product-price-unit-base" data-price-unit-base>
+                                            {%- if current_variant.available and current_variant.unit_price_measurement -%}
+                                                {%- if current_variant.unit_price_measurement.reference_value != 1 -%}
+                                                    {{- current_variant.unit_price_measurement.reference_value -}}
+                                                {%- endif -%}
+                                                {{- current_variant.unit_price_measurement.reference_unit -}}
+                                            {%- endif -%}
+                                        </span>
+                                        {%- endcapture -%}
+                                        <span class="product-price-unit-price" data-price-unit-price>{{ current_variant.unit_price | money }}</span>{{- unit_price_separator -}}{{- unit_price_base_unit -}}
+                                    </span>
+                                {% endif %}
+
+                                {%- if cart.taxes_included or shop.shipping_policy.body != blank -%}
+                                    <div class="product-tax">
+                                        {%- if cart.taxes_included -%}
+                                            {{ 'products.product.include_taxes' | t }}
+                                        {%- endif -%}
+                                        {%- if shop.shipping_policy.body != blank -%}
+                                            {{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}
+                                        {%- endif -%}
+                                    </div>
+                                {%- endif -%}
+                            </div>
+                        {% when 'description' %}
+                            <div class="product-summary__description block-{{ block.id }}" {{ block.shopify_attributes }}>{{ product.description }}</div>
+                        {% when 'variant-picker' %}
+                            {% render 'product-variant-picker', product: product, section: section, block: block %}
+
+                        {% when 'stock-count' %}
+                            <div class="product-summary__inventory-qty product-inventory-qty block-{{ block.id }}" data-low-stock-threshold="{{ block.settings.low_stock_trigger }}" data-text-in-stock="{{ 'products.product.stock.in_stock' | t: qty: '%s' }}" data-text-low-stock="{{ 'products.product.stock.low_stock' | t: qty: '%s' }}" data-text-sold="{{ 'products.product.stock.sold_out' | t: qty: '%s' }}" data-text-in-stock-no-track="{{ 'products.product.stock.in_stock_no_track' | t }}" data-text-sold="{{ 'products.product.stock.sold_out' | t: qty: '%s' }}" {{ block.shopify_attributes }}>
+
+                                {% if current_variant.inventory_quantity != 0 %}
+                                    {% if block.settings.low_stock_trigger >= current_variant.inventory_quantity and current_variant.inventory_management != blank %}
+                                        <p class="product-summary__inventory-qty--low">{{ 'products.product.stock.low_stock' | t: qty: current_variant.inventory_quantity }}</p>
+                                    {% elsif current_variant.inventory_management != blank and current_variant.inventory_policy != 'continue'  %}
+                                        <p class="product-summary__inventory-qty--normal">{{ 'products.product.stock.in_stock' | t: qty: current_variant.inventory_quantity }}</p>
+                                    {% else  %}
+                                        <p class="product-summary__inventory-qty--normal">{{ 'products.product.stock.in_stock_no_track' | t }}</p>
+                                    {% endif %}
+                                {% elsif current_variant.inventory_quantity == 0 and current_variant.inventory_management == blank %}
+                                    <p class="product-summary__inventory-qty--normal">{{ 'products.product.stock.in_stock_no_track' | t }}</p>
+                                {% else %}
+                                    <p class="product-summary__inventory-qty--sold">{{ 'products.product.stock.sold_out' | t }}</p>
+                                {% endif %}
+                            </div>
+                        {% when 'buy-buttons' %}
+                            {% liquid
+                                assign upsell_product = all_products[settings.cart_upsell_product]
+                                assign upsell_variant = upsell_product.selected_or_first_available_variant
+                            %}
+                            {% unless settings.cart_show_upsell and product.id == settings.cart_upsell_product.id and current_variant.id == upsell_variant.id %}
+                                {% liquid
+                                    assign gift_card_recipient_feature_active = false
+                                    if block.settings.show_gift_card_recipient and product.gift_card?
+                                        assign gift_card_recipient_feature_active = true
+                                    endif
+
+                                    assign show_dynamic_checkout = false
+                                    if block.settings.show_dynamic_checkout and gift_card_recipient_feature_active == false
+                                        assign show_dynamic_checkout = true
+                                    endif
+
+                                %}
+                                <div class="product-summary__product-form block-{{ block.id }}" {{ block.shopify_attributes }}>
+                                    <product-variants-selector class="product-variants-selector">
+                                        <input type="hidden" name="id" value="{{ current_variant.id }}">
+                                        
+                                    </product-variants-selector>
+                                    <div class="product-summary__action">
+
+                                        {% if gift_card_recipient_feature_active %}
+                                            {% render 'gift-card-recipient-form', product: product, form: form, section: section %}
+                                        {% endif %}
+
+                                        <div class="product-summary__qty">
+                                            {% unless block.settings.show_quantity_picker %}
+                                                <input id="ProductQuantityPickerInput" type="hidden" class="product-quantity-picker__input product-quantity-picker-input" name="quantity" value="1">
+                                            {% else %}
+                                                <label for="ProductQuantityPickerInput">{{ 'products.product.quantity.label' | t }}</label>
+                                                <product-quantity-picker class="product-quantity-picker qty">
+                                                    <span class="product-quantity-picker__minus qty-minus" tabindex="0">{% render 'icon-minus' %}</span>
+                                                    <input id="ProductQuantityPickerInput" type="number" class="product-quantity-picker__input product-quantity-picker-input" name="quantity" value="1" min="1" {% liquid 
+                                                        if current_variant.inventory_management != blank
+                                                            echo 'max="' | append: current_variant.inventory_quantity | append: '"'
+                                                        endif 
+                                                    %}>
+                                                    <span class="product-quantity-picker__plus qty-plus" tabindex="0">{% render 'icon-plus' %}</span>
+                                                </product-quantity-picker>
+                                            {% endunless %}
+                                        </div>
+                                        <button {% unless current_variant.available %}disabled{% endunless %} type="submit" name="add" id="AddToCart" class="product-summary__add-to-cart product-add-to-cart btn-fill" data-text-add-to-cart="{{ 'products.product.add_to_cart' | t }}" data-text-sold-out="{{ 'products.product.stock.sold_out' | t }}" data-text-unavailable="{{ 'products.product.stock.unavailable' | t }}" data-text-qty-error="{{ 'products.product.add_to_cart_qty_error' | t: count: '%qty' }}">
+                                            {% if current_variant.available %}
+                                                <span data-text="{{ 'products.product.add_to_cart' | t }}">
+                                                    <span>{{ 'products.product.add_to_cart' | t }}</span>
+                                                </span>
+                                            {% else %}
+                                                <span data-text="{{ 'products.product.stock.sold_out' | t }}">
+                                                    <span>{{ 'products.product.stock.sold_out' | t }}</span>
+                                                </span>
+                                            {% endif %}
+                                        </button>
+
+                                        <div class="product-summary__shopify-payment">
+                                            {% if show_dynamic_checkout %}
+
+                                                {{ form | payment_button }}
+                                            {% endif %}
+                                        </div>
+                                    </div> 
+                                </div>
+                            {% endunless %}
+                            {% if block.settings.show_sticky_cart and template != 'product.quickview' %}
+                                <div class="product-summary__sticky-bar">
+                                    {% render 'product-sticky-add-to-cart' current_variant: current_variant %}
+                                </div>
+                            {% endif %}
+                        {% when 'pickup-availability' %}
+
+                            <pickup-availability class="product-summary__pickup-availability pickup-availability block-{{ block.id }}" {{ block.shopify_attributes }}>
+                                {% render 'pickup-availability', variant: current_variant %}
+                            </pickup-availability>
+                        {% when 'vendor' %}
+                            {% assign vendor_string = product.vendor | replace: ' ', '%20' %}
+                            <a class="product-summary__vendor block-{{ block.id }}" href="{{ routes.root_url }}collections/vendors?q={{ vendor_string }}" {{ block.shopify_attributes }}>{{ product.vendor }}</a>
+                        {% when 'rating' %}
+                            <div class="product-summary__rating block-{{ block.id }}" {{ block.shopify_attributes }}>
+                                <div class="product-rating">
+                                    {%- if product.metafields.reviews.rating.value != blank -%}
+                                        {% liquid
+                                            assign rating_percentage = product.metafields.reviews.rating.value.rating | times: 100 | divided_by: product.metafields.reviews.rating.value.scale_max
+                                            assign rating_decimal = 0
+                                            assign decimal = product.metafields.reviews.rating.value.rating | modulo: 1
+
+                                            if decimal >= 0.3 and decimal <= 0.7
+                                                assign rating_decimal = 0.5
+                                            elsif decimal > 0.7
+                                                assign rating_decimal = 1
+                                            endif
+                                        %}
+                                        <div class="product-rating-stars" style="--rating-percentage: {{ rating_percentage | floor }}%;">
+                                            <span class="product-rating-stars__base">{% render 'icon-star-outlined', times: 5 %}</span>
+                                            <span class="product-rating-stars__current">{% render 'icon-star', times: 5 %}</span>
+                                        </div>
+                                        <div class="product-rating-text">
+                                            <span aria-hidden="true">{{ product.metafields.reviews.rating.value }} / {{ product.metafields.reviews.rating.value.scale_max }}</span>
+                                        </div>
+                                        <div class="product-rating-count">
+                                            <span>{{ product.metafields.reviews.rating_count }}</span>
+                                            {% if product.metafields.reviews.rating_count == 1 %}
+                                                <span>{{ 'products.product.review.single_review' | t }}</span>
+                                            {% else %}
+                                                <span>{{ 'products.product.review.total_reviews' | t }}</span>
+                                            {% endif %}
+                                        </div>
+                                    {%- else -%}
+                                        <div class="product-rating-count no-reviews">{{ 'products.product.review.no_review' | t }}</div>
+                                    {%- endif -%}
+                                </div>
+
+                            </div>
+                        {% when 'text' %}
+                            <div class="product-summary__text block-{{ block.id }}" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+                        {% when 'collapsible-row' %}
+                            <div class="product-summary__collapsible-row block-{{ block.id }}" {{ block.shopify_attributes }}>
+                                <product-collapsible-row class="product-collapsible-row{% liquid 
+                                    if block.settings.open_by_default 
+                                        echo ' active_by_default active'
+                                    endif 
+                                    
+                                %}">
+                                    <h2 class="product-collapsible-row__title heading-size-{{ block.settings.title_size }}" tabindex="0">
+                                        {{ block.settings.title_text }}
+                                        <span>{% render 'icon-chevron-down' %}</span>
+                                    </h2>
+                                    <div class="product-collapsible-row__content">
+                                        {{ block.settings.description_text }}
+                                    </div>
+                                </product-collapsible-row>
+                            </div>
+                        {% when 'info-box' %}
+                            <div class="product-summary__info-box block-{{ block.id }}" {{ block.shopify_attributes }}>
+                                <div class="product-info-box">
+                                    {% if block.settings.icon != blank %}
+                                        <div class="product-info-box__icon">{% render 'icon-set-feather', icon: block.settings.icon %}</div>
+                                    {% endif %}
+                                    <div class="product-info-box__text">{{ block.settings.text }}</div>
+                                </div>
+                            </div>
+                        {% when 'share' %}
+                            <div class="product-summary__share-icons block-{{ block.id }}" {{ block.shopify_attributes }}>
+                                <product-share-icons class="product-share-icons">
+                                    <div class="product-share-icons-label">{{ 'products.product.share.label' | t }}</div>
+                                    <ul class="product-share-icons-list">
+                                        {% if block.settings.copy_link %}
+                                            <li class="product-share-icons-list-item product-share-copy-link">
+                                                <a href="{{ request.origin }}{{ product.url }}" title="Email">{% render 'icon-link' %}</a>
+                                                <div class="product-share-icons__tooltip">{{ 'products.product.share.copy_text' | t }}</div>
+                                                <div class="product-share-icons__notification">{{ 'products.product.share.copy_success' | t }}</div>
+                                            </li>
+                                        {% endif %}
+                                        {% if block.settings.facebook %}
+                                            <li class="product-share-icons-list-item product-share-icon"><a href="https://www.facebook.com/sharer/sharer.php?u={{ request.origin }}{{ product.url }}" title="{{ 'products.product.share.facebook' | t }}">{% render 'icon-social-facebook' %}</a></li>
+                                        {% endif %}
+                                        {% if block.settings.twitter %}
+                                            <li class="product-share-icons-list-item product-share-icon"><a href="https://twitter.com/intent/tweet?text={{ request.origin }}{{ product.url }}" title="{{ 'products.product.share.twitter' | t }}">{% render 'icon-social-twitter' %}</a></li>
+                                        {% endif %}
+                                        {% if block.settings.pinterest %}
+                                            <li class="product-share-icons-list-item product-share-icon"><a href="https://pinterest.com/pin/create/link/?url={{ request.origin }}{{ product.url }}&media={{ request.origin }}{{ product.featured_image }}" title="{{ 'products.product.share.pinterest' | t }}">{% render 'icon-social-pinterest' %}</a></li>
+                                        {% endif %}
+                                        {% if block.settings.linkedin %}
+                                            <li class="product-share-icons-list-item product-share-icon"><a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.origin }}{{ product.url }}" title="{{ 'products.product.share.linkedin' | t }}">{% render 'icon-social-linkedin' %}</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </product-share-icons>
+                            </div>
+                        {% when 'info-popup' %}
+                            {% if block.settings.variant_choice == blank %}
+                                {% assign page_handle = block.settings.page %}
+                                <div class="product-summary__info-popup block-{{ block.id }}" {{ block.shopify_attributes }}>
+                                    <product-info-popup class="product-info-popup">
+                                        <a href="{{ pages[page_handle].url }}" class="product-info-popup__button" data-page-handle="{{ page_handle }}" data-empty-text="{{ 'products.product.info_popup.placeholder_text' | t }}">{{ block.settings.link_text }}</a>
+                                    </product-info-popup>
+                                </div>
+                            {% endif %}
+                        {% when 'shoppay-banner' %}
+                            <div class="product-summary__shoppay-banner block-{{ block.id }}" {{ block.shopify_attributes }}>
+                                    {{ form | payment_terms }}
+                            </div>
+                        {% when 'separator' %}
+                            <div class="product-summary__separator block-{{ block.id }}" {{ block.shopify_attributes }}>
+                                <hr class="separator" />
+                            </div>
+                        {% when 'spacer' %}
+                            <div class="product-summary__spacer block-{{ block.id }}" {{ block.shopify_attributes }}>
+                                <div class="spacer"></div>
+                            </div>
+                        {% when '@app' %}
+                            {% render block %}
+                            
+                        {% when 'liquid' %}
+                            <div class="custom-liquid">
+                                {{ block.settings.custom_liquid }}
+                            </div>
+
+                    {% endcase %}
+                {% endfor %}
+            {% endif %}
+        {% endform %}
+    {% else %}
+
+        
+
+
+        
+        {% if section.blocks != blank %}
+                {% for block in section.blocks %}
+                    {% case block.type %}
+                        {% when 'title_price' %}
+                            <div class="product-summary__title-price block-{{ block.id }}" {{ block.shopify_attributes }}>
+                                <div class="product-summary__title-price--left">
+                                    <h1 class="product-summary__title">
+                                        {{ 'products.placeholder.title' | t }}
+                                    </h1>
+                                </div>
+                                {% if block.settings.show_price %}
+                                    <div class="product-summary__title-price--right">
+                                        <div class="product-summary__price product-price block-{{ block.id }}">
+                                        
+                                            <span data-price>{{ 'products.placeholder.price' | t }}</span>
+                                            
+                                            {%- if cart.taxes_included or shop.shipping_policy.body != blank -%}
+                                                <div class="product-tax">
+                                                    {%- if cart.taxes_included -%}
+                                                        {{ 'products.product.include_taxes' | t }}
+                                                    {%- endif -%}
+                                                    {%- if shop.shipping_policy.body != blank -%}
+                                                        {{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}
+                                                    {%- endif -%}
+                                                </div>
+                                            {%- endif -%}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+
+                        {% when 'title' %}
+                            <h1 class="product-summary__title block-{{ block.id }}" {{ block.shopify_attributes }}>
+                                {{ 'products.placeholder.title' | t }}
+                            </h1>
+                        {% when 'price' %}
+                            <div class="product-summary__price product-price block-{{ block.id }}" {{ block.shopify_attributes }}>
+                            
+                                <span data-price>{{ 'products.placeholder.price' | t }}</span>
+
+                                {%- if cart.taxes_included or shop.shipping_policy.body != blank -%}
+                                    <div class="product-tax">
+                                        {%- if cart.taxes_included -%}
+                                            {{ 'products.product.include_taxes' | t }}
+                                        {%- endif -%}
+                                        {%- if shop.shipping_policy.body != blank -%}
+                                            {{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}
+                                        {%- endif -%}
+                                    </div>
+                                {%- endif -%}
+                            </div>
+                        {% when 'description' %}
+                            <p class="product-summary__description block-{{ block.id }}" {{ block.shopify_attributes }}>{{ 'products.placeholder.description' | t }}</p>
+                        {% when 'stock-count' %}
+                            <div class="product-summary__inventory-qty product-inventory-qty block-{{ block.id }}" {{ block.shopify_attributes }}>
+                                <p class="product-summary__inventory-qty--normal">{{ 'products.product.stock.in_stock_no_track' | t }}</p>
+                            </div>
+                        {% when 'buy-buttons' %}
+                            <div class="product-summary__product-form block-{{ block.id }}" {{ block.shopify_attributes }}>
+                                <div class="product-summary__action">
+                                    <div class="product-summary__qty">
+                                        {% if block.settings.show_quantity_picker %}
+                                            <label for="ProductQuantityPickerInput">{{ 'products.product.quantity.label' | t }}</label>
+                                            <product-quantity-picker class="product-quantity-picker qty">
+                                                <span class="product-quantity-picker__minus qty-minus" tabindex="0">{% render 'icon-minus' %}</span>
+                                                <input id="ProductQuantityPickerInput" type="number" class="product-quantity-picker__input product-quantity-picker-input" name="quantity" value="1" min="1">
+                                                <span class="product-quantity-picker__plus qty-plus" tabindex="0">{% render 'icon-plus' %}</span>
+                                            </product-quantity-picker>
+                                        {% endif %}
+                                    </div>
+                                    <button type="submit" name="add" id="AddToCart" class="product-summary__add-to-cart product-add-to-cart btn-fill" disabled>
+                                        <span data-text="{{ 'products.product.add_to_cart' | t }}">
+                                            <span>{{ 'products.product.add_to_cart' | t }}</span>
+                                        </span>
+                                    </button>
+                                </div> 
+                            </div>
+                        {% when 'vendor' %}
+                            <a class="product-summary__vendor block-{{ block.id }}" href="{{ routes.root_url }}" {{ block.shopify_attributes }}>{{ 'products.placeholder.vendor' | t }}</a>
+                        {% when 'rating' %}
+                            <div class="product-summary__rating block-{{ block.id }}" {{ block.shopify_attributes }}>
+                                <div class="product-rating">
+                                    <div class="product-rating-count no-reviews">{{ 'products.product.review.no_review' | t }}</div>
+                                </div>
+
+                            </div>
+                        {% when 'text' %}
+                            <div class="product-summary__text block-{{ block.id }}" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+                        {% when 'collapsible-row' %}
+                            <div class="product-summary__collapsible-row block-{{ block.id }}" {{ block.shopify_attributes }}>
+                                <product-collapsible-row class="product-collapsible-row{% liquid 
+                                    if block.settings.open_by_default 
+                                        echo ' active_by_default active'
+                                    endif 
+                                    
+                                %}">
+                                    <h2 class="product-collapsible-row__title" tabindex="0">
+                                        {{ block.settings.title_text }}
+                                        <span>{% render 'icon-chevron-down' %}</span>
+                                    </h2>
+                                    <div class="product-collapsible-row__content">
+                                        {{ block.settings.description_text }}
+                                    </div>
+                                </product-collapsible-row>
+                            </div>
+                        {% when 'info-box' %}
+                            <div class="product-summary__info-box block-{{ block.id }}" {{ block.shopify_attributes }}>
+                                <div class="product-info-box">
+                                    {% if block.settings.icon != blank %}
+                                        <div class="product-info-box__icon">{% render 'icon-set-feather', icon: block.settings.icon %}</div>
+                                    {% endif %}
+                                    <div class="product-info-box__text">{{ block.settings.text }}</div>
+                                </div>
+                            </div>
+                        {% when 'share' %}
+                            <div class="product-summary__share-icons block-{{ block.id }}" {{ block.shopify_attributes }}>
+                                <product-share-icons class="product-share-icons">
+                                    <div class="product-share-icons-label">{{ 'products.product.share.label' | t }}</div>
+                                    <ul class="product-share-icons-list">
+                                        {% if block.settings.copy_link %}
+                                            <li class="product-share-icons-list-item product-share-copy-link">
+                                                <a href="{{ request.origin }}{{ product.url }}">{% render 'icon-link' %}</a>
+                                                <div class="product-share-icons__tooltip">{{ 'products.product.share.copy_text' | t }}</div>
+                                                <div class="product-share-icons__notification">{{ 'products.product.share.copy_success' | t }}</div>
+                                            </li>
+                                        {% endif %}
+                                        {% if block.settings.facebook %}
+                                            <li class="product-share-icons-list-item product-share-icon"><a href="https://www.facebook.com/sharer/sharer.php?u={{ request.origin }}{{ product.url }}">{% render 'icon-social-facebook' %}</a></li>
+                                        {% endif %}
+                                        {% if block.settings.twitter %}
+                                            <li class="product-share-icons-list-item product-share-icon"><a href="https://twitter.com/intent/tweet?text={{ request.origin }}{{ product.url }}">{% render 'icon-social-twitter' %}</a></li>
+                                        {% endif %}
+                                        {% if block.settings.pinterest %}
+                                            <li class="product-share-icons-list-item product-share-icon"><a href="https://pinterest.com/pin/create/link/?url={{ request.origin }}{{ product.url }}&media={{ request.origin }}{{ product.featured_image }}">{% render 'icon-social-pinterest' %}</a></li>
+                                        {% endif %}
+                                        {% if block.settings.linkedin %}
+                                            <li class="product-share-icons-list-item product-share-icon"><a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.origin }}{{ product.url }}">{% render 'icon-social-linkedin' %}</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </product-share-icons>
+                            </div>
+                        {% when 'info-popup' %}
+                            {% if block.settings.variant_choice == blank %}
+                                {% assign page_handle = block.settings.page %}
+                                <div class="product-summary__info-popup block-{{ block.id }}" {{ block.shopify_attributes }}>
+                                    <product-info-popup class="product-info-popup">
+                                        <a href="{{ pages[page_handle].url }}" class="product-info-popup__button" data-page-handle="{{ page_handle }}" data-empty-text="{{ 'products.product.info_popup.placeholder_text' | t }}">{{ block.settings.link_text }}</a>
+                                    </product-info-popup>
+                                </div>
+                            {% endif %}
+                        {% when 'shoppay-banner' %}
+                            <div class="product-summary__shoppay-banner block-{{ block.id }}" {{ block.shopify_attributes }}>
+                                    {{ form | payment_terms }}
+                            </div>
+                        {% when 'separator' %}
+                            <div class="product-summary__separator block-{{ block.id }}" {{ block.shopify_attributes }}>
+                                <hr class="separator" />
+                            </div>
+                        {% when 'spacer' %}
+                            <div class="product-summary__spacer block-{{ block.id }}" {{ block.shopify_attributes }}>
+                                <div class="spacer"></div>
+                            </div>
+                        {% when '@app' %}
+                            {% render block %}
+                            
+                        {% when 'liquid' %}
+                            <div class="custom-liquid">
+                                {{ block.settings.custom_liquid }}
+                            </div>
+
+                    {% endcase %}
+                {% endfor %}
+            {% endif %}
+
+
+    {% endif %}
+</div>
