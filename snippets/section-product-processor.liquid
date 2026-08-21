@@ -18,11 +18,6 @@
     assign current_variant = product.selected_or_first_available_variant
 
 
-    if current_variant == product and product.price_varies
-        assign money_price = 'products.product.price.from_price_html' | t: price: money_price
-    endif
-
-    
     if settings.product_option_swatches_name contains ','
         assign swatch_names = settings.product_option_swatches_name | split: ', '
     else
@@ -244,9 +239,6 @@
     {% endif %}
     {% if product.price != blank and settings.collection_show_price %}
     <p class="{{ prefix | default: 'product' }}__price product__price">
-        {% if product.price_varies %}
-            <span class="{{ prefix | default: 'product' }}__price--varies product__price--varies">{{ 'products.product.from_price_html' | t: price: money_price }}</span>
-        {% endif %}
         {% if product.compare_at_price  and product.compare_at_price > product.price %}
             <span class="{{ prefix | default: 'product' }}__price--compare product__price--compare">{{ product.compare_at_price | money }}</span>
         {% endif %}
