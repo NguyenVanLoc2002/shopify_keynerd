@@ -64,3 +64,32 @@
   padding-top: 12px;
   box-sizing: border-box;
 }
+
+/* Quick view media */
+.quickview-product .product-gallery-images {
+  display: grid;
+  gap: 0;
+}
+
+.quickview-product .product-gallery-images__image {
+  aspect-ratio: 6 / 5;
+  background-color: #f8f8f8;
+  overflow: hidden;
+}
+
+.quickview-product .product-gallery-images__image > a,
+.quickview-product .product-gallery-images__image figure {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.quickview-product .product-gallery-images__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.quickview-product .product-summary__collapsible-row {
+  display: none;
+}
