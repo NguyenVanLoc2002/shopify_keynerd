@@ -1,6 +1,7 @@
 /* Featured product cards */
 .section-featured-products .product__image,
-.section-featured-products-tabs .product__image {
+.section-featured-products-tabs .product__image,
+.section-product-recommendations .product__image {
   aspect-ratio: 1 / 1;
   border-radius: 10px;
   box-shadow: 5px -5px 14px rgba(0, 0, 0, 0.07);
@@ -9,28 +10,34 @@
 
 .section-featured-products .product__image a,
 .section-featured-products-tabs .product__image a,
+.section-product-recommendations .product__image a,
 .section-featured-products .product__image figure,
-.section-featured-products-tabs .product__image figure {
+.section-featured-products-tabs .product__image figure,
+.section-product-recommendations .product__image figure {
   width: 100%;
   height: 100%;
 }
 
 .section-featured-products .product__image img,
 .section-featured-products-tabs .product__image img,
+.section-product-recommendations .product__image img,
 .section-featured-products .product__image svg,
-.section-featured-products-tabs .product__image svg {
+.section-featured-products-tabs .product__image svg,
+.section-product-recommendations .product__image svg {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
 .section-featured-products .product__title,
-.section-featured-products-tabs .product__title {
+.section-featured-products-tabs .product__title,
+.section-product-recommendations .product__title {
   min-height: calc(2em * var(--theme-heading-line-height, 1.2));
 }
 
 .section-featured-products .product__title a,
-.section-featured-products-tabs .product__title a {
+.section-featured-products-tabs .product__title a,
+.section-product-recommendations .product__title a {
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
