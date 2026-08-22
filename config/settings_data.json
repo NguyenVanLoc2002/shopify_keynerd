@@ -28,6 +28,18 @@
     "product_option_swatches_list": "Olive: #50462B, \nMaroon: #69232D, \nBlue: #3995e6, \nGray: #776D6A, \nBlack: #1B191B, \nPink: #e944ce, \nRed: #f34141, \nGreen: #30d830, \nOrange: #e7a428",
     "collection_enable_add_to_cart": true,
     "content_for_index": [],
+    "blocks": {
+      "10956798698494376089": {
+        "type": "shopify://apps/floatify-cta-social-buttons/blocks/app-embed/38f6d0e7-3732-47a7-bc73-9635042e08d7",
+        "disabled": false,
+        "settings": {}
+      },
+      "0442293608007037209": {
+        "type": "shopify://apps/air-reviews-1/blocks/app-embed/c4e1e9ca-4d46-4e76-bc39-7e42417cb327",
+        "disabled": false,
+        "settings": {}
+      }
+    },
     "color_schemes": {
       "scheme_1": {
         "settings": {

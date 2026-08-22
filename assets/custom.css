@@ -44,3 +44,16 @@
   -webkit-line-clamp: 2;
   line-clamp: 2;
 }
+
+/* Product reviews app block */
+.template-product [id$="__main"]:has(+ [id$="__1787412342528d6cd6"]) .main-product {
+  --theme-section-spacing-bottom: clamp(12px, 2vh, 24px);
+}
+
+.template-product [id$="__1787412342528d6cd6"] {
+  --theme-section-side-margin: var(--theme-section-side-margin-level-5);
+  margin-left: var(--theme-section-side-margin);
+  margin-right: var(--theme-section-side-margin);
+  padding-top: 12px;
+  box-sizing: border-box;
+}
