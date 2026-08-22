@@ -65,12 +65,6 @@
   box-sizing: border-box;
 }
 
-/* Quick view media */
-.quickview-product .product-gallery-images {
-  display: grid;
-  gap: 0;
-}
-
 .quickview-product .product-gallery-images__image {
   aspect-ratio: 6 / 5;
   background-color: #f8f8f8;
