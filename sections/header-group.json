@@ -7,7 +7,6 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
-
 {
   "name": "Header",
   "type": "header",
@@ -82,7 +81,8 @@
         "inset_choice": "level-3",
         "header_style": "1",
         "header_min_height": 70,
-        "logo_height": 20,
+        "logo": "shopify://shop_images/logo.jpg",
+        "logo_height": 40,
         "primary_menu": "main-menu",
         "account_icon": true,
         "account_label": false,

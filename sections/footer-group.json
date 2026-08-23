@@ -7,7 +7,6 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
-
 {
   "name": "Footer",
   "type": "footer",
@@ -30,6 +29,7 @@
         },
         "menu-1": {
           "type": "menu",
+          "disabled": true,
           "settings": {
             "menu": "footer",
             "title": true

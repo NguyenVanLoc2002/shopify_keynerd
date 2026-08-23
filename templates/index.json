@@ -847,7 +847,7 @@
       "type": "featured-product-banner",
       "settings": {
         "fullwidth": true,
-        "width": 1320,
+        "width": 500,
         "side_margin_choice": "level-0",
         "color_scheme": "scheme_8",
         "inset": false,
