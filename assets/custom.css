@@ -87,3 +87,62 @@
 .quickview-product .product-summary__collapsible-row {
   display: none;
 }
+
+/* Stable flag rendering for Windows/Chrome, which can show regional emoji as text. */
+.template-product .block-collapsible-row-3 .product-collapsible-row__content p > strong:nth-of-type(3)::before {
+  content: "";
+  display: inline-block;
+  width: 1.35em;
+  height: 0.95em;
+  margin-right: 0.2em;
+  vertical-align: -0.08em;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(23, 31, 42, 0.18);
+  overflow: hidden;
+  background:
+    linear-gradient(#3c3b6e, #3c3b6e) 0 0 / 46% 54% no-repeat,
+    repeating-linear-gradient(
+      to bottom,
+      #b22234 0,
+      #b22234 7.7%,
+      #f7f7f2 7.7%,
+      #f7f7f2 15.4%
+    );
+}
+
+/* Compact PDP summary spacing without changing controls or accordion behavior. */
+.template-product .main-product .block-spacer-1 .spacer {
+  height: 18px;
+}
+
+.template-product .main-product .block-spacer-2 .spacer {
+  height: 12px;
+}
+
+.template-product .main-product .product-summary__collapsible-row {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.template-product .main-product .product-collapsible-row__title {
+  padding-bottom: 12px;
+}
+
+.template-product .main-product .product-collapsible-row__content p {
+  margin-bottom: 14px;
+}
+
+.template-product .main-product .product-share-icons {
+  margin: 8px 0;
+}
+
+@media screen and (max-width: 767px) {
+  .template-product .main-product .block-spacer-1 .spacer {
+    height: 14px;
+  }
+
+  .template-product .main-product .product-summary__collapsible-row {
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+}

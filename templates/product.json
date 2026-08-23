@@ -47,6 +47,7 @@
         },
         "description": {
           "type": "description",
+          "disabled": true,
           "settings": {}
         },
         "stock-count": {
@@ -84,14 +85,15 @@
         "collapsible-row-1": {
           "type": "collapsible-row",
           "settings": {
-            "title_text": "Product Details & Fabrics",
+            "title_text": "Product Details",
             "title_size": "x-small",
-            "description_text": "<p>ITEM DETAILS</p><ul><li>Fitted ribbed tank</li><li>Made in a soft stretchy cotton and elastane blend</li><li>P.E Nation graphic print</li></ul><p> <br/>MATERIAL COMPOSITION</p><ul><li>97% Cotton, 3% Elastane</li></ul>",
+            "description_text": "<p></p>{{ product.description }}",
             "open_by_default": false
           }
         },
         "collapsible-row-2": {
           "type": "collapsible-row",
+          "disabled": true,
           "settings": {
             "title_text": "Wash Care Instructions",
             "title_size": "x-small",
@@ -104,7 +106,7 @@
           "settings": {
             "title_text": "Delivery & Returns",
             "title_size": "x-small",
-            "description_text": "<p>Same day local delivery. Same week delivery for others. Get instant refund when you're not happy with our product.</p>",
+            "description_text": "<p><strong>Processing Time: 5–7 business days<br/></strong>Each item is carefully prepared before shipment. If your item is already available and ready to ship, we will ship it as soon as possible.<br/><br/><strong>Estimated Shipping Time:</strong><br/><br/><strong>United States:</strong> 8–15 business days<br/>🌎 <strong>Other countries</strong>: 15–25 business days<br/><br/>All orders are <strong>shipped from Vietnam</strong>, so international delivery times may vary depending on the destination, customs clearance, local postal services, holidays, or other unexpected delays.<br/><br/>Please note that the estimated delivery time includes <strong>processing time + shipping time.</strong><br/><br/><strong>Returns & Exchanges</strong><br/><br/>Because our products are handmade and/or personalized, we generally <strong>do not accept returns or exchanges for change-of-mind purchases.</strong><br/><br/>However, if your item arrives <strong>damaged, defective, or incorrect</strong>, please contact us with photos of the item and packaging. We will review the issue and work with you to provide an appropriate solution, such as a replacement or refund.<br/><br/>Please contact us if you have any questions about your order or delivery. We're always happy to help!</p>",
             "open_by_default": false
           }
         },
@@ -202,7 +204,7 @@
           "settings": {
             "air_blockreviews_summaryHeading": "Reviews",
             "air_blockreviews_layout": "list",
-            "air_blockreviews_singleStarColor": "#16A086",
+            "air_blockreviews_singleStarColor": "#16a086",
             "air_blockreviews_primaryColor": "#121212"
           }
         }
