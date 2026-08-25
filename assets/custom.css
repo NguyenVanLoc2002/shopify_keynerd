@@ -186,7 +186,7 @@
 
 .section-footer-column__text.block-text-2 .section-footer-column__text-content p {
   display: grid;
-  grid-template-columns: 24px minmax(0, 1fr);
+  grid-template-columns: 22px minmax(0, 1fr);
   column-gap: 10px;
   align-items: start;
   margin: 0 0 16px;
@@ -195,12 +195,23 @@
 
 .section-footer-column__text.block-text-2 .section-footer-column__text-content p::before {
   content: "";
-  width: 18px;
-  height: 18px;
-  margin-top: 3px;
+  width: 22px;
+  height: 22px;
   background-color: currentColor;
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 10c0 4.6-8 12-8 12S4 14.6 4 10a8 8 0 1 1 16 0Z'/%3E%3Ccircle cx='12' cy='10' r='3'/%3E%3C/svg%3E") center / contain no-repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 10c0 4.6-8 12-8 12S4 14.6 4 10a8 8 0 1 1 16 0Z'/%3E%3Ccircle cx='12' cy='10' r='3'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.section-footer-column__text.block-text-2 .footer-social-list li a {
+  min-height: 22px;
+  gap: 10px;
+}
+
+.section-footer-column__text.block-text-2 .footer-social-list li svg {
+  display: block;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
 }
 
 .section-footer-column__text.block-text-2 .footer-social-list.display-style-3 {
