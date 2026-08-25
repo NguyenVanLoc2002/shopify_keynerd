@@ -31,13 +31,16 @@
           "type": "text",
           "settings": {
             "text_custom_width": true,
-            "text_width": 300,
+            "text_width": 340,
             "heading": "Contact us",
-            "text": "<p>✉  contact@refine.com</p><p>☎  +1 123 456 7890</p><p>📍  575/31/10 Cach Mang Thang Tam, Nhieu Loc, Ho Chi Minh, Vietnam<br/><br/><br/></p>"
+            "text": "<p>575/31/10 Cach Mang Thang Tam, Nhieu Loc,<br/>Ho Chi Minh, Vietnam</p>",
+            "show_social_links": true,
+            "social_display_style": "3"
           }
         },
         "social-1": {
           "type": "social",
+          "disabled": true,
           "settings": {
             "display_style": "3"
           }

@@ -818,7 +818,7 @@
         "button_style": "link",
         "collection_choice": "trending-now",
         "display_style": "medium",
-        "product_excerpt_show": true,
+        "product_excerpt_show": false,
         "product_excerpt_words": 55,
         "columns_count": 3,
         "columns_offset": true,

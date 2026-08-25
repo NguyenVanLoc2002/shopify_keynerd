@@ -810,6 +810,12 @@
             },
             {
                 "type": "text",
+                "id": "social_etsy_link",
+                "label": "Etsy link",
+                "info": "https://www.etsy.com/shop/KeyNerd"
+            },
+            {
+                "type": "text",
                 "id": "social_tiktok_link",
                 "label": "t:settings_schema.social_media.settings.social_tiktok_link.label",
                 "info": "t:settings_schema.social_media.settings.social_tiktok_link.info"
