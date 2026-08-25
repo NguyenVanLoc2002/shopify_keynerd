@@ -37,6 +37,7 @@
         "announcement-bar-1",
         "announcement-bar-2"
       ],
+      "disabled": true,
       "settings": {
         "color_scheme": "",
         "border_choice": "0",

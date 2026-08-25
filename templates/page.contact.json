@@ -7,7 +7,6 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
-
 {
   "sections": {
     "main": {
@@ -45,7 +44,7 @@
             "text_3": "",
             "text_3_size": "large",
             "button_text": "View in Map",
-            "button_url": "",
+            "button_url": "https://maps.app.goo.gl/MHS5rHa9GbQzLGaD8",
             "button_target": "_self",
             "button_style": "link"
           }
@@ -98,6 +97,7 @@
         "card_3JF6LD",
         "card_fLGYrB"
       ],
+      "disabled": true,
       "settings": {
         "fullwidth": true,
         "width": 1320,

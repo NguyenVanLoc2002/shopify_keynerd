@@ -33,6 +33,7 @@
 
 
     assign product_description_show = section_settings.product_excerpt_show | default: false
+    assign product_description_words = section_settings.product_excerpt_words | default: 20
 
     assign swatch_limit = 5
 %}
@@ -266,7 +267,7 @@
     {% endif %}
     {% if product_description_show %}
         <div class="{{ prefix | default: 'product' }}__description product__description">
-            {{ product.description | truncatewords: 20 }}
+            {{ product.description | truncatewords: product_description_words }}
         </div>
     {% endif %}
 

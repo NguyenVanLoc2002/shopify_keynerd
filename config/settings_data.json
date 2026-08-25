@@ -27,6 +27,9 @@
     "predictive_search_recommendation_choice": "frontpage",
     "product_option_swatches_list": "Olive: #50462B, \nMaroon: #69232D, \nBlue: #3995e6, \nGray: #776D6A, \nBlack: #1B191B, \nPink: #e944ce, \nRed: #f34141, \nGreen: #30d830, \nOrange: #e7a428",
     "collection_enable_add_to_cart": true,
+    "social_twitter_link": "",
+    "social_facebook_link": "https://www.facebook.com/profile.php?id=61585087554470",
+    "social_instagram_link": "https://www.instagram.com/keynerd_artisankeycap/",
     "content_for_index": [],
     "blocks": {
       "10956798698494376089": {
@@ -687,5 +690,8 @@
       "product_option_swatches_list": "Green: #6BCA2F, Caramel: #E4AB68, Black: #000000, White: #FFFFFF, Brown: #9A5630, Camel: #E27830, Khaki: #5E6E40, Beige: #E5D8B6",
       "collection_swatches_type": "color"
     }
+  },
+  "platform_customizations": {
+    "custom_css": []
   }
 }

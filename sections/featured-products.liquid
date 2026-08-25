@@ -542,6 +542,15 @@ echo ' ' | append: section.settings.color_scheme
         },
         {
             "type": "range",
+            "id": "product_excerpt_words",
+            "min": 20,
+            "max": 80,
+            "step": 5,
+            "label": "Product excerpt words",
+            "default": 20
+        },
+        {
+            "type": "range",
             "id": "columns_count",
             "min": 2,
             "max": 6,
@@ -790,4 +799,3 @@ echo ' ' | append: section.settings.color_scheme
     }
 }
 {% endschema %}
-

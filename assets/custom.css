@@ -146,3 +146,40 @@
     margin-bottom: 8px;
   }
 }
+
+/* Trending Now: let excerpts use the space above Quickview. */
+[id$="__featured_products_mC6eF3"] .product__description {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 7;
+  line-clamp: 7;
+}
+
+[id$="__featured_products_mC6eF3"] .product__quickview {
+  flex-shrink: 0;
+}
+
+@media screen and (min-width: 768px) {
+  [id$="__featured_products_mC6eF3"] .has-product-size-medium .section-featured-products-product {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: stretch;
+    gap: 30px;
+  }
+
+  [id$="__featured_products_mC6eF3"] .has-product-size-medium .product__top {
+    width: auto;
+    min-width: 0;
+  }
+
+  [id$="__featured_products_mC6eF3"] .has-product-size-medium .product__bottom {
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+  }
+
+  [id$="__featured_products_mC6eF3"] .has-product-size-medium .product__quickview {
+    margin-top: auto;
+  }
+}

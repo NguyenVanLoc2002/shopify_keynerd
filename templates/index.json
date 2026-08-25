@@ -819,6 +819,7 @@
         "collection_choice": "trending-now",
         "display_style": "medium",
         "product_excerpt_show": true,
+        "product_excerpt_words": 55,
         "columns_count": 3,
         "columns_offset": true,
         "total_count": 6,
@@ -845,6 +846,7 @@
     },
     "featured_product_banner_mxieNd": {
       "type": "featured-product-banner",
+      "disabled": true,
       "settings": {
         "fullwidth": true,
         "width": 500,

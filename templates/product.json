@@ -76,12 +76,6 @@
           "type": "pickup-availability",
           "settings": {}
         },
-        "spacer-1": {
-          "type": "spacer",
-          "settings": {
-            "height": 30
-          }
-        },
         "collapsible-row-1": {
           "type": "collapsible-row",
           "settings": {
@@ -112,6 +106,7 @@
         },
         "spacer-2": {
           "type": "spacer",
+          "disabled": true,
           "settings": {
             "height": 30
           }
@@ -166,7 +161,6 @@
         "variant-picker",
         "buy-buttons",
         "pickup-availability",
-        "spacer-1",
         "collapsible-row-1",
         "collapsible-row-2",
         "collapsible-row-3",
